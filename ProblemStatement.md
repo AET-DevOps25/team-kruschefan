@@ -4,7 +4,7 @@ Creating forms manually can be time-consuming and repetitive, especially for bus
 
 ## Main Functionality
 
-FormsAI is a platform that uses AI to generate forms based on user input or predefined templates. It allows users to:
+FormsAI is a platform that uses AI to generate forms based on user input. It allows users to:
 
 - Automatically generate forms by describing their requirements.
 - Customize the generated forms to suit their specific needs.
@@ -22,8 +22,9 @@ FormsAI is designed for:
 
 Generative AI is at the core of FormsAI. It will:
 
-- Interpret user-provided descriptions to generate relevant form fields and layouts.
+- Interpret user-provided descriptions to generate relevant form fields with prefilled questions.
 - Provide multilingual support to create forms in various languages.
+- Suggest the best input types (e.g., text, multiple choice, rating) for each question generated.
 
 ## Scenarios of Usage
 
