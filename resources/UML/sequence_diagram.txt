@@ -1,0 +1,20 @@
+sequenceDiagram
+  actor User as User
+  participant Form Service as Form Service
+  participant GenAI Service as GenAI Service
+  participant RAG as RAG
+  participant LLM as LLM
+  participant Form Service as Form Service as Form Service as Form Service
+  participant Form Service as Form Service
+
+  User ->> Form Service: Submit prompt for form generation
+  Form Service ->> GenAI Service: Forward prompt
+  GenAI Service ->> RAG: Trigger RAG
+  RAG -->> GenAI Service: Return relevant vectors
+  GenAI Service ->> LLM : Generate form schema
+  LLM -->> GenAI Service: Return generated form
+  GenAI Service -->> Form Service: Deliver form schema
+  Form Service -->> User: Display generated form
+
+
+
