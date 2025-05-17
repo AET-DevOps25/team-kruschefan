@@ -15,7 +15,7 @@ import json
 import logging
 
 app = FastAPI()
-HUGGINGFACEHUB_API_TOKEN = "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"
+HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 REMOTE_REPO_ID = "HuggingFaceH4/zephyr-7b-beta"
 LOCAL_REPO_ID = "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF"    # TODO: change
 

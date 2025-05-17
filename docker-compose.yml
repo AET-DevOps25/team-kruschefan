@@ -21,7 +21,7 @@ services:
       - ./GenAI/llm:/models
     environment:
       - PYTHONUNBUFFERED=1
-      - HUGGINGFACEHUB_API_TOKEN=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
+      - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN}
       - MONGO_URI=mongodb://root:example@mongodb:27017/
 
   # Weaviate for RAG vector database
