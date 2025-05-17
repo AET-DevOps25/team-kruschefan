@@ -1,0 +1,27 @@
+curl -X POST http://localhost:8000/generate_form \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "I want to collect feedback on our new product",
+    "model_source": "remote",
+    "llm_name": null
+  }'
+
+
+
+
+curl -X POST http://localhost:8000/generate_form \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "I want to collect feedback on our new product"
+  }'
+
+
+
+curl -X POST http://localhost:8000/generate_form \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "I want to collect feedback on our new product",
+    "llm_name": null
+  }'
+
+

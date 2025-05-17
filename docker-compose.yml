@@ -1,0 +1,153 @@
+version: '3.8'
+
+services:
+
+  # Angular for frontend
+  angular-client:
+    build:
+      context: ./client
+    ports:
+      - "4200:80"
+
+  # Langchain GenAI service
+  langchain-app:
+    build:
+      context: ./GenAI
+    ports:
+      - "8000:8000"
+    working_dir: /GenAI
+    volumes:
+      - ./GenAI:/GenAI
+      - ./GenAI/llm:/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN}
+      - MONGO_URI=mongodb://root:example@mongodb:27017/
+
+  # Weaviate for RAG vector database
+  weaviate:
+    image: semitechnologies/weaviate:1.24.3
+    container_name: weaviate
+    ports:
+      - "8083:8080"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      ENABLE_MODULES: ''
+    volumes:
+      - weaviate-data:/var/lib/weaviate
+    restart: unless-stopped
+
+  # Postgres for keycloak
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # Keycloak, user auth service
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    
+  # MongoDB for the main database
+  mongodb:
+    image: mongo:7
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+  
+  # Metabase for data dashboards for users
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+    volumes:
+      - metabase-data:/metabase-data
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - langchain-app
+
+  # Alertmanager for alert sending
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+    ports:
+      - "9093:9093"
+
+  # Grafana for app data visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  # 
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8084:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+
+  # Mongo-schema-loader for mongo db definitions
+  mongo-schema-loader:
+    build:
+      context: ./mongo-schema-loader
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://root:example@mongodb:27017
+    command: ["python", "schema_loader.py"]
+
+
+volumes:
+  postgres-data:
+  mongo-data:
+  weaviate-data:
+  metabase-data:
+  grafana-data:
