@@ -1,4 +1,4 @@
-version: '3.8'
+version: '4'
 
 services:
 
@@ -29,7 +29,7 @@ services:
     image: semitechnologies/weaviate:1.24.3
     container_name: weaviate
     ports:
-      - "8083:8080"
+      - "9000:8080"
     environment:
       QUERY_DEFAULTS_LIMIT: 25
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
@@ -66,7 +66,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "8080:8080"
+      - "9001:8080"
     
   # MongoDB for the main database
   mongodb:
@@ -76,7 +76,9 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
     environment:
+      MONGO_INITDB_DATABASE: mongodb
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
   
@@ -144,6 +146,47 @@ services:
       MONGO_URI: mongodb://root:example@mongodb:27017
     command: ["python", "schema_loader.py"]
 
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mongodb
+
+  form-service:
+    build:
+      context: .
+      dockerfile: form-service/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  template-service:
+    build:
+      context: .
+      dockerfile: template-service/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway-service/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - user-service
+      - form-service
+      - template-service
 
 volumes:
   postgres-data:
