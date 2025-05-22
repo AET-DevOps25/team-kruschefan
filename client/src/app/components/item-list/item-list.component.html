@@ -1,0 +1,8 @@
+<div class="items-list">
+  @for (cardItem of items; track $index) {
+    <forms-ai-item-card
+      [label]="cardItem.label"
+      [imgSrc]="cardItem.imgSrc"
+    ></forms-ai-item-card>
+  }
+</div>
