@@ -1,4 +1,4 @@
-version: '4'
+version: '3.8'
 
 services:
 
@@ -154,6 +154,7 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - KEYCLOAK_REALM=FormsAI
     depends_on:
       - mongodb
 
