@@ -1,8 +1,17 @@
-<div class="items-list">
+<div
+  class="items-list"
+  cdkDropList
+  id="itemsList"
+  [cdkDropListData]="items"
+  [cdkDropListConnectedTo]="['formEditor']"
+  cdkDropListSortingDisabled
+>
   @for (cardItem of items; track $index) {
     <forms-ai-item-card
       [label]="cardItem.label"
       [imgSrc]="cardItem.imgSrc"
+      cdkDrag
+      [cdkDragData]="cardItem"
     ></forms-ai-item-card>
   }
 </div>
