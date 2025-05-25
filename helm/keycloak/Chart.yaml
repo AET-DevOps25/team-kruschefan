@@ -1,0 +1,9 @@
+apiVersion: v2
+name: keycloak
+description: A custom config for Bitnami Keycloak
+type: application
+version: 0.1.0
+dependencies:
+  - name: keycloak
+    version: 16.1.6
+    repository: https://charts.bitnami.com/bitnami

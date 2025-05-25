@@ -1,0 +1,14 @@
+mongodb:
+  auth:
+    enabled: true
+    existingSecret: mongodb-secret
+    database: mongodb
+
+  architecture: standalone
+  persistence:
+    enabled: true
+    size: 1Gi
+
+  service:
+    type: ClusterIP
+    port: 27017

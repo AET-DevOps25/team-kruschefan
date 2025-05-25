@@ -387,3 +387,7 @@ GenAI/llm/*
 
 # Fish
 sourcelocal.fish
+
+# Helm
+secret_command.txt
+helm/**/charts/
