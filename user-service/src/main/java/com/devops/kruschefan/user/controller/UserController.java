@@ -26,5 +26,26 @@ public class UserController {
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
+    
+    // Get a single user by username
+    @GetMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username);
+    }
+
+    // Delete a user by username
+    @DeleteMapping("/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable String username) {
+        userService.deleteUserByUsername(username);
+    }
+
+    // Update user by username
+    @PutMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto updateUser(@PathVariable String username, @RequestBody CreateUserDto updatedUser) {
+        return userService.updateUserByUsername(username, updatedUser);
+    }
 
 }
