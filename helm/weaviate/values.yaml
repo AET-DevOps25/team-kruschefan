@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: semitechnologies/weaviate
+  tag: 1.24.3
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+env:
+  - name: QUERY_DEFAULTS_LIMIT
+    value: "25"
+  - name: AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED
+    value: "true"
+  - name: PERSISTENCE_DATA_PATH
+    value: "/var/lib/weaviate"
+  - name: DEFAULT_VECTORIZER_MODULE
+    value: "none"
+  - name: ENABLE_MODULES
+    value: ""
+
+volumeMounts:
+  - name: weaviate-data
+    mountPath: /var/lib/weaviate
+
+volumes:
+  - name: weaviate-data
+    persistentVolumeClaim:
+      claimName: weaviate-pvc

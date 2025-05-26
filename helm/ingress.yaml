@@ -1,0 +1,95 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: client
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 8080
+      - path: /user-service
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 8083
+      - path: /form-service
+        pathType: Prefix
+        backend:
+          service:
+            name: form-service
+            port:
+              number: 8081
+      - path: /template-service
+        pathType: Prefix
+        backend:
+          service:
+            name: template-service
+            port:
+              number: 8082
+      - path: /keycloak
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 8080
+      - path: /metabase
+        pathType: Prefix
+        backend:
+          service:
+            name: metabase
+            port:
+              number: 3000
+      - path: /mongo-express
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 8081
+      - path: /weaviate
+        pathType: Prefix
+        backend:
+          service:
+            name: weaviate
+            port:
+              number: 8080
+      - path: /prometheus
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-server
+            port:
+              number: 9090
+      - path: /alertmanager
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager
+            port:
+              number: 9093
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000

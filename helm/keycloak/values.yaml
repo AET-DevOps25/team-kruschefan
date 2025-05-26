@@ -1,0 +1,29 @@
+keycloak:
+  image:
+    registry: quay.io
+    repository: keycloak/keycloak
+    tag: 24.0.1
+    pullPolicy: IfNotPresent
+
+  production: false
+  proxyAddressForwarding: true
+
+  auth:
+    adminUser: admin
+    existingSecret: project-secrets
+    passwordSecretKey: keycloak_admin_password
+
+  service:
+    type: ClusterIP
+    ports:
+      http: 8080
+
+  database:
+    vendor: postgresql
+    externalDatabase:
+      host: postgres
+      port: 5432
+      user: keycloak
+      database: keycloak
+      existingSecret: project-secrets
+      existingSecretPasswordKey: postgres_password
