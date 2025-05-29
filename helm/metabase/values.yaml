@@ -21,3 +21,17 @@ volumes:
   - name: metabase-data
     persistentVolumeClaim:
       claimName: metabase-pvc
+  
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

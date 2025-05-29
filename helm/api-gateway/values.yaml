@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/YOUR_USERNAME/api-gateway # TODO: push image to registry
+  repository: ghcr.io/aet-devops25/api-gateway-service # TODO: push image to registry
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -12,3 +12,17 @@ service:
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: docker
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

@@ -1,5 +1,5 @@
 image:
-  repository: ghcr.io/YOUR_USERNAME/mongo-schema-loader  # TODO: push image to registry 
+  repository: ghcr.io/aet-devops25/mongo-schema-loader  # TODO: push image to registry 
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -11,3 +11,22 @@ env:
 
 command: ["python"]
 args: ["schema_loader.py"]
+
+# TODO: do not even need a service
+service:
+  type: ClusterIP
+  port: 8080
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

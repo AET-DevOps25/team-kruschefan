@@ -1,8 +1,8 @@
 keycloak:
   image:
-    registry: quay.io
-    repository: keycloak/keycloak
-    tag: 24.0.1
+    registry: docker.io
+    repository: bitnami/keycloak
+    tag: latest
     pullPolicy: IfNotPresent
 
   production: false
@@ -27,3 +27,33 @@ keycloak:
       database: keycloak
       existingSecret: project-secrets
       existingSecretPasswordKey: postgres_password
+
+  global:
+    security:
+      allowInsecureImages: true
+
+  test:
+    enabled: false
+
+serviceAccount:
+  create: true
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+image:
+  registry: docker.io
+  repository: bitnami/keycloak
+  tag: latest
+  pullPolicy: IfNotPresent

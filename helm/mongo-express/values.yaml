@@ -28,3 +28,17 @@ env:
     valueFromSecret:
       name: project-secrets
       key: mongo_express_password
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

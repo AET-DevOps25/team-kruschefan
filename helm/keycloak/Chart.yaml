@@ -1,9 +1,11 @@
 apiVersion: v2
-name: keycloak
-description: A custom config for Bitnami Keycloak
+name: keycloak-wrapper
+description: A wrapper chart for deploying Bitnami's Keycloak with custom values.
 type: application
 version: 0.1.0
+appVersion: "24.7.1"
+
 dependencies:
   - name: keycloak
-    version: 16.1.6
+    version: 24.7.1
     repository: https://charts.bitnami.com/bitnami

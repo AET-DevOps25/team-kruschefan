@@ -1,14 +1,67 @@
+image:
+  repository: bitnami/mongodb
+  tag: 6.0.8-debian-11-r0
+  pullPolicy: IfNotPresent
+
 mongodb:
   auth:
     enabled: true
-    existingSecret: mongodb-secret
+    existingSecret: mongodb-secrets 
     database: mongodb
+    usernames:
+      - myuser
+    databases:
+      - mydb
 
   architecture: standalone
+  
   persistence:
     enabled: true
+    storageClass: "standard"
     size: 1Gi
+    accessModes:
+      - ReadWriteOnce
 
   service:
     type: ClusterIP
-    port: 27017
+    port: 27018
+
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+
+serviceAccount:
+  create: true
+  name: "mongodb"
+  automount: true
+
+service:
+  type: ClusterIP
+  port: 27018
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: disktype
+          operator: In
+          values:
+          - ssd
+
+resources:
+  limits:
+    memory: 2Gi
+  requests:
+    memory: 1Gi
+
