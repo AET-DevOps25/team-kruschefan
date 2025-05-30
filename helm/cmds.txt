@@ -50,19 +50,10 @@ export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/nam
 export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
 
-# mongodb
+# mongo
 ############ helm dependency build ./helm/mongodb
-############ helm install mongodb helm/mongodb
-
-# mongo-express # TODO: try after mongodb
-helm install mongo-express helm/mongo-express
-export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mongo-express,app.kubernetes.io/instance=mongo-express" -o jsonpath="{.items[0].metadata.name}")
-export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
-
-# mongo-schema-loader
-helm install mongo-schema-loader helm/mongo-schema-loader
-export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mongo-schema-loader,app.kubernetes.io/instance=mongo-schema-loader" -o jsonpath="{.items[0].metadata.name}")
+############ helm -loader helm/mongo-schema-loader
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mongo,app.kubernetes.io/instance=mongo" -o jsonpath="{.items[0].metadata.name}")
 export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
 
@@ -87,7 +78,16 @@ kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
 # weaviate
 kubectl apply -f infrastructure/k8s/weaviate-pvc.yaml
 helm install weaviate helm/weaviate
-export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=weaviate,app.kubernetes.io/instance=weaviate" -o jsonpath="{.items[0].metadata.name}")
+export POD_NAME=$(kubectl get poinstall mongodb helm/mongodb
+
+# mongo-express # TODO: try after mongodb
+helm install mongo-express helm/mongo-express
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mongo-express,app.kubernetes.io/instance=mongo-express" -o jsonpath="{.items[0].metadata.name}")
+export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
+
+# mongo-schema-loader
+helm install mongo-schemads --namespace default -l "app.kubernetes.io/name=weaviate,app.kubernetes.io/instance=weaviate" -o jsonpath="{.items[0].metadata.name}")
 export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
 

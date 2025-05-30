@@ -4,6 +4,7 @@ import os
 # MongoDB connection
 mongo_uri = os.getenv("MONGO_URI", "mongodb://root:example@mongodb:27017")
 client = MongoClient(mongo_uri)
+print(f"Connected to MongoDB at {mongo_uri}")
 
 # Database name
 db = client["formbuilder"]

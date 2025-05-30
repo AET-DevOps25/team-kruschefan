@@ -5,28 +5,7 @@ image:
 
 env:
   - name: MONGO_URI
-    valueFromSecret:
-      name: project-secrets
-      key: mongo_uri
+    value: mongodb://mongo:27017
 
 command: ["python"]
 args: ["schema_loader.py"]
-
-# TODO: do not even need a service
-service:
-  type: ClusterIP
-  port: 8080
-
-serviceAccount:
-  create: true
-  name: ""
-
-# TODO: change ingress config
-ingress:
-  enabled: false
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
