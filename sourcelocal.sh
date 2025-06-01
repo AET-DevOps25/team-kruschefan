@@ -1,13 +1,11 @@
 #!/bin/bash
-set -e
-
-cd "$(dirname "$0")" || exit 1
+cd "$(dirname "$0")" || return 1
 
 BUILD=${1:-nobuild}
 
 if [ ! -f .env.secret ]; then
   echo "[!] .env.secret file not found. Please create one with your secrets."
-  exit 1
+  return 1
 fi
 
 echo "[+] Loading secrets from .env.secret..."

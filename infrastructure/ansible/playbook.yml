@@ -1,0 +1,35 @@
+---
+- name: Provision EC2 instance
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure apt cache is updated
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install base packages
+      ansible.builtin.apt:
+        name:
+          - jq
+          - git
+        state: present
+
+    - import_tasks: tasks/install_docker.yml
+    - import_tasks: tasks/install_kubectl.yml
+    - import_tasks: tasks/install_helm.yml
+
+    - name: Clone repo
+      ansible.builtin.git:
+        repo: "https://github.com/AET-DevOps25/team-kruschefan.git"
+        dest: "/home/{{ ansible_user }}/app"
+        version: main
+
+    - name: Copy start.sh to remote host
+      ansible.builtin.copy:
+        src: ./start.sh
+        dest: "/home/{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Run start.sh
+      ansible.builtin.command: "/home/{{ ansible_user }}/start.sh"
