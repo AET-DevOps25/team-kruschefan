@@ -1,0 +1,10 @@
+---
+- name: Download and install Helm
+  ansible.builtin.shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  args:
+    creates: /usr/local/bin/helm
+
+- name: Ensure helm is executable
+  ansible.builtin.file:
+    path: /usr/local/bin/helm
+    mode: '0755'

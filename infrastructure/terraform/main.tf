@@ -1,11 +1,11 @@
 provider "aws" {
-  region = "us-east-1" # Change to your preferred AWS region
+  region = var.aws_region
 }
 
 # Define an SSH key pair for connecting to the EC2 instance
 resource "aws_key_pair" "team_kruschefan_key" {
-  key_name   = "team-key" # Name visible in AWS Console
-  public_key = file("~/.ssh/team-key.pub") # Path to your local public key
+  key_name   = var.ssh_key_name # Name visible in AWS Console
+  public_key = file(var.public_key_path) # Path to your local public key
 }
 
 # Create a security group allowing SSH and HTTP access
@@ -37,8 +37,8 @@ resource "aws_security_group" "team_kruschefan_sg" {
 
 # Define the EC2 instance to launch
 resource "aws_instance" "team_kruschefan_ec2" {
-  ami           = "ami-0c02fb55956c7d316" # Amazon Linux 2 AMI in us-east-1
-  instance_type = "t2.micro" # Free tier
+  ami           = var.ami_id # Amazon Linux 2 AMI in us-east-1
+  instance_type = var.instance_type # Free tier
   key_name          = aws_key_pair.team_kruschefan_key.key_name # Use the created SSH key
   security_groups   = [aws_security_group.team_kruschefan_sg.name] # Attach the security group
 
@@ -46,41 +46,27 @@ resource "aws_instance" "team_kruschefan_ec2" {
     Name = "team-kruschefan-ec2" # Tag in the AWS Console
   }
 
-  # Upload local start.sh
-  provisioner "file" {
-    source      = "${path.module}/start.sh"
-    destination = "/home/ec2-user/start.sh"
-  }
-
-  # Remote setup and run start.sh
   provisioner "remote-exec" {
     inline = [
-      "sudo yum update -y",
-      "sudo yum install -y jq git",
-
-      # Docker
-      "sudo amazon-linux-extras install docker -y",
-      "sudo service docker start",
-      "sudo usermod -a -G docker ec2-user",
-
-      # Helm
-      "curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash",
-
-      # kubectl
-      "curl -LO https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl",
-      "chmod +x kubectl",
-      "sudo mv kubectl /usr/local/bin",
-
-      # Execute app startup script
-      "chmod +x /home/ec2-user/start.sh",
-      "/home/ec2-user/start.sh"
+      "echo Waiting for SSH...",
+      "while ! nc -z localhost 22; do sleep 5; done"
     ]
-
 
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("~/.ssh/team-key") # Local path to your private key
+      user        = var.ami_user
+      private_key = file(var.private_key_path)
+      host        = self.public_ip
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_CONFIG=../ansible/ansible.cfg ansible-playbook -i ${self.public_ip}, -u ${var.ami_user} --private-key ${var.private_key_path} ../ansible/playbook.yml"
+
+    connection {
+      type        = "ssh"
+      user        = var.ami_user
+      private_key = file(var.private_key_path)
       host        = self.public_ip
     }
   }
@@ -101,6 +87,6 @@ resource "aws_secretsmanager_secret" "team_kruschefan_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "team_kruschefan_credentials_version" {
-  secret_id     = aws_secretsmanager_secret.app.id
+  secret_id     = aws_secretsmanager_secret.team_kruschefan_credentials.id
   secret_string = var.secret_string
 }
