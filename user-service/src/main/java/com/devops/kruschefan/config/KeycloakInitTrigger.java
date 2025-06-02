@@ -1,4 +1,4 @@
-package com.devops.kruschefan.user.config;
+package com.devops.kruschefan.config;
 
 import jakarta.annotation.PostConstruct;
 import org.keycloak.admin.client.Keycloak;

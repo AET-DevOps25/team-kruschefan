@@ -1,4 +1,4 @@
-package com.devops.kruschefan.user.config;
+package com.devops.kruschefan.config;
 
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
