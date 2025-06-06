@@ -1,32 +1,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "mongo-schema-loader.fullname" . }}
-  labels:
-    app: {{ include "mongo-schema-loader.name" . }}
+  name: mongo-schema-loader
 spec:
   template:
-    metadata:
-      labels:
-        app: {{ include "mongo-schema-loader.name" . }}
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
+      backoffLimit: 0
       containers:
-        - name: loader
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        - name: schema-loader
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: {{ toJson .Values.command }}
-          args: {{ toJson .Values.args }}
+          command: {{ .Values.command }}
+          args: {{ .Values.args }}
           env:
             {{- range .Values.env }}
-            {{- if .value }}
             - name: {{ .name }}
-              value: {{ .value | quote }}
-            {{- else if .valueFromSecret }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .valueFromSecret.name }}
-                  key: {{ .valueFromSecret.key }}
-            {{- end }}
+              value: {{ .value }}
             {{- end }}

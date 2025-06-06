@@ -3,68 +3,62 @@ repositories:
     url: https://charts.bitnami.com/bitnami
 
 releases:
-  - name: postgres
-    namespace: default
-    chart: bitnami/postgresql
-    values:
-      - ./postgres/values.yaml
-
   - name: keycloak
-    namespace: default
+    namespace: team-kruschefan
     chart: ./keycloak
 
   - name: user-service
-    namespace: default
+    namespace: team-kruschefan
     chart: ./user-service
 
   - name: form-service
-    namespace: default
+    namespace: team-kruschefan
     chart: ./form-service
 
   - name: template-service
-    namespace: default
+    namespace: team-kruschefan
     chart: ./template-service
 
   - name: api-gateway
-    namespace: default
+    namespace: team-kruschefan
     chart: ./api-gateway
 
   - name: mongodb
-    namespace: default
+    namespace: team-kruschefan
     chart: ./mongodb
 
   - name: langchain-app
-    namespace: default
+    namespace: team-kruschefan
     chart: ./langchain-app
 
   - name: mongo-express
-    namespace: default
+    namespace: team-kruschefan
     chart: ./mongo-express
 
   - name: mongo-schema-loader
-    namespace: default
+    namespace: team-kruschefan
     chart: ./mongo-schema-loader
 
   - name: client
-    namespace: default
+    namespace: team-kruschefan
     chart: ./client
 
   - name: metabase
-    namespace: default
+    namespace: team-kruschefan
     chart: ./metabase
 
   - name: weaviate
-    namespace: default
+    namespace: team-kruschefan
     chart: ./weaviate
 
   - name: prometheus
-    namespace: default
+    namespace: team-kruschefan
     chart: ./prometheus
 
   - name: grafana
-    namespace: default
+    namespace: team-kruschefan
     chart: ./grafana
 
   - name: alertmanager
-    namespace: default
+    namespace: team-kruschefan
     chart: ./alertmanager

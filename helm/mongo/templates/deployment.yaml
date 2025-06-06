@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "user-service.fullname" . }}
+  name: {{ include "mongodb.fullname" . }}
   labels:
-    {{- include "user-service.labels" . | nindent 4 }}
+    {{- include "mongodb.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "user-service.selectorLabels" . | nindent 6 }}
+      {{- include "mongodb.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "user-service.labels" . | nindent 8 }}
+        {{- include "mongodb.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "user-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "mongodb.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -44,11 +44,6 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-            {{- range .Values.env }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
-            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

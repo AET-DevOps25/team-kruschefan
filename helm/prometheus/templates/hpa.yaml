@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "mongo-schema-loader.fullname" . }}
+  name: {{ include "prometheus.fullname" . }}
   labels:
-    {{- include "mongo-schema-loader.labels" . | nindent 4 }}
+    {{- include "prometheus.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "mongo-schema-loader.fullname" . }}
+    name: {{ include "prometheus.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
