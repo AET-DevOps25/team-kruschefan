@@ -1,9 +1,9 @@
 apiVersion: v2
-name: keycloak
-description: A custom config for Bitnami Keycloak
+name: mongodb
+description: MongoDB wrapper chart using Bitnami
 type: application
 version: 0.1.0
 dependencies:
-  - name: keycloak
-    version: 16.1.6
+  - name: mongodb
+    version: 13.18.2
     repository: https://charts.bitnami.com/bitnami

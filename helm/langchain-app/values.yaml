@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/aet-devops25/genai # TODO: push image to registry
+  repository: ghcr.io/cjzbeastmode/genai:latest
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -20,17 +20,3 @@ env:
     valueFromSecret:
       name: project-secrets
       key: huggingface_api_key
-
-serviceAccount:
-  create: true
-  name: ""
-
-# TODO: change ingress config
-ingress:
-  enabled: false
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80

@@ -49,11 +49,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init-keycloak.sql:/docker-entrypoint-initdb.d/init-keycloak.sql:ro
+    networks:
+      - shared-net
 
   # Keycloak, user auth service
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
-    command: start-dev
+    volumes:
+      - ./keycloak/create-realm.sh:/opt/keycloak/create-realm.sh
+    entrypoint: ["/opt/keycloak/create-realm.sh"]
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: postgres
@@ -63,10 +68,12 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HOSTNAME: localhost
-    depends_on:
-      - postgres
     ports:
       - "9001:8080"
+    depends_on:
+      - postgres
+    networks:
+      - shared-net
     
   # MongoDB for the main database
   mongodb:
@@ -154,13 +161,14 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - KEYCLOAK_REALM=FormsAI
-      - KEYCLOAK_SERVER_URL=http://keycloak:8080
-      - KEYCLOAK_CLIENT_ID=admin-cli
-      - KEYCLOAK_USERNAME=admin
-      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_REALM=forms-ai
+      - MONGO_URI=mongodb://root:example@mongodb:27017/?authSource=admin
     depends_on:
       - mongodb
+      - postgres
+      - keycloak
+    networks:
+      - shared-net
 
   form-service:
     build:
@@ -199,3 +207,6 @@ volumes:
   weaviate-data:
   metabase-data:
   grafana-data:
+
+networks:
+  shared-net:

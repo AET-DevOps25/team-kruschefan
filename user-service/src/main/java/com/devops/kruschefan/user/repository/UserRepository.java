@@ -1,14 +1,13 @@
 package com.devops.kruschefan.user.repository;
 
 import com.devops.kruschefan.user.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
     
-    // Custom finder methods based on fields in your User class
     Optional<User> findByUsername(String username);
-    
+
     Optional<User> findByEmail(String email);
 }

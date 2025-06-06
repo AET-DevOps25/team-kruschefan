@@ -391,3 +391,4 @@ sourcelocal.fish
 # Helm
 secret_command.txt
 helm/**/charts/
+publish.sh

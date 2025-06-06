@@ -1,24 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/aet-devops25/client # TODO: push image to registry
+  repository: ghcr.io/cjzbeastmode/client:latest
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
   port: 80
-
-serviceAccount:
-  create: true
-  name: ""
-
-# TODO: change ingress
-ingress:
-  enabled: false
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80

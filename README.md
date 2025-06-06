@@ -16,3 +16,8 @@ Below are the UML diagrams for the project for an overview of the project archit
 
 **Sequence Diagram (for GenAI usage)**
 <img src="/resources/UML/sequence_diagram.png" alt="Sequence Diagram" style="height: 35vw;"/>
+
+
+
+
+!!! chmod
