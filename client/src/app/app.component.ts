@@ -7,7 +7,7 @@ import { Question, QuestionType } from './interfaces/Question';
   selector: 'forms-ai-app-root',
   imports: [ItemListComponent, FormEditorComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'Forms-AI';

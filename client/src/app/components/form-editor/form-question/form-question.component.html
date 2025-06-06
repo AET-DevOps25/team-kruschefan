@@ -2,16 +2,22 @@
   <div class="question-icon sort-handle" cdkDragHandle>
     <img src="assets/img/sorticon.png" alt="Sort Icon" />
   </div>
-  <div>
-    <mat-label>{{ questionLabel() }}</mat-label>
-    <input matInput />
+  <div class="question-input">
+    <mat-form-field appearance="outline">
+      <mat-label>Please enter your {{ questionLabel() }} question</mat-label>
+      <input matInput />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Answer Field</mat-label>
+      <input matInput disabled />
+    </mat-form-field>
   </div>
   <div class="icon-group">
-    <div class="question-icon">
+    <button class="question-icon">
       <img src="assets/img/settings.svg" alt="Settings Icon" />
-    </div>
-    <div class="question-icon">
+    </button>
+    <button matButton="tonal" class="question-icon" (click)="deleteQuestion()">
       <img src="assets/img/delete.svg" alt="Delete Icon" />
-    </div>
+    </button>
   </div>
 </div>

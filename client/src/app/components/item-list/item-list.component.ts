@@ -7,7 +7,7 @@ import { ItemCardComponent } from './item-card/item-card.component';
   selector: 'forms-ai-item-list',
   imports: [ItemCardComponent, DragDropModule],
   templateUrl: './item-list.component.html',
-  styleUrl: './item-list.component.css',
+  styleUrl: './item-list.component.scss',
 })
 export class ItemListComponent {
   public items = QuestionTypeCards;
