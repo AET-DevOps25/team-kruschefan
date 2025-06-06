@@ -1,29 +1,46 @@
-keycloak:
-  image:
-    registry: quay.io
-    repository: keycloak/keycloak
-    tag: 24.0.1
-    pullPolicy: IfNotPresent
+auth:
+  adminUser: admin
+  adminPassword: admin
 
-  production: false
-  proxyAddressForwarding: true
-
+postgresql:
   auth:
-    adminUser: admin
-    existingSecret: project-secrets
-    passwordSecretKey: keycloak_admin_password
+    username: bn_keycloak
+    password: password
+    database: keycloak
+    
+production: false
+proxyAddressForwarding: true
 
-  service:
-    type: ClusterIP
-    ports:
-      http: 8080
+global:
+  security:
+    allowInsecure: true
 
-  database:
-    vendor: postgresql
-    externalDatabase:
-      host: postgres
-      port: 5432
-      user: keycloak
-      database: keycloak
-      existingSecret: project-secrets
-      existingSecretPasswordKey: postgres_password
+test:
+  enabled: false
+
+ingress:
+  enabled: false
+
+image:
+  registry: docker.io
+  repository: bitnami/keycloak
+  tag: latest
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+service:
+  port: 8080
+
+postgresql:
+  primary:
+    persistence:
+      enabled: false

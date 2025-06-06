@@ -1,7 +1,6 @@
-package com.devops.kruschefan.config;
+package com.devops.kruschefan.user.init;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RealmRepresentation;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class RealmInitializer {
 
@@ -19,6 +17,10 @@ public class RealmInitializer {
 
     @Value("${keycloak.realm:${KEYCLOAK_REALM}}")
     private String realm;
+
+    public RealmInitializer(Keycloak keycloak) {
+        this.keycloak = keycloak;
+    }
 
     @PostConstruct
     public void initRealmIfNotExists() {

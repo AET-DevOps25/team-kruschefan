@@ -155,6 +155,10 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYCLOAK_REALM=FormsAI
+      - KEYCLOAK_SERVER_URL=http://keycloak:8080
+      - KEYCLOAK_CLIENT_ID=admin-cli
+      - KEYCLOAK_USERNAME=admin
+      - KEYCLOAK_PASSWORD=admin
     depends_on:
       - mongodb
 

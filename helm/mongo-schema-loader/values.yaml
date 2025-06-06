@@ -1,13 +1,11 @@
 image:
-  repository: ghcr.io/YOUR_USERNAME/mongo-schema-loader  # TODO: push image to registry 
+  repository: ghcr.io/aet-devops25/mongo-schema-loader  # TODO: push image to registry 
   tag: latest
   pullPolicy: IfNotPresent
 
 env:
   - name: MONGO_URI
-    valueFromSecret:
-      name: project-secrets
-      key: mongo_uri
+    value: mongodb://mongo:27017
 
 command: ["python"]
 args: ["schema_loader.py"]

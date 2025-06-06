@@ -6,6 +6,7 @@ image:
   pullPolicy: IfNotPresent
 
 service:
+  enabled: true
   type: ClusterIP
   port: 3000
 
@@ -25,3 +26,17 @@ datasources:
         url: http://prometheus-server.default.svc.cluster.local:9090
         access: proxy
         isDefault: true
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

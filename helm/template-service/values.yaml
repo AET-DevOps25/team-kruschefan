@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/YOUR_USERNAME/template-service
+  repository: ghcr.io/aet-devops25/template-service # TODO: push image to registry
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -16,3 +16,17 @@ env:
     valueFromSecret:
       name: project-secrets
       key: mongo_uri
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

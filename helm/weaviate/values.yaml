@@ -29,3 +29,17 @@ volumes:
   - name: weaviate-data
     persistentVolumeClaim:
       claimName: weaviate-pvc
+
+serviceAccount:
+  create: true
+  name: ""
+
+# TODO: change ingress config
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
