@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'forms-ai-item-card',
   imports: [MatCardModule],
   templateUrl: './item-card.component.html',
-  styleUrl: './item-card.component.css',
+  styleUrl: './item-card.component.scss',
 })
 export class ItemCardComponent {
   label: InputSignal<string> = input.required<string>();

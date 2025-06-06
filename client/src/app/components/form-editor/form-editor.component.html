@@ -1,5 +1,12 @@
 <div class="form-editor">
-  <h2>Form Editor</h2>
+  <h2 class="header">FORMS AI</h2>
+  <div class="ai-text-area">
+    <mat-form-field appearance="outline">
+      <mat-label>Please enter your form description</mat-label>
+      <textarea matInput></textarea>
+    </mat-form-field>
+    <button color="primary">Add Question</button>
+  </div>
   <div
     class="drop-area"
     cdkDropList
@@ -9,9 +16,10 @@
   >
     @for (question of questions(); track $index) {
       <forms-ai-form-question
-        [questionLabel]="question.label"
         cdkDrag
+        [questionLabel]="question.label"
         [cdkDragData]="question"
+        (deleteClicked)="deleteQuestion($index)"
       ></forms-ai-form-question>
     }
   </div>

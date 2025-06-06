@@ -2,13 +2,13 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  padding: 0.5rem;
+  padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
   .question-icon {
     > img {
-      width: 2rem;
-      height: 2rem;
+      width: 1rem;
+      height: 1rem;
     }
     &.sort-handle {
       cursor: grab;
@@ -16,9 +16,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightgrey;
+    background-color: #f4f3f6;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid gray;
+    cursor: pointer;
   }
   .icon-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .question-input {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

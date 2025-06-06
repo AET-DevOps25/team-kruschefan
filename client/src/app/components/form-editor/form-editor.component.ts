@@ -1,8 +1,4 @@
-import {
-  Component,
-  model,
-  ModelSignal,
-} from '@angular/core';
+import { Component, model, ModelSignal } from '@angular/core';
 import { QuestionTypeCard } from '../../interfaces/QuestionTypeCard';
 import {
   CdkDragDrop,
@@ -11,21 +7,24 @@ import {
 } from '@angular/cdk/drag-drop';
 import { FormQuestionComponent } from './form-question/form-question.component';
 import { Question, QuestionType } from '../../interfaces/Question';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'forms-ai-form-editor',
-  imports: [DragDropModule, FormQuestionComponent],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    DragDropModule,
+    FormQuestionComponent,
+  ],
   templateUrl: './form-editor.component.html',
-  styleUrl: './form-editor.component.css',
+  styleUrl: './form-editor.component.scss',
 })
 export class FormEditorComponent {
   public questions: ModelSignal<Question[]> = model.required<Question[]>();
   protected onDrop(
-    event: CdkDragDrop<
-      Question[],
-      Question[] | QuestionTypeCard[],
-      Question | QuestionTypeCard
-    >,
+    event: CdkDragDrop<Question[], Question[], Question | QuestionTypeCard>,
   ): void {
     if (event.previousContainer.id === event.container.id) {
       moveItemInArray(
@@ -42,5 +41,12 @@ export class FormEditorComponent {
         return [...currentQuestions, newQuestion];
       });
     }
+  }
+
+  protected deleteQuestion(index: number): void {
+    this.questions.update((currentQuestions) => {
+      currentQuestions.splice(index, 1);
+      return currentQuestions;
+    });
   }
 }
