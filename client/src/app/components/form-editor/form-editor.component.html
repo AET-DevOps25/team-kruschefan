@@ -1,12 +1,18 @@
-<div class="drop-area">
-    <h2>Form Editor</h2>
-    <p>Drag and drop items here</p>
-    <div
-      class="drop-area"
-      cdkDropList
-      id="formEditor"
-      (cdkDropListDropped)="onDrop($event)"
-    >
-      <p>Drop items here</p>
-    </div>
+<div class="form-editor">
+  <h2>Form Editor</h2>
+  <div
+    class="drop-area"
+    cdkDropList
+    id="formEditor"
+    [cdkDropListData]="questions()"
+    (cdkDropListDropped)="onDrop($event)"
+  >
+    @for (question of questions(); track $index) {
+      <forms-ai-form-question
+        [questionLabel]="question.label"
+        cdkDrag
+        [cdkDragData]="question"
+      ></forms-ai-form-question>
+    }
+  </div>
 </div>

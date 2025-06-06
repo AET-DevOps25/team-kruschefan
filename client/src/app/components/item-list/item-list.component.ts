@@ -1,5 +1,5 @@
-import { Component, input, InputSignal } from '@angular/core';
-import {CdkDragDrop, DragDropModule} from '@angular/cdk/drag-drop';
+import { Component } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { QuestionTypeCards } from '../../configs/question-type-cards.config';
 import { ItemCardComponent } from './item-card/item-card.component';
 

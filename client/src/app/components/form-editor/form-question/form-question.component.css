@@ -1,0 +1,26 @@
+.form-question {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  .question-icon {
+    > img {
+      width: 2rem;
+      height: 2rem;
+    }
+    &.sort-handle {
+      cursor: grab;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightgrey;
+  }
+  .icon-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
