@@ -21,11 +21,5 @@ export const QuestionTypeCards: QuestionTypeCard[] = [
     imgSrc: '/assets/img/multiple_choice.svg',
   },
   { id: '7', label: QuestionType.DROPDOWN, imgSrc: '/assets/img/dropdown.svg' },
-  { id: '8', label: QuestionType.FILE, imgSrc: '/assets/img/file_upload.svg' },
-  { id: '9', label: QuestionType.COMMENT, imgSrc: '/assets/img/comment.svg' },
-  {
-    id: '10',
-    label: QuestionType.CHECKBOX,
-    imgSrc: '/assets/img/checkbox.svg',
-  },
+  { id: '8', label: QuestionType.COMMENT, imgSrc: '/assets/img/comment.svg' },
 ];
