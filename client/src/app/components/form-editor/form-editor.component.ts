@@ -40,7 +40,13 @@ export class FormEditorComponent {
           label: event.item.data.label,
           type: event.item.data.label as QuestionType,
         };
-        if ([QuestionType.SINGLE_CHOICE, QuestionType.MULTIPLE_CHOICE, QuestionType.DROPDOWN].includes(event.item.data.label as QuestionType)) {
+        if (
+          [
+            QuestionType.SINGLE_CHOICE,
+            QuestionType.MULTIPLE_CHOICE,
+            QuestionType.DROPDOWN,
+          ].includes(event.item.data.label as QuestionType)
+        ) {
           newQuestion = {
             ...newQuestion,
             options: ['Option 1', 'Option 2', 'Option 3'],

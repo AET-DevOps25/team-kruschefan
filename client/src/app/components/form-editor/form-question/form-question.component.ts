@@ -40,5 +40,4 @@ export class FormQuestionComponent {
   protected deleteQuestion(): void {
     this.deleteClicked.emit();
   }
-
 }
