@@ -23,33 +23,13 @@ releases:
     namespace: team-kruschefan
     chart: ./api-gateway
 
-  - name: mongodb
-    namespace: team-kruschefan
-    chart: ./mongodb
-
   - name: langchain-app
     namespace: team-kruschefan
     chart: ./langchain-app
 
-  - name: mongo-express
-    namespace: team-kruschefan
-    chart: ./mongo-express
-
-  - name: mongo-schema-loader
-    namespace: team-kruschefan
-    chart: ./mongo-schema-loader
-
   - name: client
     namespace: team-kruschefan
     chart: ./client
-
-  - name: metabase
-    namespace: team-kruschefan
-    chart: ./metabase
-
-  - name: weaviate
-    namespace: team-kruschefan
-    chart: ./weaviate
 
   - name: prometheus
     namespace: team-kruschefan
@@ -62,3 +42,7 @@ releases:
   - name: alertmanager
     namespace: team-kruschefan
     chart: ./alertmanager
+
+  - name: postgres
+    namespace: team-kruschefan
+    chart: ./postgres

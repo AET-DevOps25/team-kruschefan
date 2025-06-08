@@ -15,10 +15,9 @@ public class KeycloakConfig {
         return KeycloakBuilder.builder()
                 .serverUrl("http://keycloak:8080")
                 .realm("forms-ai")
-                .clientId("admin-cli")
-                .username("keycloak")
-                .password("keycloak-pw")
-                .grantType(OAuth2Constants.PASSWORD)
+                .clientId("user-service")
+                .clientSecret("user-service-pw")  
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .build();
     }
 }

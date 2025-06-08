@@ -1,0 +1,5 @@
+apiVersion: v2
+name: postgres
+version: 0.1.0
+description: A PostgreSQL Helm chart for the Keycloak database
+type: application

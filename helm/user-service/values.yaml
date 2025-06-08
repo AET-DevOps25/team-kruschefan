@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/aet-devops25/user-service # TODO: push image to registry
+  repository: ghcr.io/cjzbeastmode/user-service
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP 
@@ -14,16 +14,15 @@ env:
     value: docker
   - name: KEYCLOAK_REALM
     value: master
-  - name: KEYCLOAK_SERVER_URL
-    value: http://keycloak:80
   - name: KEYCLOAK_CLIENT_ID
     value: admin-cli
   - name: KEYCLOAK_USERNAME
     value: admin
   - name: KEYCLOAK_PASSWORD
     value: admin
-  - name: SPRING_DATA_MONGODB_URI
-    value: mongodb://root:password@mongo:27017/admin
+  - name: KEYCLOAK_URL
+    value: http://keycloak:9001
+
 
 serviceAccount:
   create: true
@@ -38,3 +37,6 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+
+imagePullSecrets:
+  - name: ghcr-cred

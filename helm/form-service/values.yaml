@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/aet-devops25/form-service # TODO: push image to registry
+  repository: ghcr.io/cjzbeastmode/form-service
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
@@ -30,3 +30,6 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+
+imagePullSecrets:
+  - name: ghcr-cred

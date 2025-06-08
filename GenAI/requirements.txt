@@ -1,13 +1,7 @@
 fastapi
 uvicorn
-weaviate-client>=3.26.7,<4.0.0
 langchain==0.2.1
 langchain-community>=0.2.1
 langchain-huggingface>=0.0.1
 llama-cpp-python==0.2.11
-huggingface_hub[hf_xet]
-sentence-transformers
-transformers
 pydantic
-typing
-
