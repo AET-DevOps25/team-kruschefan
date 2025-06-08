@@ -1,15 +1,13 @@
 export interface Question {
   label: string;
   type: QuestionType;
+  options?: string[];
 }
 
 export enum QuestionType {
   TEXT = 'Text',
-  RADIO = 'Radio',
-  CHECKBOX = 'Checkbox',
   DATE = 'Date',
   NUMBER = 'Number',
-  FILE = 'File',
   MULTIPLE_CHOICE = 'Multiple Choice',
   COMMENT = 'Comment',
   TEXT_BOX = 'Text Box',

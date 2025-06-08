@@ -1,23 +1,76 @@
 <div class="form-question">
-  <div class="question-icon sort-handle" cdkDragHandle>
-    <img src="assets/img/sorticon.png" alt="Sort Icon" />
-  </div>
+  <button class="question-icon sort-handle" cdkDragHandle>
+    <mat-icon fontIcon="menu"></mat-icon>
+  </button>
   <div class="question-input">
     <mat-form-field appearance="outline">
-      <mat-label>Please enter your {{ questionLabel() }} question</mat-label>
+      <mat-label>{{
+        question().label === Types.COMMENT
+          ? 'Please enter your comment'
+          : 'Please enter your ' + question().label + ' question'
+      }}</mat-label>
       <input matInput />
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Answer Field</mat-label>
-      <input matInput disabled />
-    </mat-form-field>
+    @switch (question().type) {
+      @case (Types.TEXT) {
+        <mat-form-field appearance="fill">
+          <input matInput />
+        </mat-form-field>
+      }
+      @case (Types.NUMBER) {
+        <mat-form-field appearance="fill">
+          <input matInput type="number" />
+        </mat-form-field>
+      }
+      @case (Types.SINGLE_CHOICE) {
+        <mat-radio-group>
+          @for (option of question().options; track $index) {
+            <mat-radio-button>{{ option }}</mat-radio-button>
+          }
+        </mat-radio-group>
+      }
+      @case (Types.MULTIPLE_CHOICE) {
+        <ul>
+          @for (option of question().options; track $index) {
+            <li>
+              <mat-checkbox>{{ option }}</mat-checkbox>
+            </li>
+          }
+        </ul>
+      }
+      @case (Types.DATE) {
+        <mat-form-field appearance="fill">
+          <input matInput [matDatepicker]="picker" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      }
+      @case (Types.TEXT_BOX) {
+        <mat-form-field appearance="fill">
+          <textarea matInput></textarea>
+        </mat-form-field>
+      }
+      @case (Types.DROPDOWN) {
+        <mat-form-field appearance="fill">
+          <mat-select>
+            @for (option of question().options; track $index) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      @case (Types.COMMENT) {}
+    }
   </div>
   <div class="icon-group">
     <button class="question-icon">
-      <img src="assets/img/settings.svg" alt="Settings Icon" />
+      <mat-icon fontIcon="settings"></mat-icon>
     </button>
-    <button matButton="tonal" class="question-icon" (click)="deleteQuestion()">
-      <img src="assets/img/delete.svg" alt="Delete Icon" />
+    <button class="question-icon delete-icon" (click)="deleteQuestion()">
+      <mat-icon fontIcon="delete"></mat-icon>
     </button>
   </div>
 </div>

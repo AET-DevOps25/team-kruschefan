@@ -9,12 +9,14 @@ import { FormQuestionComponent } from './form-question/form-question.component';
 import { Question, QuestionType } from '../../interfaces/Question';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'forms-ai-form-editor',
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     DragDropModule,
     FormQuestionComponent,
   ],
@@ -34,11 +36,19 @@ export class FormEditorComponent {
       );
     } else {
       this.questions.update((currentQuestions) => {
-        const newQuestion: Question = {
+        let newQuestion: Question = {
           label: event.item.data.label,
           type: event.item.data.label as QuestionType,
         };
-        return [...currentQuestions, newQuestion];
+        if ([QuestionType.SINGLE_CHOICE, QuestionType.MULTIPLE_CHOICE, QuestionType.DROPDOWN].includes(event.item.data.label as QuestionType)) {
+          newQuestion = {
+            ...newQuestion,
+            options: ['Option 1', 'Option 2', 'Option 3'],
+          };
+        }
+        const index = event.currentIndex;
+        currentQuestions.splice(index, 0, newQuestion);
+        return currentQuestions;
       });
     }
   }
