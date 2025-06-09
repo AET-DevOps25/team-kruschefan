@@ -16,9 +16,11 @@ persistence:
   size: 1Gi
 
 postgres:
-  user: postgres
-  password: postgres-pw
-  db: forms-ai
+  existingSecret: postgresql-secrets
+  secretKeys:
+    user: POSTGRES_USER
+    password: POSTGRES_PASSWORD
+    db: POSTGRES_DB
 
 serviceAccount:
   create: true

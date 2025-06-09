@@ -12,12 +12,10 @@ service:
 env:
   - name: PYTHONUNBUFFERED
     value: "1"
-  - name: MONGO_URI
+  - name: HUGGINGFACE_API_KEY
     valueFromSecret:
       name: project-secrets
-      key: mongo_uri
-  - name: HUGGINGFACE_API_KEY
-    value: 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
+      key: HUGGINGFACE_API_KEY
 
 serviceAccount:
   create: true

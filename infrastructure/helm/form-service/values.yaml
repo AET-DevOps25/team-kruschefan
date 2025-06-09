@@ -12,10 +12,7 @@ service:
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: docker
-  - name: MONGO_URI
-    valueFromSecret:
-      name: project-secrets
-      key: mongo_uri
+
 
 serviceAccount:
   create: true
