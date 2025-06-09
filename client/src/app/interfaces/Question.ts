@@ -2,6 +2,9 @@ export interface Question {
   label: string;
   type: QuestionType;
   options?: string[];
+  defaultValue?: string | number | Date;
+  placeholder?: string;
+  required?: boolean;
 }
 
 export enum QuestionType {
