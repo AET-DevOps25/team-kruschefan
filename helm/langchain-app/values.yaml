@@ -16,10 +16,8 @@ env:
     valueFromSecret:
       name: project-secrets
       key: mongo_uri
-  - name: HUGGINGFACEHUB_API_TOKEN
-    valueFromSecret:
-      name: project-secrets
-      key: huggingface_api_key
+  - name: HUGGINGFACE_API_KEY
+    value: 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
 
 serviceAccount:
   create: true

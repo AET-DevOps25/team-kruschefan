@@ -15,13 +15,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt -v
 
-# Download the mistral model
-RUN mkdir -p /app/llm && \
-    wget -O /app/llm/mistral-7b-instruct-v0.1.Q2_K.gguf \
-    https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q2_K.gguf?download=true
+COPY . . 
 
-COPY . .
+RUN rm -rf /root/.cache
 
-EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
