@@ -15,12 +15,12 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-postgres:
+postgresql:
   existingSecret: postgresql-secrets
   secretKeys:
-    user: POSTGRES_USER
+    username: POSTGRES_USER
     password: POSTGRES_PASSWORD
-    db: POSTGRES_DB
+    database: POSTGRES_DB
 
 serviceAccount:
   create: true
