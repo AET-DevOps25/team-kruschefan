@@ -4,22 +4,21 @@ WORKDIR /app
 
 # System dependencies for llama-cpp
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     build-essential \
     cmake \
     libopenblas-dev \
     wget \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Download the mistral model
-RUN mkdir -p /app/llm && \
-    wget -O /app/llm/mistral-7b-instruct-v0.1.Q2_K.gguf \
-    https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q2_K.gguf?download=true
-
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt -v
 
-COPY . .
+COPY . . 
 
-EXPOSE 8000
+RUN rm -rf /root/.cache
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]

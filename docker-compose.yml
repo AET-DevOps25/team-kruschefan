@@ -21,78 +21,44 @@ services:
       - ./GenAI/llm:/models
     environment:
       - PYTHONUNBUFFERED=1
-      - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN}
+      - HUGGINGFACEHUB_API_KEY=${HUGGINGFACEHUB_API_KEY}
       - MONGO_URI=${MONGO_URI}
-
-  # Weaviate for RAG vector database
-  weaviate:
-    image: semitechnologies/weaviate:1.24.3
-    container_name: weaviate
-    ports:
-      - "9000:8080"
-    environment:
-      QUERY_DEFAULTS_LIMIT: 25
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: 'none'
-      ENABLE_MODULES: ''
-    volumes:
-      - weaviate-data:/var/lib/weaviate
-    restart: unless-stopped
 
   # Postgres for keycloak
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_DB: keycloak
+      POSTGRES_DB: forms-ai
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
+    networks:
+      - shared-net
 
   # Keycloak, user auth service
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
-    command: start-dev
+    volumes:
+      - ./keycloak/create-realm.sh:/opt/keycloak/create-realm.sh
+    entrypoint: ["/opt/keycloak/create-realm.sh"]
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: postgres
-      KC_DB_URL_DATABASE: keycloak
+      KC_DB_URL_DATABASE: forms-ai
       KC_DB_USERNAME: ${KC_DB_USERNAME}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HOSTNAME: localhost
-    depends_on:
-      - postgres
     ports:
       - "9001:8080"
-    
-  # MongoDB for the main database
-  mongodb:
-    image: mongo:7
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-      - ./mongo-init:/docker-entrypoint-initdb.d
-    environment:
-      MONGO_INITDB_DATABASE: mongodb
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    depends_on:
+      - postgres
+    networks:
+      - shared-net  
   
-  # Metabase for data dashboards for users
-  metabase:
-    image: metabase/metabase:latest
-    container_name: metabase
-    ports:
-      - "3000:3000"
-    environment:
-      MB_DB_FILE: /metabase-data/metabase.db
-    volumes:
-      - metabase-data:/metabase-data
-
   # Prometheus for metrics collection
   prometheus:
     image: prom/prometheus:latest
@@ -101,8 +67,6 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    depends_on:
-      - langchain-app
 
   # Alertmanager for alert sending
   alertmanager:
@@ -122,30 +86,6 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
 
-  # Mongo-express for MongoDB GUI
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    ports:
-      - "8084:8081"
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
-
-  # Mongo-schema-loader for mongo db definitions
-  mongo-schema-loader:
-    build:
-      context: ./mongo-schema-loader
-    depends_on:
-      - mongodb
-    environment:
-      MONGO_URI: mongodb://root:example@mongodb:27017
-    command: ["python", "schema_loader.py"]
-
   user-service:
     build:
       context: .
@@ -154,13 +94,12 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - KEYCLOAK_REALM=FormsAI
-      - KEYCLOAK_SERVER_URL=http://keycloak:8080
-      - KEYCLOAK_CLIENT_ID=admin-cli
-      - KEYCLOAK_USERNAME=admin
-      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_REALM=forms-ai
     depends_on:
-      - mongodb
+      - postgres
+      - keycloak
+    networks:
+      - shared-net
 
   form-service:
     build:
@@ -192,10 +131,11 @@ services:
       - user-service
       - form-service
       - template-service
+      - langchain-app
 
 volumes:
   postgres-data:
-  mongo-data:
-  weaviate-data:
-  metabase-data:
   grafana-data:
+
+networks:
+  shared-net:

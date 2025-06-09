@@ -1,0 +1,53 @@
+admin:
+  username: keycloak
+  password: keycloak_pw
+
+db:
+  username: postgres
+  password: postgres_pw
+  database: keycloak
+
+postgresql:
+  auth:
+    username: postgres
+    password: postgres_pw
+    database: forms-ai
+  primary:
+    persistence:
+      enabled: false
+    
+production: false
+proxyAddressForwarding: true
+
+global:
+  security:
+    allowInsecure: true
+
+test:
+  enabled: false
+
+ingress:
+  enabled: false
+
+image:
+  registry: docker.io
+  repository: bitnami/keycloak
+  tag: latest
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+service:
+  port: 8080
+
+envFrom:
+  - secretRef:
+      name: keycloak-secret
