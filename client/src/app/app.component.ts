@@ -12,6 +12,6 @@ import { Question, QuestionType } from './interfaces/Question';
 export class AppComponent {
   title = 'Forms-AI';
   questions: WritableSignal<Question[]> = signal<Question[]>([
-    { label: 'string', type: QuestionType.TEXT },
+    { label: '', type: QuestionType.TEXT },
   ]);
 }
