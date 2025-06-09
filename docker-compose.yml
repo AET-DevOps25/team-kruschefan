@@ -10,19 +10,19 @@ services:
       - "4200:80"
 
   # Langchain GenAI service
-  # langchain-app:
-  #   build:
-  #     context: ./GenAI
-  #   ports:
-  #     - "8000:8000"
-  #   working_dir: /GenAI
-  #   volumes:
-  #     - ./GenAI:/GenAI
-  #     - ./GenAI/llm:/models
-  #   environment:
-  #     - PYTHONUNBUFFERED=1
-  #     - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN}
-  #     - MONGO_URI=${MONGO_URI}
+  langchain-app:
+    build:
+      context: ./GenAI
+    ports:
+      - "8000:8000"
+    working_dir: /GenAI
+    volumes:
+      - ./GenAI:/GenAI
+      - ./GenAI/llm:/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HUGGINGFACEHUB_API_KEY=${HUGGINGFACEHUB_API_KEY}
+      - MONGO_URI=${MONGO_URI}
 
   # Postgres for keycloak
   postgres:
@@ -131,6 +131,7 @@ services:
       - user-service
       - form-service
       - template-service
+      - langchain-app
 
 volumes:
   postgres-data:

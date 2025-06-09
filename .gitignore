@@ -389,6 +389,7 @@ GenAI/llm/*
 sourcelocal.fish
 
 # Helm
-secret_command.txt
-helm/**/charts/
+infrastructure/helm/secret_command.txt
+infrastructure/helm/**/charts/
 publish.sh
+infrastructure/helm/cmds.txt

@@ -9,7 +9,7 @@ echo "Waiting for Keycloak to become ready..."
 until /opt/keycloak/bin/kcadm.sh config credentials \
   --server http://localhost:8080 \
   --realm master \
-  --user "$KEYCLOAK_ADMIN" \
+  --user "$KEYCLOAK_ADMIN_USER" \
   --password "$KEYCLOAK_ADMIN_PASSWORD"; do
     echo "Keycloak not ready yet, retrying..."
     sleep 5
@@ -29,14 +29,14 @@ fi
 if ! /opt/keycloak/bin/kcadm.sh get clients -r forms-ai | grep '"clientId" : "user-service"' > /dev/null; then
   echo "Creating client 'user-service'..."
   /opt/keycloak/bin/kcadm.sh create clients -r forms-ai \
-    -s clientId=user-service \
+    -s clientId=$KEYCLOAK_FORMSAI_USER \
     -s name="User Service" \
     -s enabled=true \
     -s serviceAccountsEnabled=true \
     -s directAccessGrantsEnabled=true \
     -s publicClient=false \
     -s protocol=openid-connect \
-    -s secret="user-service-pw"
+    -s secret=$KEYCLOAK_FORMSAI_PASSWORD
 fi
 
 # Create realm role 'spring' if it doesn't exist
