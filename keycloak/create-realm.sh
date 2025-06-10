@@ -9,7 +9,7 @@ echo "Waiting for Keycloak to become ready..."
 until /opt/keycloak/bin/kcadm.sh config credentials \
   --server http://localhost:8080 \
   --realm master \
-  --user "$KEYCLOAK_ADMIN_USER" \
+  --user "$KEYCLOAK_ADMIN" \
   --password "$KEYCLOAK_ADMIN_PASSWORD"; do
     echo "Keycloak not ready yet, retrying..."
     sleep 5
@@ -46,22 +46,22 @@ if ! /opt/keycloak/bin/kcadm.sh get roles -r forms-ai | grep '"name" : "spring"'
 fi
 
 # Assign roles to service account of user-service
-SERVICE_ACCOUNT_ID=$( /opt/keycloak/bin/kcadm.sh get users -r forms-ai -q username=service-account-user-service --fields id --format csv | tail -n1 | tr -d '\r"' )
+SERVICE_ACCOUNT_ID=$( /opt/keycloak/bin/kcadm.sh get users -r forms-ai -q username=$KEYCLOAK_FORMSAI_USER --fields id --format csv | tail -n1 | tr -d '\r"' )
 
 # Assign realm role 'spring'
-/opt/keycloak/bin/kcadm.sh add-roles -r forms-ai --uusername service-account-user-service --rolename spring
+/opt/keycloak/bin/kcadm.sh add-roles -r forms-ai --uusername service-account-$KEYCLOAK_FORMSAI_USER --rolename spring
 
 # Get the ID of the realm-management client
 REALM_MGMT_ID=$(/opt/keycloak/bin/kcadm.sh get clients -r forms-ai -q clientId=realm-management --fields id --format csv | tail -n1 | tr -d '\r"')
 
 # Assign view-users and manage-users to service account
 /opt/keycloak/bin/kcadm.sh add-roles -r forms-ai \
-  --uusername service-account-user-service \
+  --uusername service-account-$KEYCLOAK_FORMSAI_USER \
   --cclientid realm-management \
   --rolename view-users
 
 /opt/keycloak/bin/kcadm.sh add-roles -r forms-ai \
-  --uusername service-account-user-service \
+  --uusername service-account-$KEYCLOAK_FORMSAI_USER \
   --cclientid realm-management \
   --rolename manage-users
 

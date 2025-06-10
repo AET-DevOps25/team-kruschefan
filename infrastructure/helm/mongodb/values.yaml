@@ -1,0 +1,16 @@
+auth:
+  enabled: true
+  rootUser: mongo
+  rootPassword: mongo-secret
+  username: mongo-user
+  password: mongo-user-secret
+  database: forms-ai
+
+architecture: standalone
+
+persistence:
+  enabled: true
+  size: 8Gi
+
+service:
+  type: ClusterIP
