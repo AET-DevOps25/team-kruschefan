@@ -21,8 +21,7 @@ services:
       - ./GenAI/llm:/models
     environment:
       - PYTHONUNBUFFERED=1
-      - HUGGINGFACEHUB_API_KEY=${HUGGINGFACEHUB_API_KEY}
-      - MONGO_URI=${MONGO_URI}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
 
   # Postgres for keycloak
   postgres:
@@ -49,7 +48,7 @@ services:
       KC_DB_URL_DATABASE: forms-ai
       KC_DB_USERNAME: ${KC_DB_USERNAME}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN} # DO NOT CHANGE!!!
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HOSTNAME: localhost
     ports:
@@ -98,6 +97,7 @@ services:
     depends_on:
       - postgres
       - keycloak
+      - mongo
     networks:
       - shared-net
 
@@ -118,6 +118,8 @@ services:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mongo
 
   api-gateway:
     build:
@@ -132,10 +134,26 @@ services:
       - form-service
       - template-service
       - langchain-app
+      - mongo
+  
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - shared-net
 
 volumes:
   postgres-data:
   grafana-data:
+  mongo-data:
+
 
 networks:
   shared-net:

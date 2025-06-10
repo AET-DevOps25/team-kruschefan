@@ -15,10 +15,12 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-postgres:
-  user: postgres
-  password: postgres-pw
-  db: forms-ai
+postgresql:
+  existingSecret: postgresql-secrets
+  secretKeys:
+    username: POSTGRES_USER
+    password: POSTGRES_PASSWORD
+    database: POSTGRES_DB
 
 serviceAccount:
   create: true

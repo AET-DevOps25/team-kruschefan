@@ -1,17 +1,23 @@
 admin:
-  username: keycloak
-  password: keycloak_pw
+  existingSecret: keycloak-secrets
+  secretKeys:
+    username: username
+    password: password
 
 db:
-  username: postgres
-  password: postgres_pw
-  database: keycloak
+  existingSecret: postgresql-secrets
+  secretKeys:
+    username: POSTGRES_USER
+    password: POSTGRES_PASSWORD
+    database: POSTGRES_DB
 
 postgresql:
   auth:
-    username: postgres
-    password: postgres_pw
-    database: forms-ai
+    existingSecret: postgresql-secrets
+    secretKeys:
+      username: POSTGRES_USER
+      password: POSTGRES_PASSWORD
+      database: POSTGRES_DB
   primary:
     persistence:
       enabled: false
@@ -47,7 +53,3 @@ autoscaling:
 
 service:
   port: 8080
-
-envFrom:
-  - secretRef:
-      name: keycloak-secret

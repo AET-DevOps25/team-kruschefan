@@ -20,5 +20,5 @@ COPY . .
 RUN rm -rf /root/.cache
 
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
