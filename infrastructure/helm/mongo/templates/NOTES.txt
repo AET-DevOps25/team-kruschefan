@@ -1,0 +1,5 @@
+MongoDB has been deployed.
+
+You can connect to it using:
+
+  mongo --host <pod-name> -u myuser -p mypassword --authenticationDatabase mydatabase

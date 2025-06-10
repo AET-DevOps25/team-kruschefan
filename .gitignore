@@ -385,8 +385,9 @@ GenAI/llm/*
 # Terraform
 *.tfvars
 
-# Fish
+# source
 sourcelocal.fish
+sourcelocal.sh
 
 # Helm
 infrastructure/helm/secret_command.txt
