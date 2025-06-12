@@ -25,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class FormEditorComponent {
   public questions: ModelSignal<Question[]> = model.required<Question[]>();
+
   protected onDrop(
     event: CdkDragDrop<Question[], Question[], Question | QuestionTypeCard>,
   ): void {
@@ -37,7 +38,7 @@ export class FormEditorComponent {
     } else {
       this.questions.update((currentQuestions) => {
         let newQuestion: Question = {
-          label: event.item.data.label,
+          label: '',
           type: event.item.data.label as QuestionType,
         };
         if (

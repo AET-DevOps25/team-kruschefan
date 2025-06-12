@@ -5,21 +5,32 @@
   <div class="question-input">
     <mat-form-field appearance="outline">
       <mat-label>{{
-        question().label === Types.COMMENT
-          ? 'Please enter your comment'
-          : 'Please enter your ' + question().label + ' question'
+        question().type === Types.COMMENT ? 'Comment' : 'Question'
       }}</mat-label>
-      <input matInput />
+      <input
+        matInput
+        [(ngModel)]="question().label"
+        [required]="question().required ?? false"
+      />
     </mat-form-field>
     @switch (question().type) {
       @case (Types.TEXT) {
         <mat-form-field appearance="fill">
-          <input matInput />
+          <input
+            matInput
+            [(ngModel)]="question().defaultValue"
+            [placeholder]="question().placeholder ?? ''"
+          />
         </mat-form-field>
       }
       @case (Types.NUMBER) {
         <mat-form-field appearance="fill">
-          <input matInput type="number" />
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="question().defaultValue"
+            [placeholder]="question().placeholder ?? ''"
+          />
         </mat-form-field>
       }
       @case (Types.SINGLE_CHOICE) {
@@ -40,7 +51,12 @@
       }
       @case (Types.DATE) {
         <mat-form-field appearance="fill">
-          <input matInput [matDatepicker]="picker" />
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="question().defaultValue"
+            [placeholder]="question().placeholder ?? ''"
+          />
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"
@@ -50,7 +66,11 @@
       }
       @case (Types.TEXT_BOX) {
         <mat-form-field appearance="fill">
-          <textarea matInput></textarea>
+          <textarea
+            matInput
+            [(ngModel)]="question().defaultValue"
+            [placeholder]="question().placeholder ?? ''"
+          ></textarea>
         </mat-form-field>
       }
       @case (Types.DROPDOWN) {
@@ -66,9 +86,11 @@
     }
   </div>
   <div class="icon-group">
-    <button class="question-icon">
-      <mat-icon fontIcon="settings"></mat-icon>
-    </button>
+    @if (question().type !== Types.COMMENT) {
+      <button class="question-icon" (click)="openPropertiesEditor()">
+        <mat-icon fontIcon="settings"></mat-icon>
+      </button>
+    }
     <button class="question-icon delete-icon" (click)="deleteQuestion()">
       <mat-icon fontIcon="delete"></mat-icon>
     </button>

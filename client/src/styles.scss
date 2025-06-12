@@ -22,3 +22,7 @@ mat-form-field {
   --mat-form-field-container-vertical-padding: 4px;
   --mat-form-field-container-height: 36px;
 }
+
+button.mdc-icon-button {
+  --mdc-icon-button-state-layer-size: 30px;
+}

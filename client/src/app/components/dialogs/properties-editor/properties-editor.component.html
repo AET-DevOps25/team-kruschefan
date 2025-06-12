@@ -1,0 +1,105 @@
+<h2 mat-dialog-title>Question Properties</h2>
+<mat-dialog-content>
+  <div class="properties-container">
+    <div class="col-container">
+      <span>Question text</span>
+      <mat-form-field>
+        <input matInput [(ngModel)]="question.label" />
+      </mat-form-field>
+    </div>
+    @if (
+      [Types.TEXT, Types.NUMBER, Types.DATE, Types.TEXT_BOX].includes(
+        question.type
+      )
+    ) {
+      <div class="col-container">
+        <span>Default value</span>
+        @switch (question.type) {
+          @case (Types.TEXT) {
+            <mat-form-field>
+              <input matInput [(ngModel)]="question.defaultValue" />
+            </mat-form-field>
+          }
+          @case (Types.NUMBER) {
+            <mat-form-field>
+              <input
+                matInput
+                type="number"
+                [(ngModel)]="question.defaultValue"
+              />
+            </mat-form-field>
+          }
+          @case (Types.DATE) {
+            <mat-form-field>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                [(ngModel)]="question.defaultValue"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          }
+          @case (Types.TEXT_BOX) {
+            <mat-form-field>
+              <textarea matInput [(ngModel)]="question.defaultValue"></textarea>
+            </mat-form-field>
+          }
+        }
+      </div>
+    }
+    @if (
+      [Types.TEXT, Types.NUMBER, Types.DATE, Types.TEXT_BOX].includes(
+        question.type
+      )
+    ) {
+      <div class="col-container">
+        <span>Placeholder</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="question.placeholder" />
+        </mat-form-field>
+      </div>
+    }
+    <div class="row-container">
+      <span>Is the question required?</span>
+      <mat-checkbox [(ngModel)]="question.required"> </mat-checkbox>
+    </div>
+    @if (
+      [Types.SINGLE_CHOICE, Types.MULTIPLE_CHOICE, Types.DROPDOWN].includes(
+        question.type
+      )
+    ) {
+      <div class="col-container">
+        <div class="row-container">
+          <span>Options</span>
+          <button mat-icon-button (click)="addOption()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <div class="col-container">
+          @for (option of question.options; track $index) {
+            <div class="row-container">
+              <mat-form-field>
+                <input
+                  matInput
+                  [ngModel]="option"
+                  (ngModelChange)="updateOption($index, $event)"
+                />
+              </mat-form-field>
+              <button mat-icon-button (click)="removeOption($index)">
+                <mat-icon style="color: red">delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [mat-dialog-close]="question" cdkFocusInitial>Save</button>
+</mat-dialog-actions>
