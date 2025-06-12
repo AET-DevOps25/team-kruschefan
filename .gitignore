@@ -385,11 +385,13 @@ GenAI/llm/*
 # Terraform
 *.tfvars
 
-# Fish
+# source
 sourcelocal.fish
+sourcelocal.sh
 
 # Helm
 infrastructure/helm/secret_command.txt
 infrastructure/helm/**/charts/
 publish.sh
 infrastructure/helm/cmds.txt
+infrastructure/helm/test-pod.yaml

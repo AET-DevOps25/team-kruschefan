@@ -1,23 +1,17 @@
 admin:
-  existingSecret: keycloak-secrets
-  secretKeys:
-    username: username
-    password: password
+  username: keycloak
+  password: keycloak-secret
 
 db:
-  existingSecret: postgresql-secrets
-  secretKeys:
-    username: POSTGRES_USER
-    password: POSTGRES_PASSWORD
-    database: POSTGRES_DB
+  username: postgres
+  password: postgres-secret
+  database: forms-ai
 
 postgresql:
   auth:
-    existingSecret: postgresql-secrets
-    secretKeys:
-      username: POSTGRES_USER
-      password: POSTGRES_PASSWORD
-      database: POSTGRES_DB
+    username: postgres
+    password: postgres-secret
+    database: forms-ai
   primary:
     persistence:
       enabled: false
@@ -53,3 +47,17 @@ autoscaling:
 
 service:
   port: 8080
+
+envFrom:
+  - secretRef:
+      name: keycloak-secret
+
+extraEnvVars:
+  - name: KC_DB
+    value: 'forms-ai'
+  - name: KC_DB_URL
+    value: 'jdbc:postgresql://postgres:5432/forms-ai'
+  
+podLabels:
+  app.kubernetes.io/instance: keycloak
+  app.kubernetes.io/name: keycloak

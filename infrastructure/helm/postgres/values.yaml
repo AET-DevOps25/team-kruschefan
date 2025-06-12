@@ -15,15 +15,13 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-postgresql:
-  existingSecret: postgresql-secrets
-  secretKeys:
-    username: POSTGRES_USER
-    password: POSTGRES_PASSWORD
-    database: POSTGRES_DB
+postgres:
+  user: postgres
+  password: postgres-secret
+  db: forms-ai
 
 serviceAccount:
-  create: true
+  create: false
   name: "postgres"
 
 # TODO: change ingress config
