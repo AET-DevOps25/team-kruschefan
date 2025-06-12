@@ -1,16 +1,16 @@
 admin:
   username: keycloak
-  password: keycloak-secret
+  password: keycloak_pw
 
 db:
   username: postgres
-  password: postgres-secret
-  database: forms-ai
+  password: postgres_pw
+  database: keycloak
 
 postgresql:
   auth:
     username: postgres
-    password: postgres-secret
+    password: postgres_pw
     database: forms-ai
   primary:
     persistence:
@@ -51,13 +51,3 @@ service:
 envFrom:
   - secretRef:
       name: keycloak-secret
-
-extraEnvVars:
-  - name: KC_DB
-    value: 'forms-ai'
-  - name: KC_DB_URL
-    value: 'jdbc:postgresql://postgres:5432/forms-ai'
-  
-podLabels:
-  app.kubernetes.io/instance: keycloak
-  app.kubernetes.io/name: keycloak

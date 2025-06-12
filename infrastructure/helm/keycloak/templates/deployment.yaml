@@ -1,53 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak
-  namespace: team-kruschefan
+  name: {{ include "keycloak.fullname" . }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: keycloak
+      app: {{ include "keycloak.name" . }}
   template:
     metadata:
       labels:
-        app: keycloak
+        app: {{ include "keycloak.name" . }}
     spec:
-      initContainers:
-        - name: keycloak-init
-          image: quay.io/keycloak/keycloak:24.0.1
-          command:
-            - sh
-            - -c
-            - |
-              cp /opt/keycloak/init/init-keycloak.sh /tmp/init.sh && \
-              chmod +x /tmp/init.sh && \
-              sh /tmp/init.sh
-          env:
-            - name: KEYCLOAK_ADMIN
-              value: keycloak
-            - name: KEYCLOAK_ADMIN_PASSWORD
-              value: keycloak-secret
-            - name: KEYCLOAK_SERVICE_HOST
-              value: localhost
-            - name: KEYCLOAK_SERVICE_PORT
-              value: "8080"
-          volumeMounts:
-            - name: keycloak-init-script
-              mountPath: /opt/keycloak/init/init-keycloak.sh
-              subPath: init-keycloak.sh
-              readOnly: true
-
-
       containers:
         - name: keycloak
           image: "quay.io/keycloak/keycloak:24.0.1"
-          command:
-            - "/opt/keycloak/bin/kc.sh"
-          args:
-            - "start-dev"
-            - "--hostname-strict=false"
-            - "--hostname-strict-https=false"
+          command: ["sh", "/opt/keycloak/create-realm.sh"]
           ports:
             - containerPort: 8080
           env:
@@ -56,19 +26,28 @@ spec:
             - name: KC_DB_URL_HOST
               value: "postgres"
             - name: KC_DB_URL_DATABASE
-              value: "forms-ai"
-            - name: KC_DB_USERNAME
-              value: "postgres"
-            - name: KC_DB_PASSWORD
-              value: "postgres-pw"
-            - name: KEYCLOAK_ADMIN
               value: "keycloak"
+            - name: KC_DB_USERNAME
+              value: "{{ .Values.db.username }}"
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: password
+            - name: KEYCLOAK_ADMIN
+              value: "{{ .Values.admin.username }}"
             - name: KEYCLOAK_ADMIN_PASSWORD
-              value: "keycloak-secret"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: adminPassword
             - name: KC_HOSTNAME
               value: "localhost"
-
+          volumeMounts:
+            - name: keycloak-init
+              mountPath: /opt/keycloak/create-realm.sh
+              subPath: create-realm.sh
       volumes:
-        - name: keycloak-init-script
+        - name: keycloak-init
           configMap:
             name: keycloak-init-script
