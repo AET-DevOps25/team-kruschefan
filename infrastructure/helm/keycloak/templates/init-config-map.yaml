@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-init-script
+  namespace: team-kruschefan
+data:
+  init-keycloak.sh: |
+    #!/bin/bash
+    set -e
+
+    KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
+    KC_PATH="/opt/keycloak/bin/kc.sh"
+
+    $KC_PATH start-dev &
+
+    echo "Waiting for Keycloak service to become ready..."
+    until $KCADM_PATH config credentials \
+      --server http://${KEYCLOAK_SERVICE_HOST}:${KEYCLOAK_SERVICE_PORT} \
+      --realm master \
+      --user "$KEYCLOAK_ADMIN" \
+      --password "$KEYCLOAK_ADMIN_PASSWORD"; do
+        echo "Keycloak API not ready yet, retrying..."
+        sleep 5
+    done
+
+    echo "Logged into Keycloak CLI"
+
+    if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
+      $KCADM_PATH create realms -s realm=forms-ai -s enabled=true
+      echo "Realm 'forms-ai' created"
+    else
+      echo "Realm 'forms-ai' already exists"
+    fi
+
+    if ! $KCADM_PATH get clients -r forms-ai | grep '"clientId" : "user-service"' > /dev/null; then
+      echo "Creating client 'user-service'..."
+      $KCADM_PATH create clients -r forms-ai \
+        -s clientId=user-service \
+        -s name="User Service" \
+        -s enabled=true \
+        -s serviceAccountsEnabled=true \
+        -s directAccessGrantsEnabled=true \
+        -s publicClient=false \
+        -s protocol=openid-connect \
+        -s secret="user-service-pw"
+    fi
+
+    if ! $KCADM_PATH get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
+      echo "Creating realm role 'spring'..."
+      $KCADM_PATH create roles -r forms-ai -s name=spring
+    fi
+
+    echo "Waiting for service account to appear..."
+    sleep 5
+
+    $KCADM_PATH add-roles -r forms-ai --uusername service-account-user-service --rolename spring
+
+    REALM_MGMT_ID=$($KCADM_PATH get clients -r forms-ai -q clientId=realm-management --fields id --format csv | tail -n1 | tr -d '\r"')
+
+    $KCADM_PATH add-roles -r forms-ai \
+      --uusername service-account-user-service \
+      --cclientid realm-management \
+      --rolename view-users
+
+    $KCADM_PATH add-roles -r forms-ai \
+      --uusername service-account-user-service \
+      --cclientid realm-management \
+      --rolename manage-users
+
+    echo "Keycloak initialization completed successfully!"

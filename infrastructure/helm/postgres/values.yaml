@@ -17,11 +17,11 @@ persistence:
 
 postgres:
   user: postgres
-  password: postgres-pw
+  password: postgres-secret
   db: forms-ai
 
 serviceAccount:
-  create: true
+  create: false
   name: "postgres"
 
 # TODO: change ingress config
