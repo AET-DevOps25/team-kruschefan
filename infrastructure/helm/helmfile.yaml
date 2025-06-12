@@ -46,7 +46,3 @@ releases:
   - name: postgres
     namespace: team-kruschefan
     chart: ./postgres
-
-  - name: mongo
-    namespace: team-kruschefan
-    chart: ./mongo

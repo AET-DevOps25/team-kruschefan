@@ -1,0 +1,27 @@
+# keycloak-init-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: keycloak-init-job
+  namespace: team-kruschefan
+spec:
+  template:
+    spec:
+      containers:
+        - name: keycloak-init
+          image: bitnami/keycloak:latest
+          command: ["/bin/sh", "/scripts/init.sh"]
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: keycloak
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: keycloak_pw
+          volumeMounts:
+            - name: init-script
+              mountPath: /scripts
+      restartPolicy: OnFailure
+      volumes:
+        - name: init-script
+          configMap:
+            name: keycloak-init-script
+            defaultMode: 0755
