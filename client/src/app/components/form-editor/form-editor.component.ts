@@ -1,4 +1,10 @@
-import { Component, model, ModelSignal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { QuestionTypeCard } from '../../interfaces/QuestionTypeCard';
 import {
   CdkDragDrop,
@@ -10,6 +16,15 @@ import { Question, QuestionType } from '../../interfaces/Question';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { GenAiService } from '../../services/gen-ai.service';
+import { catchError, of, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+
+interface GenAIResponse {
+  questions: Question[];
+  title: string;
+}
 
 @Component({
   selector: 'forms-ai-form-editor',
@@ -19,12 +34,55 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     DragDropModule,
     FormQuestionComponent,
+    FormsModule,
   ],
   templateUrl: './form-editor.component.html',
   styleUrl: './form-editor.component.scss',
 })
 export class FormEditorComponent {
-  public questions: ModelSignal<Question[]> = model.required<Question[]>();
+  protected questions: WritableSignal<Question[]> = signal<Question[]>([]);
+  protected prompt = signal<string>('');
+  private genAiService = inject(GenAiService);
+  private destroyRef = inject(DestroyRef);
+  private readonly randomQuestions = [
+    { label: 'What is your name?', type: QuestionType.TEXT },
+    { label: 'What is your age?', type: QuestionType.NUMBER },
+    {
+      label: 'What is your favorite color?',
+      type: QuestionType.SINGLE_CHOICE,
+      options: ['Red', 'Blue', 'Green'],
+    },
+    {
+      label: 'What are your hobbies?',
+      type: QuestionType.MULTIPLE_CHOICE,
+      options: ['Reading', 'Traveling', 'Gaming'],
+    },
+    {
+      label: 'Please select your country',
+      type: QuestionType.DROPDOWN,
+      options: ['USA', 'Canada', 'UK', 'Australia'],
+    },
+  ];
+
+  protected generateForm(): void {
+    if (this.prompt().length === 0) {
+      return;
+    }
+    this.genAiService
+      .generateForm(this.prompt())
+      .pipe(
+        catchError((error) => {
+          console.error('Error generating form:', error);
+          return of({
+            questions: this.randomQuestions,
+            title: '',
+          } as GenAIResponse); // Return an empty response on error
+        }),
+        tap((form: GenAIResponse) => this.questions.set(form.questions)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
 
   protected onDrop(
     event: CdkDragDrop<Question[], Question[], Question | QuestionTypeCard>,
