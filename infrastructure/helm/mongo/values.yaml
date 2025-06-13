@@ -1,9 +1,13 @@
 auth:
   enabled: true
   rootUser: mongo
+  # TODO: secret
   rootPassword: mongo-secret
+  # !!!TODO: secret
   username: mongo-user
+  # TODO: secret
   password: mongo-user-secret
+  # !!!TODO: secret
   database: forms-ai
 
 architecture: standalone

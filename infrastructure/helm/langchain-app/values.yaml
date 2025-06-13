@@ -12,16 +12,15 @@ service:
 env:
   - name: PYTHONUNBUFFERED
     value: "1"
-  - name: HUGGINGFACE_API_KEY
+  - name: OPENUI_API_KEY
     valueFromSecret:
       name: project-secrets
-      key: HUGGINGFACE_API_KEY
+      key: OPENUI_API_KEY
 
 serviceAccount:
   create: true
   name: ""
 
-# TODO: change ingress config
 ingress:
   enabled: false
 

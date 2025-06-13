@@ -26,8 +26,10 @@ spec:
           env:
             - name: KEYCLOAK_ADMIN
               value: keycloak
+            # TODO: secret
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: keycloak-secret
+            # !!!TODO: secret
             - name: KEYCLOAK_SERVICE_HOST
               value: localhost
             - name: KEYCLOAK_SERVICE_PORT
@@ -59,14 +61,19 @@ spec:
               value: "forms-ai"
             - name: KC_DB_USERNAME
               value: "postgres"
+            # TODO: secret
             - name: KC_DB_PASSWORD
               value: "postgres-pw"
+            # !!!TODO: secret
             - name: KEYCLOAK_ADMIN
               value: "keycloak"
+            # TODO: secret
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: "keycloak-secret"
+            # !!!TODO: secret
             - name: KC_HOSTNAME
               value: "localhost"
+
 
       volumes:
         - name: keycloak-init-script

@@ -18,8 +18,10 @@ env:
     value: admin-cli
   - name: KEYCLOAK_USERNAME
     value: admin
+  # TODO: secret
   - name: KEYCLOAK_PASSWORD
     value: admin
+  #!!!TODO: secret
   - name: KEYCLOAK_URL
     value: http://keycloak:9001
 
@@ -28,7 +30,6 @@ serviceAccount:
   create: true
   name: ""
 
-# TODO: change ingress config
 ingress:
   enabled: false
 
