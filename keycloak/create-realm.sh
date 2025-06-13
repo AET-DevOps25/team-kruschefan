@@ -1,12 +1,15 @@
 #!/bin/sh
 set -e
 
+KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
+KC_PATH="/opt/keycloak/bin/kc.sh"
+
 # Start Keycloak in background
-/opt/keycloak/bin/kc.sh start-dev &
+$KC_PATH start-dev &
 
 # Wait for Keycloak to become responsive to kcadm
 echo "Waiting for Keycloak to become ready..."
-until /opt/keycloak/bin/kcadm.sh config credentials \
+until $KCADM_PATH config credentials \
   --server http://localhost:8080 \
   --realm master \
   --user "$KEYCLOAK_ADMIN" \
@@ -18,17 +21,17 @@ done
 echo "Logged into Keycloak CLI"
 
 # Create realm if it doesn't exist
-if ! /opt/keycloak/bin/kcadm.sh get realms | grep '"realm" : "forms-ai"' > /dev/null; then
-  /opt/keycloak/bin/kcadm.sh create realms -s realm=forms-ai -s enabled=true
+if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
+  $KCADM_PATH create realms -s realm=forms-ai -s enabled=true
   echo "Realm 'forms-ai' created"
 else
   echo "Realm 'forms-ai' already exists"
 fi
 
 # Create 'user-service' confidential client if it doesn't exist
-if ! /opt/keycloak/bin/kcadm.sh get clients -r forms-ai | grep '"clientId" : "user-service"' > /dev/null; then
+if ! $KCADM_PATH get clients -r forms-ai | grep "\"clientId\" : \"$KEYCLOAK_FORMSAI_USER\"" > /dev/null; then
   echo "Creating client 'user-service'..."
-  /opt/keycloak/bin/kcadm.sh create clients -r forms-ai \
+  $KCADM_PATH create clients -r forms-ai \
     -s clientId=$KEYCLOAK_FORMSAI_USER \
     -s name="User Service" \
     -s enabled=true \
@@ -37,35 +40,38 @@ if ! /opt/keycloak/bin/kcadm.sh get clients -r forms-ai | grep '"clientId" : "us
     -s publicClient=false \
     -s protocol=openid-connect \
     -s secret=$KEYCLOAK_FORMSAI_PASSWORD
+
+  # Create realm role 'spring' if it doesn't exist
+  if ! $KCADM_PATH get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
+    echo "Creating realm role 'spring'..."
+    $KCADM_PATH create roles -r forms-ai -s name=spring
+  fi
+
+  # Assign roles to service account of user-service
+  SERVICE_ACCOUNT_ID=$( $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_FORMSAI_USER --fields id --format csv | tail -n1 | tr -d '\r"' )
+
+  # Assign realm role 'spring'
+  $KCADM_PATH add-roles -r forms-ai --uusername service-account-$KEYCLOAK_FORMSAI_USER --rolename spring
+
+  # Get the ID of the realm-management client
+  REALM_MGMT_ID=$($KCADM_PATH get clients -r forms-ai -q clientId=realm-management --fields id --format csv | tail -n1 | tr -d '\r"')
+
+  # Assign view-users and manage-users to service account
+  $KCADM_PATH add-roles -r forms-ai \
+    --uusername service-account-$KEYCLOAK_FORMSAI_USER \
+    --cclientid realm-management \
+    --rolename view-users
+
+  $KCADM_PATH add-roles -r forms-ai \
+    --uusername service-account-$KEYCLOAK_FORMSAI_USER \
+    --cclientid realm-management \
+    --rolename manage-users
+
+  echo "Role assignment to service account succeeded!"
+
+else
+  echo "Client $KEYCLOAK_FORMSAI_USER already exists"
 fi
-
-# Create realm role 'spring' if it doesn't exist
-if ! /opt/keycloak/bin/kcadm.sh get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
-  echo "Creating realm role 'spring'..."
-  /opt/keycloak/bin/kcadm.sh create roles -r forms-ai -s name=spring
-fi
-
-# Assign roles to service account of user-service
-SERVICE_ACCOUNT_ID=$( /opt/keycloak/bin/kcadm.sh get users -r forms-ai -q username=$KEYCLOAK_FORMSAI_USER --fields id --format csv | tail -n1 | tr -d '\r"' )
-
-# Assign realm role 'spring'
-/opt/keycloak/bin/kcadm.sh add-roles -r forms-ai --uusername service-account-$KEYCLOAK_FORMSAI_USER --rolename spring
-
-# Get the ID of the realm-management client
-REALM_MGMT_ID=$(/opt/keycloak/bin/kcadm.sh get clients -r forms-ai -q clientId=realm-management --fields id --format csv | tail -n1 | tr -d '\r"')
-
-# Assign view-users and manage-users to service account
-/opt/keycloak/bin/kcadm.sh add-roles -r forms-ai \
-  --uusername service-account-$KEYCLOAK_FORMSAI_USER \
-  --cclientid realm-management \
-  --rolename view-users
-
-/opt/keycloak/bin/kcadm.sh add-roles -r forms-ai \
-  --uusername service-account-$KEYCLOAK_FORMSAI_USER \
-  --cclientid realm-management \
-  --rolename manage-users
-
-echo "Role assignment to service account succeeded!"
 
 # Keep container running
 tail -f /dev/null

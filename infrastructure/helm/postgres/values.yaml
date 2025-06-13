@@ -17,7 +17,9 @@ persistence:
 
 postgres:
   user: postgres
+  # TODO: secret
   password: postgres-secret
+  # !!!TODO: secret
   db: forms-ai
 
 serviceAccount:

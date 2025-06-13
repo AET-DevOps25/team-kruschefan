@@ -15,13 +15,9 @@ services:
       context: ./GenAI
     ports:
       - "8000:8000"
-    working_dir: /GenAI
-    volumes:
-      - ./GenAI:/GenAI
-      - ./GenAI/llm:/models
     environment:
       - PYTHONUNBUFFERED=1
-      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - OPENUI_API_KEY=${OPENUI_API_KEY}
 
   # Postgres for keycloak
   postgres:
