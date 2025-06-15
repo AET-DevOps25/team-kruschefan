@@ -29,8 +29,6 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
-    networks:
-      - shared-net
 
   # Keycloak, user auth service
   keycloak:
@@ -51,8 +49,6 @@ services:
       - "9001:8080"
     depends_on:
       - postgres
-    networks:
-      - shared-net  
   
   # Prometheus for metrics collection
   prometheus:
@@ -60,6 +56,8 @@ services:
     container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - "9090:9090"
 
@@ -69,6 +67,8 @@ services:
     container_name: alertmanager
     volumes:
       - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
     ports:
       - "9093:9093"
 
@@ -94,8 +94,6 @@ services:
       - postgres
       - keycloak
       - mongo
-    networks:
-      - shared-net
 
   form-service:
     build:
@@ -142,8 +140,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo-data:/data/db
-    networks:
-      - shared-net
 
 volumes:
   postgres-data:
@@ -152,4 +148,5 @@ volumes:
 
 
 networks:
-  shared-net:
+  default:
+    name: shared-net

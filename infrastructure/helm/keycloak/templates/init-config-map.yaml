@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: keycloak-init-script
-  namespace: team-kruschefan
+  namespace: team-kruschefan-project
 data:
   init-keycloak.sh: |
     #!/bin/sh

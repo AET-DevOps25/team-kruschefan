@@ -42,3 +42,33 @@ image:
   repository: bitnami/prometheus
   tag: 2.44.0-debian-11-r0
   pullPolicy: IfNotPresent
+
+extraScrapeConfigs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'langchain-app'
+    static_configs:
+      - targets: ['langchain-app:8000']
+
+  - job_name: 'client'
+    static_configs:
+      - targets: ['client:80']
+
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:8080']
+
+  - job_name: 'form-service'
+    static_configs:
+      - targets: ['form-service:8081']
+
+  - job_name: 'template-service'
+    static_configs:
+      - targets: ['template-service:8082']
+
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:8083']
+    

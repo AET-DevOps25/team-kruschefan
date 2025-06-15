@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak
-  namespace: team-kruschefan
+  namespace: team-kruschefan-project
 spec:
   replicas: 1
   selector:
@@ -26,7 +26,7 @@ spec:
           env:
             - name: KEYCLOAK_ADMIN
               value: keycloak
-            # TODO: secret
+            # TODO: secret, KEYCLOAK_ADMIN_PASSWORD
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: keycloak-secret
             # !!!TODO: secret
@@ -61,13 +61,13 @@ spec:
               value: "forms-ai"
             - name: KC_DB_USERNAME
               value: "postgres"
-            # TODO: secret
+            # TODO: secret, KC_DB_PASSWORD
             - name: KC_DB_PASSWORD
-              value: "postgres-pw"
+              value: "postgres-secret"
             # !!!TODO: secret
             - name: KEYCLOAK_ADMIN
               value: "keycloak"
-            # TODO: secret
+            # TODO: secret, KEYCLOAK_ADMIN_PASSWORD
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: "keycloak-secret"
             # !!!TODO: secret
