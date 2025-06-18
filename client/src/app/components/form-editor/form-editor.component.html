@@ -1,28 +1,31 @@
-<div class="form-editor">
-  <h1 class="header">FORMS AI</h1>
-  <div class="ai-text-area">
-    <mat-form-field appearance="outline">
-      <mat-label>Please enter your form description</mat-label>
-      <textarea matInput [(ngModel)]="prompt"></textarea>
-    </mat-form-field>
-    <button mat-flat-button color="primary" (click)="generateForm()">
-      Generate
-    </button>
-  </div>
-  <div
-    class="drop-area"
-    cdkDropList
-    id="formEditor"
-    [cdkDropListData]="questions()"
-    (cdkDropListDropped)="onDrop($event)"
-  >
-    @for (question of questions(); track $index) {
-      <forms-ai-form-question
-        cdkDrag
-        [question]="question"
-        [cdkDragData]="question"
-        (deleteClicked)="deleteQuestion($index)"
-      ></forms-ai-form-question>
-    }
+<div class="template-container">
+  <forms-ai-item-list />
+  <div class="form-editor">
+    <h1 class="header">FORMS AI</h1>
+    <div class="ai-text-area">
+      <mat-form-field appearance="outline">
+        <mat-label>Please enter your form description</mat-label>
+        <textarea matInput [(ngModel)]="prompt"></textarea>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="generateForm()">
+        Generate
+      </button>
+    </div>
+    <div
+      class="drop-area"
+      cdkDropList
+      id="formEditor"
+      [cdkDropListData]="questions()"
+      (cdkDropListDropped)="onDrop($event)"
+    >
+      @for (question of questions(); track $index) {
+        <forms-ai-form-question
+          cdkDrag
+          [question]="question"
+          [cdkDragData]="question"
+          (deleteClicked)="deleteQuestion($index)"
+        ></forms-ai-form-question>
+      }
+    </div>
   </div>
 </div>

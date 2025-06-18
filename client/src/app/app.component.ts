@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { ItemListComponent } from './components/item-list/item-list.component';
-import { FormEditorComponent } from './components/form-editor/form-editor.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'forms-ai-app-root',
-  imports: [ItemListComponent, FormEditorComponent],
+  imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

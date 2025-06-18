@@ -21,6 +21,7 @@ import { PropertiesEditorComponent } from '../../dialogs/properties-editor/prope
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'forms-ai-form-question',
@@ -30,6 +31,7 @@ import { FormsModule } from '@angular/forms';
     MatCheckboxModule,
     MatRadioModule,
     MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
     DragDropModule,
