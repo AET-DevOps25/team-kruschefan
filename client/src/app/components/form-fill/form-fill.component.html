@@ -8,7 +8,7 @@
             @if (question.type === Types.COMMENT) {
               <p>{{ question.label }}</p>
             } @else {
-              <label
+              <label [for]="question.id"
                 >{{ question.label }} {{ question.required ? '*' : '' }}</label
               >
             }
@@ -17,6 +17,7 @@
                 <mat-form-field>
                   <input
                     matInput
+                    [id]="question.id"
                     [formControlName]="question.id"
                     [placeholder]="question.placeholder ?? ''"
                     [defaultValue]="question.defaultValue ?? ''"
@@ -32,6 +33,7 @@
                   <input
                     matInput
                     type="number"
+                    [id]="question.id"
                     [formControlName]="question.id"
                     [placeholder]="question.placeholder ?? ''"
                     [defaultValue]="question.defaultValue ?? ''"
@@ -47,6 +49,7 @@
                 <mat-form-field>
                   <input
                     matInput
+                    [id]="question.id"
                     [formControlName]="question.id"
                     [matDatepicker]="picker"
                     [required]="question.required ?? false"
@@ -65,6 +68,7 @@
               @case (Types.DROPDOWN) {
                 <mat-form-field>
                   <mat-select
+                    [id]="question.id"
                     [formControlName]="question.id"
                     [required]="question.required ?? false"
                   >
@@ -81,6 +85,7 @@
               @case (Types.SINGLE_CHOICE) {
                 <mat-radio-group
                   class="pb-15"
+                  [id]="question.id"
                   [formControlName]="question.id"
                   [required]="question.required ?? false"
                 >
@@ -93,7 +98,11 @@
               }
 
               @case (Types.MULTIPLE_CHOICE) {
-                <div class="pb-15" [formGroupName]="question.id">
+                <div
+                  class="pb-15"
+                  [id]="question.id"
+                  [formGroupName]="question.id"
+                >
                   <ul>
                     @for (
                       option of question.options;
@@ -119,6 +128,7 @@
                 <mat-form-field>
                   <textarea
                     matInput
+                    [id]="question.id"
                     [formControlName]="question.id"
                     [placeholder]="question.placeholder ?? ''"
                     [defaultValue]="question.defaultValue ?? ''"
@@ -147,7 +157,7 @@
     <h2>Form Submitted Successfully!</h2>
     <p>Your responses have been recorded.</p>
     <button mat-button color="primary" (click)="onReset()">
-      Fill Another Form
+      Submit Another Response
     </button>
   </div>
 }

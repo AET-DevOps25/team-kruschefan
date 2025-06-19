@@ -18,13 +18,13 @@
       [cdkDropListData]="questions()"
       (cdkDropListDropped)="onDrop($event)"
     >
-    <mat-form-field class="form-title" appearance="outline">
-      <input
-        matInput
-        [(ngModel)]="templateTitle"
-        placeholder="Please enter your desired form name"
-      />
-    </mat-form-field>
+      <mat-form-field class="form-title" appearance="outline">
+        <input
+          matInput
+          [(ngModel)]="templateTitle"
+          placeholder="Please enter your desired form name"
+        />
+      </mat-form-field>
       @for (question of questions(); track $index) {
         <forms-ai-template-question
           cdkDrag
