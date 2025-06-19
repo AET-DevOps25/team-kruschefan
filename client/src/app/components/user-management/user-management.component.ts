@@ -34,19 +34,19 @@ export class UserManagementComponent {
     {
       position: 1,
       id: '1',
-      name: 'Template 1',
+      name: 'Customer Feedback Form',
       createdOn: new Date().toDateString(),
     },
     {
       position: 2,
       id: '2',
-      name: 'Template 2',
+      name: 'Business Registration Form',
       createdOn: new Date().toDateString(),
     },
     {
       position: 3,
       id: '3',
-      name: 'Template 3',
+      name: 'Employee Onboarding Form',
       createdOn: new Date().toDateString(),
     },
   ];
@@ -54,19 +54,19 @@ export class UserManagementComponent {
     {
       position: 1,
       id: '1',
-      name: 'Response 1',
+      name: 'Customer Feedback Form',
       submittedOn: new Date().toDateString(),
     },
     {
       position: 2,
       id: '2',
-      name: 'Response 2',
+      name: 'Customer Feedback Form',
       submittedOn: new Date().toDateString(),
     },
     {
       position: 3,
       id: '3',
-      name: 'Response 3',
+      name: 'Employee Onboarding Form',
       submittedOn: new Date().toDateString(),
     },
   ];
