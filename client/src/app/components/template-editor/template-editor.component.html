@@ -1,19 +1,12 @@
 <div class="template-container">
   <forms-ai-item-list />
   <div class="form-editor">
-    <div class="button-container">
-      <button mat-stroked-button color="primary">Save as template</button>
-      <button mat-flat-button color="primary">Export the form</button>
-    </div>
-
     <div class="ai-text-area">
       <mat-form-field appearance="outline">
         <mat-label>Please enter your form description</mat-label>
         <textarea matInput [(ngModel)]="prompt"></textarea>
       </mat-form-field>
-      <button mat-button (click)="generateForm()">
-        Generate Form
-      </button>
+      <button mat-button (click)="generateForm()">Generate Form</button>
     </div>
     <div
       class="drop-area"
@@ -37,6 +30,10 @@
           (deleteClicked)="deleteQuestion($index)"
         ></forms-ai-template-question>
       }
+    </div>
+    <div class="button-container">
+      <button mat-stroked-button>Save as template</button>
+      <button mat-flat-button>Export the form</button>
     </div>
   </div>
 </div>
