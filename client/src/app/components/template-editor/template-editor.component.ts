@@ -22,6 +22,8 @@ import { catchError, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ItemListComponent } from '../item-list/item-list.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FormExportComponent } from '../dialogs/form-export/form-export.component';
 
 interface GenAIResponse {
   questions: Question[];
@@ -48,6 +50,7 @@ export class TemplateEditorComponent {
   protected prompt = signal<string>('');
   private genAiService = inject(GenAiService);
   private destroyRef = inject(DestroyRef);
+  private dialog = inject(MatDialog);
   private readonly randomQuestions = [
     { label: 'What is your name?', type: QuestionType.TEXT },
     { label: 'What is your age?', type: QuestionType.NUMBER },
@@ -67,6 +70,12 @@ export class TemplateEditorComponent {
       options: ['USA', 'Canada', 'UK', 'Australia'],
     },
   ];
+
+  protected openFormExportDialog(): void {
+    this.dialog.open(FormExportComponent, {
+      data: { formId: uuid() },
+    });
+  }
 
   protected generateForm(): void {
     if (this.prompt().length === 0) {
