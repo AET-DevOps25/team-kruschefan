@@ -16,4 +16,9 @@ export const routes: Routes = [
     path: 'form/:formId',
     component: FormFillComponent,
   },
+  {
+    path: 'response/:responseId',
+    component: FormFillComponent,
+    data: { readonly: true },
+  },
 ];

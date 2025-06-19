@@ -128,14 +128,16 @@
             }
           </div>
         }
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="form.invalid"
-        >
-          Submit
-        </button>
+        @if (!isReadonly) {
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid"
+          >
+            Submit
+          </button>
+        }
       </div>
     </form>
   </div>
