@@ -84,14 +84,14 @@ export class FormFillComponent implements OnInit {
           '55-64',
           '65 or older',
         ],
-        required: true,
+        required: false,
       },
       {
         id: 'question5',
         type: QuestionType.MULTIPLE_CHOICE,
         label: 'What are your hobbies?',
         options: ['Reading', 'Traveling', 'Cooking', 'Sports'],
-        required: true,
+        required: false,
       },
       {
         id: 'question6',
