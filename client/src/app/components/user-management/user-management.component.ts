@@ -3,6 +3,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 
+interface Template {
+  position: number;
+  id: string;
+  name: string;
+  createdOn: string;
+}
+
 @Component({
   selector: 'forms-ai-user-management',
   imports: [MatTableModule, MatButtonModule],
@@ -10,7 +17,7 @@ import { Router } from '@angular/router';
   styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent {
-  @ViewChild('templateTable') templateTable!: MatTable<any>;
+  @ViewChild('templateTable') templateTable!: MatTable<Template>;
   protected readonly templateTableColumns: string[] = [
     'position',
     'name',
@@ -65,7 +72,7 @@ export class UserManagementComponent {
   ];
   private router = inject(Router);
 
-  protected editTemplate(id: string): void {
+  protected editTemplate(): void {
     this.router.navigate(['/editor']);
   }
   protected deleteTemplate(id: string): void {
