@@ -13,7 +13,7 @@ export const routes: Routes = [
     component: FormEditorComponent,
   },
   {
-    path: 'form',
+    path: 'form/:formId',
     component: FormFillComponent,
   },
 ];

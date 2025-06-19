@@ -1,13 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Template } from '../../interfaces/Template';
-import { QuestionType } from '../../interfaces/Question';
+import { Question, QuestionType } from '../../interfaces/Question';
 import { MatInputModule } from '@angular/material/input';
 import {
+  AbstractControl,
   Form,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'forms-ai-form-fill',
@@ -73,21 +83,21 @@ export class FormFillComponent implements OnInit {
           '55-64',
           '65 or older',
         ],
-        required: false,
+        required: true,
       },
       {
         id: 'question5',
         type: QuestionType.MULTIPLE_CHOICE,
         label: 'What are your hobbies?',
         options: ['Reading', 'Traveling', 'Cooking', 'Sports'],
-        required: false,
+        required: true,
       },
       {
         id: 'question6',
         type: QuestionType.DROPDOWN,
         label: 'Select your country',
         options: ['USA', 'Canada', 'UK', 'Australia'],
-        required: false,
+        required: true,
       },
       {
         id: 'question7',
@@ -106,6 +116,7 @@ export class FormFillComponent implements OnInit {
     ],
   };
   protected form: FormGroup = new FormGroup({});
+  protected isFormSubmitted: WritableSignal<boolean> = signal(false);
   private formBuilder = inject(FormBuilder);
 
   ngOnInit(): void {
@@ -121,8 +132,6 @@ export class FormFillComponent implements OnInit {
   }
 
   protected onSubmit(): void {
-    const formData = this.form.value;
-    console.log('Form submitted:', formData);
     const processedData: { [key: string]: string | string[] | Date | number } =
       {};
     for (const question of this.template.questions) {
@@ -143,8 +152,25 @@ export class FormFillComponent implements OnInit {
         processedData[question.id] = this.getControl(question.id).value;
       }
     }
-    console.log('Processed Data:', processedData);
+    this.isFormSubmitted.set(true);
   }
+
+  protected onReset(): void {
+    this.form.reset();
+    this.isFormSubmitted.set(false);
+  }
+
+  private checkboxValidation: ValidatorFn = (
+    group: AbstractControl,
+  ): ValidationErrors | null => {
+    if (!(group instanceof FormGroup)) {
+      return null;
+    }
+    const selectedOptions = Object.values(group.controls).filter(
+      (control) => control.value,
+    );
+    return selectedOptions.length > 0 ? null : { required: true };
+  };
 
   private initializeForm(): void {
     this.template.questions.forEach((question) => {
@@ -153,7 +179,10 @@ export class FormFillComponent implements OnInit {
         question.options &&
         question.options.length > 0
       ) {
-        const checkboxGroup = this.formBuilder.group({});
+        const checkboxGroup = this.formBuilder.group(
+          {},
+          { validators: question.required ? this.checkboxValidation : null },
+        );
         question.options.forEach((_, index) => {
           checkboxGroup.addControl(`${index}`, this.formBuilder.control(false));
         });
