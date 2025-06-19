@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { FormFillComponent } from './components/form-fill/form-fill.component';
-import { FormEditorComponent } from './components/form-editor/form-editor.component';
+import { TemplateEditorComponent } from './components/template-editor/template-editor.component';
 
 export const routes: Routes = [
   {
@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
   {
     path: 'editor',
-    component: FormEditorComponent,
+    component: TemplateEditorComponent,
   },
   {
     path: 'form/:formId',

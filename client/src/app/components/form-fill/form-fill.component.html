@@ -1,5 +1,6 @@
 @if (!isFormSubmitted()) {
   <div class="form-container">
+    <h2>{{ template.title }}</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
         @for (question of template.questions; track $index) {

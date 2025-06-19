@@ -11,8 +11,8 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import {v4 as uuid} from 'uuid';
-import { FormQuestionComponent } from './form-question/form-question.component';
+import { v4 as uuid } from 'uuid';
+import { TemplateQuestionComponent } from './template-question/template-question.component';
 import { Question, QuestionType } from '../../interfaces/Question';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ import { GenAiService } from '../../services/gen-ai.service';
 import { catchError, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ItemListComponent } from "../item-list/item-list.component";
+import { ItemListComponent } from '../item-list/item-list.component';
 
 interface GenAIResponse {
   questions: Question[];
@@ -29,20 +29,21 @@ interface GenAIResponse {
 }
 
 @Component({
-  selector: 'forms-ai-form-editor',
+  selector: 'forms-ai-template-editor',
   imports: [
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     DragDropModule,
-    FormQuestionComponent,
+    TemplateQuestionComponent,
     FormsModule,
-    ItemListComponent
-],
-  templateUrl: './form-editor.component.html',
-  styleUrl: './form-editor.component.scss',
+    ItemListComponent,
+  ],
+  templateUrl: './template-editor.component.html',
+  styleUrl: './template-editor.component.scss',
 })
-export class FormEditorComponent {
+export class TemplateEditorComponent {
+  protected templateTitle: WritableSignal<string> = signal<string>('');
   protected questions: WritableSignal<Question[]> = signal<Question[]>([]);
   protected prompt = signal<string>('');
   private genAiService = inject(GenAiService);

@@ -1,3 +1,6 @@
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
 .template-container {
   display: grid;
   grid-template-columns: 20% 80%;
@@ -54,8 +57,16 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
       }
     }
-    forms-ai-form-question {
+    forms-ai-template-question {
       width: 80%;
+    }
+    .form-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      width: 50%;
+      input {
+        text-align: center;
+      }
     }
   }
 }
