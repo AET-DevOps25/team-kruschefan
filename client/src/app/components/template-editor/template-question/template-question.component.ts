@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-  selector: 'forms-ai-form-question',
+  selector: 'forms-ai-template-question',
   imports: [
     MatInputModule,
     MatButtonModule,
@@ -37,11 +37,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     DragDropModule,
     FormsModule,
   ],
-  templateUrl: './form-question.component.html',
+  templateUrl: './template-question.component.html',
   providers: [provideNativeDateAdapter()],
-  styleUrl: './form-question.component.scss',
+  styleUrl: './template-question.component.scss',
 })
-export class FormQuestionComponent {
+export class TemplateQuestionComponent {
   question = model.required<Question>();
   deleteClicked: OutputEmitterRef<void> = output<void>();
   readonly dialog = inject(MatDialog);

@@ -10,7 +10,6 @@ import { QuestionType } from '../../interfaces/Question';
 import { MatInputModule } from '@angular/material/input';
 import {
   AbstractControl,
-  Form,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -48,6 +47,7 @@ export class FormFillComponent implements OnInit {
   protected readonly Types = QuestionType;
   protected readonly template: Template = {
     id: 'template1',
+    title: 'New candidate info form',
     questions: [
       {
         id: 'question1',
