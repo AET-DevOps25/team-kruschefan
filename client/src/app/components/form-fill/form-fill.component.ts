@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'forms-ai-form-fill',
@@ -117,9 +117,10 @@ export class FormFillComponent implements OnInit {
       },
     ],
   };
-  protected readonly response: {
-    [key: string]: string | number | Date | string[];
-  } = {
+  protected readonly response: Record<
+    string,
+    string | number | Date | string[]
+  > = {
     question1: 'John Doe',
     question2: 30,
     question3: new Date('1993-01-01'),
@@ -132,7 +133,7 @@ export class FormFillComponent implements OnInit {
   };
   protected form: FormGroup = new FormGroup({});
   protected isFormSubmitted: WritableSignal<boolean> = signal(false);
-  protected isReadonly: boolean = false;
+  protected isReadonly = false;
   private formBuilder = inject(FormBuilder);
   private activatedRoute = inject(ActivatedRoute);
 
@@ -152,8 +153,7 @@ export class FormFillComponent implements OnInit {
   }
 
   protected onSubmit(): void {
-    const processedData: { [key: string]: string | string[] | Date | number } =
-      {};
+    const processedData: Record<string, string | string[] | Date | number> = {};
     for (const question of this.template.questions) {
       if (
         question.type === QuestionType.MULTIPLE_CHOICE &&
@@ -208,7 +208,8 @@ export class FormFillComponent implements OnInit {
           checkboxGroup.addControl(
             `${index}`,
             this.formBuilder.control(
-              Array.isArray(selectedOptions) &&
+              this.isReadonly &&
+                Array.isArray(selectedOptions) &&
                 selectedOptions.includes(question.options![index]),
             ),
           );
