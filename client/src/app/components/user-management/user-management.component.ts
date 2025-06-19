@@ -72,8 +72,8 @@ export class UserManagementComponent {
   ];
   private router = inject(Router);
 
-  protected editTemplate(): void {
-    this.router.navigate(['/editor']);
+  protected editTemplate(id: string): void {
+    this.router.navigate(['/editor', id]);
   }
   protected deleteTemplate(id: string): void {
     const index = this.savedTemplates.findIndex(

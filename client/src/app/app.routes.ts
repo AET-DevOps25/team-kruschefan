@@ -19,6 +19,10 @@ export const routes: Routes = [
     component: TemplateEditorComponent,
   },
   {
+    path: 'editor/:templateId',
+    component: TemplateEditorComponent,
+  },
+  {
     path: 'form/:formId',
     component: FormFillComponent,
   },
