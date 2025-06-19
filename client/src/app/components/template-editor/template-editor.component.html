@@ -33,7 +33,9 @@
     </div>
     <div class="button-container">
       <button mat-stroked-button>Save as template</button>
-      <button mat-flat-button>Export the form</button>
+      <button mat-flat-button (click)="openFormExportDialog()">
+        Export the form
+      </button>
     </div>
   </div>
 </div>
