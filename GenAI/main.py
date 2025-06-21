@@ -10,9 +10,17 @@ import logging
 import requests
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  # or ["*"] for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 OPENUI_API_KEY = os.getenv("OPENUI_API_KEY")
 OPENUI_HOSTNAME = "https://gpu.aet.cit.tum.de"
 DEFAULT_MODEL = "deepseek-r1:70b"
+
 
 
 # Classes
@@ -88,7 +96,7 @@ async def generate_form(request: FormRequest):
         The 'questions' array must contain between 4 and 8 question objects.
         Each question object in the 'questions' array must have the following keys:
         - 'label': A string representing the name or label of the field.
-        - 'type': A string representing the type of the field. Choose one STRICTLY from the following exact values: 'Text', 'Date', 'Number', 'Multiple Choice', 'Comment', 'Text Box', 'Single Choice', 'Dropdown'.
+        - 'type': A string representing the type of the field. Choose one STRICTLY from the following exact values: 'Text', 'Date', 'Number', 'Multiple Choice', 'Text Box', 'Single Choice', 'Dropdown'.
         - 'options': A list of string that should be ONLY generated for 'multiple choice', 'single choice' and 'dropdown'. Otherwise, set it as None.
         Respond ONLY with a valid JSON object. Do not include any markdown, explanations, or additional text outside of the JSON object.
     """
@@ -107,9 +115,12 @@ async def generate_form(request: FormRequest):
 
     print(response.status_code)  # TODO: error handling
     generated_json_string = response.json()["choices"][0]["message"]["content"]
+    print(f"Raw LLM output: {generated_json_string}")
+    generated_json_string = re.sub(r"```(?:json)?\s*(.*?)\s*```", r"\1", generated_json_string, flags=re.DOTALL)
     generated_json_string = re.sub(
         r"<think>.*?</think>", "", generated_json_string, flags=re.DOTALL
     ).strip()
+    generated_json_string = re.sub(r",(\s*[}\]])", r"\1", generated_json_string)
 
     try:
         parsed_data = json.loads(generated_json_string)

@@ -1,3 +1,9 @@
+@if (isFormGenerating()) {
+  <div class="loading-spinner-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Generating Form, please wait...</p>
+  </div>
+}
 <div class="template-container">
   <forms-ai-item-list />
   <div class="form-editor">
