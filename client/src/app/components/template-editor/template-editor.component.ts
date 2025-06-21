@@ -17,8 +17,9 @@ import { Question, QuestionType } from '../../interfaces/Question';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GenAiService } from '../../services/gen-ai.service';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ItemListComponent } from '../item-list/item-list.component';
@@ -40,6 +41,7 @@ interface GenAIResponse {
     TemplateQuestionComponent,
     FormsModule,
     ItemListComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './template-editor.component.html',
   styleUrl: './template-editor.component.scss',
@@ -47,6 +49,7 @@ interface GenAIResponse {
 export class TemplateEditorComponent {
   protected templateTitle: WritableSignal<string> = signal<string>('');
   protected questions: WritableSignal<Question[]> = signal<Question[]>([]);
+  protected isFormGenerating: WritableSignal<boolean> = signal<boolean>(false);
   protected prompt = signal<string>('');
   private genAiService = inject(GenAiService);
   private destroyRef = inject(DestroyRef);
@@ -81,6 +84,7 @@ export class TemplateEditorComponent {
     if (this.prompt().length === 0) {
       return;
     }
+    this.isFormGenerating.set(true);
     this.genAiService
       .generateForm(this.prompt())
       .pipe(
@@ -88,10 +92,16 @@ export class TemplateEditorComponent {
           console.error('Error generating form:', error);
           return of({
             questions: this.randomQuestions,
-            title: '',
+            title: 'Introduction Form',
           } as GenAIResponse); // Return an empty response on error
         }),
-        tap((form: GenAIResponse) => this.questions.set(form.questions)),
+        tap((form: GenAIResponse) => {
+          this.questions.set(form.questions);
+          this.templateTitle.set(form.title);
+        }),
+        finalize(() => {
+          this.isFormGenerating.set(false);
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
