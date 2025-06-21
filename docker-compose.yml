@@ -1,18 +1,17 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   # Angular for frontend
   angular-client:
     build:
-      context: ./client
+      context: ./web-client
     ports:
       - "4200:80"
 
   # Langchain GenAI service
   langchain-app:
     build:
-      context: ./GenAI
+      context: ./services/GenAI
     ports:
       - "8000:8000"
     environment:
@@ -52,8 +51,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - shared-net  
-  
+      - shared-net
+
   # Prometheus for metrics collection
   prometheus:
     image: prom/prometheus:latest
@@ -83,7 +82,7 @@ services:
 
   user-service:
     build:
-      context: .
+      context: ./services
       dockerfile: user-service/Dockerfile
     ports:
       - "8083:8083"
@@ -99,7 +98,7 @@ services:
 
   form-service:
     build:
-      context: .
+      context: ./services
       dockerfile: form-service/Dockerfile
     ports:
       - "8081:8081"
@@ -108,7 +107,7 @@ services:
 
   template-service:
     build:
-      context: .
+      context: ./services
       dockerfile: template-service/Dockerfile
     ports:
       - "8082:8082"
@@ -119,7 +118,7 @@ services:
 
   api-gateway:
     build:
-      context: .
+      context: ./services
       dockerfile: api-gateway-service/Dockerfile
     ports:
       - "8080:8080"
@@ -131,7 +130,7 @@ services:
       - template-service
       - langchain-app
       - mongo
-  
+
   mongo:
     image: mongo:6.0
     container_name: mongo
@@ -149,7 +148,6 @@ volumes:
   postgres-data:
   grafana-data:
   mongo-data:
-
 
 networks:
   shared-net:
