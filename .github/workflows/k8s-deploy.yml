@@ -11,7 +11,7 @@ jobs:
     env:
       KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
       KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
-      KEYCLOAK_ADMIN_USER: ${{ secrets.KEYCLOAK_ADMIN_USER }}
+      KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
       KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
       KEYCLOAK_FORMSAI_USER: ${{ secrets.KEYCLOAK_FORMSAI_USER }}
       KEYCLOAK_FORMSAI_PASSWORD: ${{ secrets.KEYCLOAK_FORMSAI_PASSWORD }}
@@ -20,10 +20,19 @@ jobs:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
+      MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+      MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      OPENUI_API_KEY: ${{ secrets.OPENUI_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
       GHCR_EMAIL: ${{ secrets.GHCR_EMAIL }}
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
     steps:
       - name: Checkout repo
@@ -83,36 +92,41 @@ jobs:
         run: |
           kubectl create secret generic project-secrets \
             --from-literal=GITHUB_TOKEN="$GITHUB_TOKEN" \
-            --from-literal=HUGGINGFACE_API_KEY="$HUGGINGFACE_API_KEY" \
-            --dry-run=client -o yaml | kubectl apply -f -
+            --from-literal=OPENUI_API_KEY="$OPENUI_API_KEY" \
 
           kubectl create secret generic postgresql-secrets \
             --from-literal=POSTGRES_USER="$POSTGRES_USER" \
             --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
             --from-literal=POSTGRES_URI="$POSTGRES_URI" \
-            --from-literal=POSTGRES_DB=forms-ai \
-            --dry-run=client -o yaml | kubectl apply -f -
+            --from-literal=POSTGRES_DB=forms-ai
 
           kubectl create secret generic keycloak-secret \
-            --from-literal=username="$KEYCLOAK_USER" \
-            --from-literal=password="$KEYCLOAK_PASSWORD" \
-            --from-literal=adminUsername="$KEYCLOAK_ADMIN_USER" \
-            --from-literal=adminPassword="$KEYCLOAK_ADMIN_PASSWORD" \
-            --from-literal=formsaiUsername="$KEYCLOAK_FORMSAI_USER" \
-            --from-literal=formsaiPassword="$KEYCLOAK_FORMSAI_PASSWORD" \
+            --from-literal=KEYCLOAK_USER="$KEYCLOAK_USER" \
+            --from-literal=KEYCLOAK_PASSWORD="$KEYCLOAK_PASSWORD" \
+            --from-literal=KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN" \
+            --from-literal=KEYCLOAK_ADMIN_PASSWORD="$KEYCLOAK_ADMIN_PASSWORD" \
+            --from-literal=KEYCLOAK_FORMSAI_USER="$KEYCLOAK_FORMSAI_USER" \
+            --from-literal=KEYCLOAK_FORMSAI_PASSWORD="$KEYCLOAK_FORMSAI_PASSWORD" \
             --from-literal=KC_DB_USERNAME="$KC_DB_USERNAME" \
             --from-literal=KC_DB_PASSWORD="$KC_DB_PASSWORD" \
-            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl create secret generic mongo-secret \
+            --from-literal=MONGO_INITDB_ROOT_USERNAME="$MONGO_INITDB_ROOT_USERNAME" \
+            --from-literal=MONGO_INITDB_ROOT_PASSWORD="$MONGO_INITDB_ROOT_PASSWORD" \
+            --from-literal=MONGO_INITDB_DATABASE="$MONGO_INITDB_DATABASE" \
+            --from-literal=MONGO_USERNAME="$MONGO_USERNAME" \
+            --from-literal=MONGO_PASSWORD="$MONGO_PASSWORD" \
+            --from-literal=MONGO_DATABASE="$MONGO_DATABASE" \
+            --from-literal=MONGO_URI="$MONGO_URI"
 
           kubectl create secret docker-registry ghcr-cred \
             --docker-server=ghcr.io \
             --docker-username="$GHCR_USERNAME" \
             --docker-password="$GITHUB_TOKEN" \
             --docker-email="$GHCR_EMAIL" \
-            --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy with Helmfile
-        run: helmfile apply
+        run: helmfile apply --namespace team-kruschefan-project
 
       - name: Apply Ingress resource
-        run: kubectl apply -f infrastructure/helm/ingress.yaml
+        run: kubectl apply -f infrastructure/helm/ingress.yaml --namespace team-kruschefan-project

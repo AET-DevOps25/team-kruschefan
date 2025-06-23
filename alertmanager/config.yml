@@ -1,3 +1,7 @@
+global:
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@example.com'
+
 route:
   receiver: 'default'
 

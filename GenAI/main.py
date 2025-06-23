@@ -8,6 +8,9 @@ import re
 import json
 import logging
 import requests
+from prometheus_client import Counter, Histogram, make_asgi_app
+import time
+
 
 app = FastAPI()
 app.add_middleware(
@@ -22,6 +25,18 @@ OPENUI_HOSTNAME = "https://gpu.aet.cit.tum.de"
 DEFAULT_MODEL = "deepseek-r1:70b"
 
 
+# Prometheus Metrics
+LLM_REQUESTS = Counter("llm_requests_total", "Total LLM requests")
+LLM_FAILURES = Counter("llm_request_failures_total", "Failed LLM requests")
+LLM_DURATION = Histogram("llm_request_duration_seconds", "LLM request duration")
+MODEL_SELECTED = Counter("llm_model_selected_total", "Model used", ["model"])
+FORM_REQUESTS = Counter("form_generation_requests_total", "Total form generation requests")
+FORM_FAILURES = Counter("form_generation_failures_total", "Form generation failures")
+FORM_QUESTION_COUNT = Histogram("form_generation_question_count", "Number of questions in form", buckets=[0, 2, 4, 6, 8, 10])
+
+# Mount Prometheus /metrics endpoint
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
 
 # Classes
 class FormRequest(BaseModel):
@@ -82,8 +97,15 @@ def get_models():
 
 @app.post("/generate_form")
 async def generate_form(request: FormRequest):
+    # analytics
+    FORM_REQUESTS.inc()
+    start_time = time.time()
+
     user_prompt = request.prompt
     model = select_model(request.model)
+    # analytics
+    MODEL_SELECTED.labels(model=model).inc()
+
 
     print(f"Prompt received: {user_prompt}")
     print(f"Using model {model}")
@@ -111,32 +133,38 @@ async def generate_form(request: FormRequest):
         "messages": [{"role": "user", "content": generation_prompt}],
     }
 
-    response = requests.post(url, headers=headers, json=data)
-
-    print(response.status_code)  # TODO: error handling
-    generated_json_string = response.json()["choices"][0]["message"]["content"]
-    print(f"Raw LLM output: {generated_json_string}")
-    generated_json_string = re.sub(r"```(?:json)?\s*(.*?)\s*```", r"\1", generated_json_string, flags=re.DOTALL)
-    generated_json_string = re.sub(
-        r"<think>.*?</think>", "", generated_json_string, flags=re.DOTALL
-    ).strip()
-    generated_json_string = re.sub(r",(\s*[}\]])", r"\1", generated_json_string)
-
     try:
+        LLM_REQUESTS.inc()
+        response = requests.post(url, headers=headers, json=data)
+        duration = time.time() - start_time
+        LLM_DURATION.observe(duration)
+
+        # process output
+        generated_json_string = response.json()["choices"][0]["message"]["content"]
+        generated_json_string = re.sub(
+            r"<think>.*?</think>", "", generated_json_string, flags=re.DOTALL
+        ).strip()
+        if generated_json_string.startswith("```json"):
+            generated_json_string = generated_json_string.lstrip("`json").strip("`").strip()
+        elif generated_json_string.startswith("```"):
+            generated_json_string = generated_json_string.strip("`").strip()
+
         parsed_data = json.loads(generated_json_string)
+        FORM_QUESTION_COUNT.observe(len(parsed_data.get("questions", [])))
         return GenAIResponse(**parsed_data)
+
     except json.JSONDecodeError as e:
-        logging.error(
-            f"JSON Decode Error: {e} - Raw LLM output: {generated_json_string}"
-        )
+        LLM_FAILURES.inc()
+        FORM_FAILURES.inc()
+        logging.error(f"JSON Decode Error: {e} - Raw LLM output: {generated_json_string}")
         raise HTTPException(
             status_code=500,
             detail=f"Failed to parse AI response as valid JSON. Raw output: {generated_json_string[:200]}...",
         )
     except Exception as e:
-        logging.error(
-            f"Error validating AI response: {e} - Parsed data: {generated_json_string}"
-        )
+        LLM_FAILURES.inc()
+        FORM_FAILURES.inc()
+        logging.error(f"Error validating AI response: {e} - Parsed data: {generated_json_string}")
         raise HTTPException(
             status_code=500,
             detail=f"AI response did not match expected form structure. Error: {e}",
