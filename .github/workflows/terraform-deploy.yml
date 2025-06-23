@@ -29,7 +29,7 @@ jobs:
       MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
       MONGO_URI: ${{ secrets.MONGO_URI }}
       OPENUI_API_KEY: ${{ secrets.OPENUI_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
       GHCR_EMAIL: ${{ secrets.GHCR_EMAIL }}
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
