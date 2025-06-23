@@ -1,0 +1,40 @@
+.app-header {
+  padding: 0 16px;
+  height: 64px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  position: sticky;
+  top: 0;
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-right: 24px;
+    color: white;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .main-nav {
+    display: flex;
+    gap: 2rem;
+    margin-right: 2rem;
+    a {
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0 12px;
+      height: 48px;
+
+      .mat-icon {
+        margin-right: 4px;
+      }
+
+      &.active-link {
+        background-color: #d7e3ff;
+      }
+    }
+  }
+}

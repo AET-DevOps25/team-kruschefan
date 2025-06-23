@@ -13,6 +13,13 @@ import time
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  # or ["*"] for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 OPENUI_API_KEY = os.getenv("OPENUI_API_KEY")
 OPENUI_HOSTNAME = "https://gpu.aet.cit.tum.de"
 DEFAULT_MODEL = "deepseek-r1:70b"
@@ -110,8 +117,8 @@ async def generate_form(request: FormRequest):
         Generate a JSON object representing this form. The object must have two keys: 'title' (a short string, max 50 chars) and 'questions' (an array of form questions).
         The 'questions' array must contain between 4 and 8 question objects.
         Each question object in the 'questions' array must have the following keys:
-        - 'label': A string representing the name or label of the field.
-        - 'type': A string representing the type of the field. Choose one STRICTLY from the following exact values: 'Text', 'Date', 'Number', 'Multiple Choice', 'Comment', 'Text Box', 'Single Choice', 'Dropdown'.
+        - 'label': A string representing the question to be asked. It should be a conscise and clear question and should be min 20 chars.
+        - 'type': A string representing the type of the field. Choose one STRICTLY from the following exact values: 'Text', 'Date', 'Number', 'Multiple Choice', 'Text Box', 'Single Choice', 'Dropdown'.
         - 'options': A list of string that should be ONLY generated for 'multiple choice', 'single choice' and 'dropdown'. Otherwise, set it as None.
         Respond ONLY with a valid JSON object. Do not include any markdown, explanations, or additional text outside of the JSON object.
     """

@@ -1,8 +1,9 @@
 export interface Question {
+  id: string;
   label: string;
   type: QuestionType;
   options?: string[];
-  defaultValue?: string | number | Date;
+  defaultValue?: string | number | Date | string[];
   placeholder?: string;
   required?: boolean;
 }

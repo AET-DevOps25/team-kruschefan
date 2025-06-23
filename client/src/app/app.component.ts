@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { ItemListComponent } from './components/item-list/item-list.component';
-import { FormEditorComponent } from './components/form-editor/form-editor.component';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'forms-ai-app-root',
-  imports: [ItemListComponent, FormEditorComponent],
+  imports: [RouterModule, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'Forms-AI';
-}
+export class AppComponent {}

@@ -1,0 +1,163 @@
+@if (!isFormSubmitted()) {
+  <div class="form-container">
+    <h2>{{ template.title }}</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        @for (question of template.questions; track $index) {
+          <div class="question-container">
+            @if (question.type === Types.COMMENT) {
+              <p>{{ question.label }}</p>
+            } @else {
+              <label [for]="question.id"
+                >{{ question.label }} {{ question.required ? '*' : '' }}</label
+              >
+            }
+            @switch (question.type) {
+              @case (Types.TEXT) {
+                <mat-form-field>
+                  <input
+                    matInput
+                    [id]="question.id"
+                    [formControlName]="question.id"
+                    [placeholder]="question.placeholder ?? ''"
+                    [defaultValue]="question.defaultValue ?? ''"
+                    [required]="question.required ?? false"
+                  />
+                  @if (form.get(question.id)?.hasError('required')) {
+                    <mat-error> Please enter a valid value. </mat-error>
+                  }
+                </mat-form-field>
+              }
+              @case (Types.NUMBER) {
+                <mat-form-field>
+                  <input
+                    matInput
+                    type="number"
+                    [id]="question.id"
+                    [formControlName]="question.id"
+                    [placeholder]="question.placeholder ?? ''"
+                    [defaultValue]="question.defaultValue ?? ''"
+                    [required]="question.required ?? false"
+                  />
+                  @if (form.get(question.id)?.hasError('required')) {
+                    <mat-error> Please enter a valid number. </mat-error>
+                  }
+                </mat-form-field>
+              }
+
+              @case (Types.DATE) {
+                <mat-form-field>
+                  <input
+                    matInput
+                    [id]="question.id"
+                    [formControlName]="question.id"
+                    [matDatepicker]="picker"
+                    [required]="question.required ?? false"
+                    [placeholder]="question.placeholder ?? ''"
+                    [defaultValue]="question.defaultValue ?? ''"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error> Please select a valid date. </mat-error>
+                </mat-form-field>
+              }
+
+              @case (Types.DROPDOWN) {
+                <mat-form-field>
+                  <mat-select
+                    [id]="question.id"
+                    [formControlName]="question.id"
+                    [required]="question.required ?? false"
+                  >
+                    @for (option of question.options; track $index) {
+                      <mat-option [value]="option">{{ option }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (form.get(question.id)?.hasError('required')) {
+                    <mat-error> Please select an option. </mat-error>
+                  }
+                </mat-form-field>
+              }
+
+              @case (Types.SINGLE_CHOICE) {
+                <mat-radio-group
+                  class="pb-15"
+                  [id]="question.id"
+                  [formControlName]="question.id"
+                  [required]="question.required ?? false"
+                >
+                  @for (option of question.options; track $index) {
+                    <mat-radio-button [value]="option">{{
+                      option
+                    }}</mat-radio-button>
+                  }
+                </mat-radio-group>
+              }
+
+              @case (Types.MULTIPLE_CHOICE) {
+                <div
+                  class="pb-15"
+                  [id]="question.id"
+                  [formGroupName]="question.id"
+                >
+                  <ul>
+                    @for (
+                      option of question.options;
+                      let index = $index;
+                      track $index
+                    ) {
+                      <li>
+                        <mat-checkbox
+                          [formControlName]="index"
+                          [value]="option"
+                          >{{ option }}</mat-checkbox
+                        >
+                      </li>
+                    }
+                  </ul>
+                  @if (form.get(question.id)?.hasError('required')) {
+                    <mat-error> Please select at least one option. </mat-error>
+                  }
+                </div>
+              }
+
+              @case (Types.TEXT_BOX) {
+                <mat-form-field>
+                  <textarea
+                    matInput
+                    [id]="question.id"
+                    [formControlName]="question.id"
+                    [placeholder]="question.placeholder ?? ''"
+                    [defaultValue]="question.defaultValue ?? ''"
+                    [required]="question.required ?? false"
+                  ></textarea>
+                </mat-form-field>
+              }
+            }
+          </div>
+        }
+        @if (!isReadonly) {
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid"
+          >
+            Submit
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+} @else {
+  <div class="form-container">
+    <h2>Form Submitted Successfully!</h2>
+    <p>Your responses have been recorded.</p>
+    <button mat-button color="primary" (click)="onReset()">
+      Submit Another Response
+    </button>
+  </div>
+}

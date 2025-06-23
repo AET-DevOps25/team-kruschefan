@@ -21,25 +21,27 @@ import { PropertiesEditorComponent } from '../../dialogs/properties-editor/prope
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-  selector: 'forms-ai-form-question',
+  selector: 'forms-ai-template-question',
   imports: [
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
     MatRadioModule,
     MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
     DragDropModule,
     FormsModule,
   ],
-  templateUrl: './form-question.component.html',
+  templateUrl: './template-question.component.html',
   providers: [provideNativeDateAdapter()],
-  styleUrl: './form-question.component.scss',
+  styleUrl: './template-question.component.scss',
 })
-export class FormQuestionComponent {
+export class TemplateQuestionComponent {
   question = model.required<Question>();
   deleteClicked: OutputEmitterRef<void> = output<void>();
   readonly dialog = inject(MatDialog);
