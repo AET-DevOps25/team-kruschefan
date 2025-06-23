@@ -2,7 +2,9 @@ name: Deploy to Kubernetes via Helmfile
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feat/k8s-cicd
 
 jobs:
   deploy:
