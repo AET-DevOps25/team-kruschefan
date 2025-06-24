@@ -5,12 +5,12 @@ on:
     branches:
       - "main"
     paths:
-      - "client/**"
+      - "web-client/**"
   pull_request:
     branches:
       - "main"
     paths:
-      - "client/**"
+      - "web-client/**"
 
 jobs:
   lint-format:
@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: client
+        working-directory: web-client
 
     steps:
       - name: Checkout repo
