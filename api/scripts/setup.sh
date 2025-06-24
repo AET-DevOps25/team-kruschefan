@@ -10,9 +10,6 @@ for service in "$SERVICES_DIR"/*; do
       RESOURCES_DIR="$service/src/main/resources"
       mkdir -p "$RESOURCES_DIR"
       cp "$OPENAPI_SRC" "$RESOURCES_DIR/openapi.yaml"
-      echo "Copied openapi.yaml to $RESOURCES_DIR"
-    else
-      echo "Skipping $service: not a Java project"
     fi
   fi
 done

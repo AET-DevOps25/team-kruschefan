@@ -5,6 +5,7 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Run frontend lint-staged
 echo "🛠️- Running linting and formatting checks..."
+
 cd ./web-client
 npx lint-staged
 
