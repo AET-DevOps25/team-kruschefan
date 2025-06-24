@@ -94,16 +94,19 @@ jobs:
       - name: Create multiple Kubernetes secrets
         run: |
           kubectl create secret generic project-secrets \
+            --namespace team-kruschefan-project \
             --from-literal=GITHUB_TOKEN="$GITHUB_TOKEN" \
             --from-literal=OPENUI_API_KEY="$OPENUI_API_KEY" \
 
           kubectl create secret generic postgresql-secrets \
+            --namespace team-kruschefan-project \
             --from-literal=POSTGRES_USER="$POSTGRES_USER" \
             --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
             --from-literal=POSTGRES_URI="$POSTGRES_URI" \
             --from-literal=POSTGRES_DB=forms-ai
 
           kubectl create secret generic keycloak-secret \
+            --namespace team-kruschefan-project \
             --from-literal=KEYCLOAK_USER="$KEYCLOAK_USER" \
             --from-literal=KEYCLOAK_PASSWORD="$KEYCLOAK_PASSWORD" \
             --from-literal=KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN" \
@@ -114,6 +117,7 @@ jobs:
             --from-literal=KC_DB_PASSWORD="$KC_DB_PASSWORD" \
 
           kubectl create secret generic mongo-secret \
+            --namespace team-kruschefan-project \
             --from-literal=MONGO_INITDB_ROOT_USERNAME="$MONGO_INITDB_ROOT_USERNAME" \
             --from-literal=MONGO_INITDB_ROOT_PASSWORD="$MONGO_INITDB_ROOT_PASSWORD" \
             --from-literal=MONGO_INITDB_DATABASE="$MONGO_INITDB_DATABASE" \
@@ -123,6 +127,7 @@ jobs:
             --from-literal=MONGO_URI="$MONGO_URI"
 
           kubectl create secret docker-registry ghcr-cred \
+            --namespace team-kruschefan-project \
             --docker-server=ghcr.io \
             --docker-username="$GHCR_USERNAME" \
             --docker-password="$GITHUB_TOKEN" \
