@@ -3,18 +3,14 @@ FROM maven:3.9.6-eclipse-temurin-21 AS maven-base
 WORKDIR /app
 
 COPY pom.xml .
-COPY api-gateway-service/pom.xml api-gateway-service/
-COPY user-service/pom.xml user-service/
-COPY template-service/pom.xml template-service/
-COPY form-service/pom.xml form-service/
 # Pre-fetch all Maven dependencies
 RUN mvn -B dependency:go-offline
 
 # === Actual service build ===
 FROM maven-base AS build
-COPY user-service/ user-service/
-COPY pom.xml .
-RUN mvn -B clean package -pl user-service -am -DskipTests
+COPY . user-service/
+WORKDIR /app/user-service
+RUN mvn -B clean package -DskipTests
 
 # === Final runtime image ===
 FROM eclipse-temurin:21-jdk

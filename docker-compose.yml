@@ -82,8 +82,7 @@ services:
 
   user-service:
     build:
-      context: ./services
-      dockerfile: user-service/Dockerfile
+      context: ./services/user-service
     ports:
       - "8083:8083"
     environment:
@@ -98,8 +97,7 @@ services:
 
   form-service:
     build:
-      context: ./services
-      dockerfile: form-service/Dockerfile
+      context: ./services/form-service
     ports:
       - "8081:8081"
     environment:
@@ -107,8 +105,7 @@ services:
 
   template-service:
     build:
-      context: ./services
-      dockerfile: template-service/Dockerfile
+      context: ./services/template-service
     ports:
       - "8082:8082"
     environment:
@@ -118,8 +115,7 @@ services:
 
   api-gateway:
     build:
-      context: ./services
-      dockerfile: api-gateway-service/Dockerfile
+      context: ./services/api-gateway-service
     ports:
       - "8080:8080"
     environment:
