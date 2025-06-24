@@ -50,12 +50,13 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: 'latest'
-
+          
       - name: Set up Helmfile
         run: |
-          curl -L https://github.com/helmfile/helmfile/releases/latest/download/helmfile_linux_amd64 -o helmfile
+          curl -L https://github.com/helmfile/helmfile/releases/latest/download/helmfile_linux_amd64.tar.gz -o helmfile.tar.gz
+          tar -xzf helmfile.tar.gz
           chmod +x helmfile
-          sudo mv helmfile /usr/local/bin/
+          sudo mv helmfile /usr/local/bin/helmfile
 
       - name: Set up kubeconfig
         run: |
