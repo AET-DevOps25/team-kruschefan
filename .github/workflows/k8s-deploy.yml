@@ -93,11 +93,13 @@ jobs:
 
       - name: Create multiple Kubernetes secrets
         run: |
+          kubectl delete secret project-secrets --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic project-secrets \
             --namespace team-kruschefan-project \
             --from-literal=GITHUB_TOKEN="$GITHUB_TOKEN" \
             --from-literal=OPENUI_API_KEY="$OPENUI_API_KEY" \
 
+          kubectl delete secret postgresql-secrets --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic postgresql-secrets \
             --namespace team-kruschefan-project \
             --from-literal=POSTGRES_USER="$POSTGRES_USER" \
@@ -105,6 +107,7 @@ jobs:
             --from-literal=POSTGRES_URI="$POSTGRES_URI" \
             --from-literal=POSTGRES_DB=forms-ai
 
+          kubectl delete secret keycloak-secret --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic keycloak-secret \
             --namespace team-kruschefan-project \
             --from-literal=KEYCLOAK_USER="$KEYCLOAK_USER" \
@@ -116,6 +119,7 @@ jobs:
             --from-literal=KC_DB_USERNAME="$KC_DB_USERNAME" \
             --from-literal=KC_DB_PASSWORD="$KC_DB_PASSWORD" \
 
+          kubectl delete secret mongo-secret --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic mongo-secret \
             --namespace team-kruschefan-project \
             --from-literal=MONGO_INITDB_ROOT_USERNAME="$MONGO_INITDB_ROOT_USERNAME" \
@@ -126,6 +130,7 @@ jobs:
             --from-literal=MONGO_DATABASE="$MONGO_DATABASE" \
             --from-literal=MONGO_URI="$MONGO_URI"
 
+          kubectl delete secret ghcr-cred --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret docker-registry ghcr-cred \
             --namespace team-kruschefan-project \
             --docker-server=ghcr.io \
