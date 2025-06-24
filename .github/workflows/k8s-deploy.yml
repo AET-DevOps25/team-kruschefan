@@ -50,12 +50,6 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: 'latest'
-        
-      - name: Set up Helmfile
-        run: |
-          curl -L https://github.com/helmfile/helmfile/releases/download/v0.156.0/helmfile_linux_amd64 -o helmfile
-          chmod +x helmfile
-          sudo mv helmfile /usr/local/bin/helmfile
 
       - name: Set up kubeconfig
         run: |
@@ -139,7 +133,11 @@ jobs:
             --docker-email="$GHCR_EMAIL" \
 
       - name: Deploy with Helmfile
-        run: helmfile apply --namespace team-kruschefan-project
+        uses: helmfile/helmfile-action@v2.0.4
+        with:
+          helmfile-version: 'v0.150.0'
+          helm-version: 'v3.11.0'
+          helmfile-args: apply --namespace team-kruschefan-project
 
       - name: Apply Ingress resource
         run: kubectl apply -f infrastructure/helm/ingress.yaml --namespace team-kruschefan-project
