@@ -69,20 +69,19 @@
                 <version>7.12.0</version>
                 <executions>
                     <execution>
-                        <phase>none</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/../api/openapi.yaml
+                                ${project.basedir}/src/main/resources/openapi.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
-                            <!--                            <apiPackage>com.devops.kruschefan.openapi.api</apiPackage>-->
-                            <!--                            <modelPackage>com.devops.kruschefan.openapi.model</modelPackage>-->
-                            <!--                            <supportingFilesToGenerate>-->
-                            <!--                                ApiUtil.java-->
-                            <!--                            </supportingFilesToGenerate>-->
+                            <apiPackage>com.devops.kruschefan.openapi.api</apiPackage>
+                            <modelPackage>com.devops.kruschefan.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
                             <configOptions>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <delegatePattern>true</delegatePattern>
@@ -144,6 +143,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
         </dependency>
     </dependencies>
 

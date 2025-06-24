@@ -1,0 +1,345 @@
+openapi: 3.0.0
+
+info:
+  title: Form Sharing Service API
+  version: 1.0.0
+
+security:
+  - bearerHttpAuthentication: []
+
+tags:
+  - name: user
+    description: User service
+  - name: template
+    description: Template service
+  - name: form
+    description: Form service
+
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      operationId: createUser
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        "201":
+          description: The created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+  /user/{username}:
+    get:
+      tags:
+        - user
+      operationId: getUser
+      summary: Retrieve a single user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    put:
+      tags:
+        - user
+      operationId: updateUser
+      summary: Update an existing user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        "200":
+          description: The updated user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    delete:
+      tags:
+        - user
+      summary: Delete an existing user
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No content
+
+  /template:
+    post:
+      tags:
+        - template
+      operationId: createTemplate
+      summary: Create a new template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateCreateRequest'
+      responses:
+        "201":
+          description: The created template
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateResponse'
+    get:
+      tags:
+        - template
+      operationId: getAllTemplates
+      summary: Retrieve all templates
+      responses:
+        "200":
+          description: All templates created by the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateResponse'
+
+  /template/{templateId}:
+    get:
+      tags:
+        - template
+      operationId: getTemplateById
+      summary: Retrieve a single template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: The template data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponse'
+    put:
+      tags:
+        - template
+      operationId: updateTemplate
+      summary: Update an existing template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateUpdateRequest'
+      responses:
+        "200":
+          description: The updated template data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponse'
+    delete:
+      tags:
+        - template
+      operationId: deleteTemplate
+      summary: Delete a template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  /form:
+    post:
+      tags:
+        - form
+      operationId: createForm
+      summary: Create a new form from a template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormCreateRequest'
+      responses:
+        "201":
+          description: No content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormResponse'
+  /form/{templateId}:
+    get:
+      tags:
+        - form
+      operationId: getAllForms
+      summary: Get all forms generated with the given template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of all forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormResponse'
+
+components:
+  securitySchemes:
+    bearerHttpAuthentication:
+      description: Bearer token using a JWT
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserCreateRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+    UserUpdateRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        keycloakId:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+    TemplateCreateRequest:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+    TemplateUpdateRequest:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+    TemplateResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        creatorId:
+          type: integer
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+    QuestionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        required:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/QuestionType'
+        options:
+          type: array
+          items:
+            type: string
+    QuestionType:
+      type: string
+      enum:
+        - TEXT
+        - DATE
+        - NUMBER
+        - SINGLE_CHOICE
+        - MULTIPLE_CHOICE
+        - TEXT_BOX
+        - DROPDOWN
+    FormCreateRequest:
+      type: object
+      properties:
+        templateId:
+          type: integer
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              questionId:
+                type: integer
+              answer:
+                type: string
+    FormResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        template:
+          $ref: '#/components/schemas/TemplateResponse'
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              questionId:
+                type: integer
+              answer:
+                type: string
