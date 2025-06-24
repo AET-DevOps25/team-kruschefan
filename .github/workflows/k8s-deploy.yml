@@ -58,6 +58,13 @@ jobs:
           chmod +x helmfile
           sudo mv helmfile /usr/local/bin/helmfile
 
+      - name: Set up Helmfile
+        run: |
+          curl -L https://github.com/helmfile/helmfile/releases/download/v0.156.0/helmfile_linux_amd64.tar.gz -o helmfile.tar.gz
+          tar -xzf helmfile.tar.gz
+          chmod +x helmfile
+          sudo mv helmfile /usr/local/bin/helmfile
+
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
