@@ -1,8 +1,13 @@
 package com.devops.kruschefan.user.service;
 
 import com.devops.kruschefan.config.KeycloakConfig;
+import com.devops.kruschefan.metrics.LoginMetrics;
+import com.devops.kruschefan.metrics.ProcessingMetrics;
+import com.devops.kruschefan.metrics.ActiveUserGauge;
+import com.devops.kruschefan.metrics.PayloadMetrics;
 import com.devops.kruschefan.user.dto.CreateUserDto;
 import com.devops.kruschefan.user.dto.UserDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,12 +33,19 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final Keycloak keycloak;
+    private final LoginMetrics loginMetrics;
+    private final ProcessingMetrics processingMetrics;
+    private final ActiveUserGauge activeUserGauge;
+    private final PayloadMetrics payloadMetrics;
 
     @Value("${keycloak.realm:${KEYCLOAK_REALM}}")
     private String realm;
 
     public UserDto createUser(CreateUserDto createUserDto) {
         log.info("Creating user in Keycloak: {}", createUserDto.username());
+
+        payloadMetrics.recordPayloadSize(createUserDto.password().length()); // track password size
+        processingMetrics.processUserRequest(); // record timing
 
         UserRepresentation kcUser = new UserRepresentation();
         kcUser.setUsername(createUserDto.username());
@@ -50,11 +62,15 @@ public class UserService {
 
         Response response = keycloak.realm(realm).users().create(kcUser);
         if (response.getStatus() != 201) {
+            log.error("Failed to create user: {}", createUserDto.username());
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Failed to create user in Keycloak. Status: " + response.getStatus()
             );
         }
+
+        loginMetrics.recordLogin();
+        activeUserGauge.increment();
 
         String keycloakId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
         return new UserDto(keycloakId, createUserDto.username(), createUserDto.email());
@@ -88,6 +104,7 @@ public class UserService {
 
         keycloak.realm(realm).users().get(user.getId()).remove();
         log.info("Deleted Keycloak user: {}", username);
+        activeUserGauge.decrement();
     }
 
     public UserDto updateUserByUsername(String username, CreateUserDto dto) {

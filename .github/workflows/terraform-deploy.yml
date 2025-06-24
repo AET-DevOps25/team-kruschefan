@@ -9,21 +9,31 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_key_name: ${{ secrets.AWS_KEY_NAME }}
-      TF_VAR_private_key_path: ~/.ssh/id_rsa
-
-      # App-specific secrets
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      MONGO_URI: ${{ secrets.MONGO_URI }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
-      KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
+      KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
+      KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
       KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
       KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      KEYCLOAK_FORMSAI_USER: ${{ secrets.KEYCLOAK_FORMSAI_USER }}
+      KEYCLOAK_FORMSAI_PASSWORD: ${{ secrets.KEYCLOAK_FORMSAI_PASSWORD }}
+      KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
+      KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
+      MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+      MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      OPENUI_API_KEY: ${{ secrets.OPENUI_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_EMAIL: ${{ secrets.GHCR_EMAIL }}
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

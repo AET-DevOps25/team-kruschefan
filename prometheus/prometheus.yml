@@ -6,6 +6,9 @@ alerting:
     - static_configs:
         - targets: ['alertmanager:9093']
 
+rule_files:
+  - "alert.rules.yml"
+
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
@@ -14,3 +17,23 @@ scrape_configs:
   - job_name: 'langchain-app'
     static_configs:
       - targets: ['langchain-app:8000']
+
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:8080']
+    metrics_path: /actuator/prometheus
+
+  - job_name: 'form-service'
+    static_configs:
+      - targets: ['form-service:8081']
+    metrics_path: /actuator/prometheus
+
+  - job_name: 'template-service'
+    static_configs:
+      - targets: ['template-service:8082']
+    metrics_path: /actuator/prometheus
+
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:8083']
+    metrics_path: /actuator/prometheus

@@ -1,5 +1,5 @@
 alertmanager:
-  enabled: false
+  enabled: true
 
 server:
   service:
@@ -7,7 +7,54 @@ server:
     port: 9090
   ingress:
     enabled: false
-
+  extraVolumes:
+    - name: custom-config
+      configMap:
+        name: custom-prometheus-config
+    - name: rules
+      configMap:
+        name: prometheus-alert-rules
+  extraVolumeMounts:
+    - name: custom-config
+      mountPath: /opt/bitnami/prometheus/conf/prometheus.yml
+      subPath: prometheus.yml
+    - name: rules
+      mountPath: /opt/bitnami/prometheus/conf/alert.rules.yml
+      subPath: alert.rules.yml
+  extraScrapeConfigs: |-
+    - job_name: "prometheus"
+      static_configs:
+        - targets: ["localhost:9090"]
+    - job_name: 'langchain-app'
+      static_configs:
+        - targets: ['langchain-app.team-kruschefan-project.svc.cluster.local:8000']
+    - job_name: 'api-gateway'
+      metrics_path: /actuator/prometheus
+      static_configs:
+        - targets: ['api-gateway.team-kruschefan-project.svc.cluster.local:8080']
+    - job_name: 'form-service'
+      metrics_path: /actuator/prometheus
+      static_configs:
+        - targets: ['form-service.team-kruschefan-project.svc.cluster.local:8081']
+    - job_name: 'template-service'
+      metrics_path: /actuator/prometheus
+      static_configs:
+        - targets: ['template-service.team-kruschefan-project.svc.cluster.local:8082']
+    - job_name: 'user-service'
+      metrics_path: /actuator/prometheus
+      static_configs:
+        - targets: ['user-service.team-kruschefan-project.svc.cluster.local:8083']
+  extraRules: |-
+    groups:
+      - name: example
+        rules:
+          - alert: AlwaysFiring
+            expr: vector(1)
+            for: 10s
+            labels:
+              severity: test
+            annotations:
+              summary: "This alert always fires"
 pushgateway:
   enabled: false
 
@@ -24,7 +71,6 @@ serviceAccount:
   create: true
   name: ""
 
-# TODO: change ingress config
 ingress:
   enabled: false
 
@@ -35,8 +81,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 service:
-    type: ClusterIP
-    port: 9090
+  type: ClusterIP
+  port: 9090
 
 image:
   repository: bitnami/prometheus

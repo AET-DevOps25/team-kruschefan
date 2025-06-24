@@ -4,49 +4,49 @@ repositories:
 
 releases:
   - name: keycloak
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./keycloak
 
   - name: user-service
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./user-service
 
   - name: form-service
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./form-service
 
   - name: template-service
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./template-service
 
   - name: api-gateway
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./api-gateway
 
   - name: langchain-app
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./langchain-app
 
   - name: client
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./client
 
   - name: prometheus
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./prometheus
 
   - name: grafana
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./grafana
 
   - name: alertmanager
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./alertmanager
 
   - name: postgres
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./postgres
 
   - name: mongo
-    namespace: team-kruschefan
+    namespace: team-kruschefan-project
     chart: ./mongo
