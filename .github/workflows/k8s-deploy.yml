@@ -140,5 +140,5 @@ jobs:
           helmfile-args: apply --namespace team-kruschefan-project
           helmfile-workdirectory: infrastructure/helm
 
-      - name: Apply Ingress resource
-        run: kubectl apply -f infrastructure/helm/ingress.yaml --namespace team-kruschefan-project
+      # - name: Apply Ingress resource
+      #  run: kubectl apply -f infrastructure/helm/ingress.yaml --namespace team-kruschefan-project
