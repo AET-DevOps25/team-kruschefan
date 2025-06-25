@@ -320,6 +320,9 @@ components:
           type: integer
         creatorId:
           type: integer
+        createdOn:
+          type: string
+          format: date-time
         templateName:
           type: string
         questions:
@@ -385,9 +388,6 @@ components:
           type: integer
         formName:
           type: string
-        createdAt:
-          type: string
-          format: date-time
         questions:
           type: array
           items:
