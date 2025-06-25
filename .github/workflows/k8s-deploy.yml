@@ -65,26 +65,36 @@ jobs:
       - name: Build and push Docker images
         run: |
           # api-gateway
+          echo "Building and pushing api-gateway image..."
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f services/api-gateway-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
 
           # client
+          echo "Building and pushing web-client image..."
           cd web-client
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/client:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/client:latest
           cd ..
 
           # form-service
+          echo "Building and pushing form-service image..."
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/form-service:latest -f services/form-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/form-service:latest
 
           # GenAI
+          echo "Building and pushing GenAI images..."
           cd services/GenAI
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/genai:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/genai:latest
           cd ../..
 
           # template-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/template-service:latest -f services/template-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/template-service:latest
+          echo "Building and pushing template-service image..."
+          cd services/GenAI
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/template-service:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/template-service:latest
+          cd ../..
 
           # user-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/user-service:latest -f services/user-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/user-service:latest
+          echo "Building and pushing user-service image..."
+          cd services/user-service
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/user-service:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/user-service:latest
+          cd ../..
 
       - name: Create multiple Kubernetes secrets
         run: |
