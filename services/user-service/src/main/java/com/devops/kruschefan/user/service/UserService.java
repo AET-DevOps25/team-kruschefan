@@ -5,6 +5,10 @@ import com.devops.kruschefan.metrics.LoginMetrics;
 import com.devops.kruschefan.metrics.ProcessingMetrics;
 import com.devops.kruschefan.metrics.ActiveUserGauge;
 import com.devops.kruschefan.metrics.PayloadMetrics;
+import com.devops.kruschefan.openapi.api.UserApiDelegate;
+import com.devops.kruschefan.openapi.model.UserCreateRequest;
+import com.devops.kruschefan.openapi.model.UserResponse;
+import com.devops.kruschefan.openapi.model.UserUpdateRequest;
 import com.devops.kruschefan.user.dto.CreateUserDto;
 import com.devops.kruschefan.user.dto.UserDto;
 
@@ -13,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,7 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Import(KeycloakConfig.class)
 @Slf4j
-public class UserService {
+public class UserService implements UserApiDelegate {
 
     private final Keycloak keycloak;
     private final LoginMetrics loginMetrics;
