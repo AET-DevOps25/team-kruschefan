@@ -66,7 +66,9 @@ jobs:
         run: |
           # api-gateway
           echo "Building and pushing api-gateway image..."
+          cd services/api-gateway-service
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f services/api-gateway-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
+          cd ../..
 
           # client
           echo "Building and pushing web-client image..."
@@ -76,7 +78,9 @@ jobs:
 
           # form-service
           echo "Building and pushing form-service image..."
+          cd services/form-service
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/form-service:latest -f services/form-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/form-service:latest
+          cd ../..
 
           # GenAI
           echo "Building and pushing GenAI images..."
