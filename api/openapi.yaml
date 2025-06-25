@@ -193,7 +193,7 @@ paths:
       tags:
         - form
       operationId: createForm
-      summary: Create a new form from a template
+      summary: Create a new form
       requestBody:
         required: true
         content:
@@ -206,28 +206,60 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormResponse'
-  /form/{templateId}:
+                $ref: '#/components/schemas/FormCreateResponse'
+
+  /form/responses:
     get:
       tags:
         - form
-      operationId: getAllForms
-      summary: Get all forms generated with the given template
+      operationId: getAllFormsResponses
+      summary: Get all forms responses
+      responses:
+        "200":
+          description: List of all forms responses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormSubmitResponse'
+    post:
+      tags:
+        - form
+      operationId: submitForm
+      summary: Submit a form response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSubmitRequest'
+      responses:
+        "201":
+          description: The submitted form response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSubmitResponse'
+  /form/responses/{responseId}:
+    get:
+      tags:
+        - form
+      operationId: getFormResponseById
+      summary: Retrieve a single form response
       parameters:
-        - name: templateId
+        - name: responseId
           in: path
           required: true
           schema:
             type: integer
       responses:
         "200":
-          description: List of all forms
+          description: The form response data
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FormResponse'
+                $ref: '#/components/schemas/FormSubmitResponse'
 
 components:
   securitySchemes:
@@ -266,6 +298,8 @@ components:
     TemplateCreateRequest:
       type: object
       properties:
+        templateName:
+          type: string
         questions:
           type: array
           items:
@@ -273,6 +307,8 @@ components:
     TemplateUpdateRequest:
       type: object
       properties:
+        templateName:
+          type: string
         questions:
           type: array
           items:
@@ -284,6 +320,8 @@ components:
           type: integer
         creatorId:
           type: integer
+        templateName:
+          type: string
         questions:
           type: array
           items:
@@ -294,6 +332,10 @@ components:
         id:
           type: integer
         question:
+          type: string
+        placeholder:
+          type: string
+        defaultValue:
           type: string
         required:
           type: boolean
@@ -316,7 +358,16 @@ components:
     FormCreateRequest:
       type: object
       properties:
-        templateId:
+        formName:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+    FormSubmitRequest:
+      type: object
+      properties:
+        formId:
           type: integer
         answers:
           type: array
@@ -327,13 +378,43 @@ components:
                 type: integer
               answer:
                 type: string
-    FormResponse:
+    FormCreateResponse:
       type: object
       properties:
         id:
           type: integer
-        template:
-          $ref: '#/components/schemas/TemplateResponse'
+        formName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              questionId:
+                type: integer
+              answer:
+                type: string
+    FormSubmitResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        formId:
+          type: integer
+        submittedAt:
+          type: string
+          format: date-time
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionResponse'
         answers:
           type: array
           items:
