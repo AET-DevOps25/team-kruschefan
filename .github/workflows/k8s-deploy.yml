@@ -2,7 +2,11 @@ name: Deploy to Kubernetes via Helmfile
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feat/k8s-cicd
+      - feat/add-openapi-docs
+    workflow_dispatch:
 
 jobs:
   deploy:
@@ -48,12 +52,6 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Set up Helmfile
-        run: |
-          curl -L https://github.com/helmfile/helmfile/releases/latest/download/helmfile_linux_amd64 -o helmfile
-          chmod +x helmfile
-          sudo mv helmfile /usr/local/bin/
-
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
@@ -62,45 +60,51 @@ jobs:
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build and push Docker images
         run: |
           # api-gateway
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f api-gateway-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f services/api-gateway-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
 
           # client
-          cd client
+          cd web-client
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/client:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/client:latest
           cd ..
 
           # form-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/form-service:latest -f form-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/form-service:latest
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/form-service:latest -f services/form-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/form-service:latest
 
           # GenAI
-          cd GenAI
+          cd services/GenAI
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/genai:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/genai:latest
-          cd ..
+          cd ../..
 
           # template-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/template-service:latest -f template-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/template-service:latest
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/template-service:latest -f services/template-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/template-service:latest
 
           # user-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/user-service:latest -f user-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/user-service:latest
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/user-service:latest -f services/user-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/user-service:latest
 
       - name: Create multiple Kubernetes secrets
         run: |
+          kubectl delete secret project-secrets --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic project-secrets \
+            --namespace team-kruschefan-project \
             --from-literal=GITHUB_TOKEN="$GITHUB_TOKEN" \
             --from-literal=OPENUI_API_KEY="$OPENUI_API_KEY" \
 
+          kubectl delete secret postgresql-secrets --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic postgresql-secrets \
+            --namespace team-kruschefan-project \
             --from-literal=POSTGRES_USER="$POSTGRES_USER" \
             --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
             --from-literal=POSTGRES_URI="$POSTGRES_URI" \
             --from-literal=POSTGRES_DB=forms-ai
 
+          kubectl delete secret keycloak-secret --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic keycloak-secret \
+            --namespace team-kruschefan-project \
             --from-literal=KEYCLOAK_USER="$KEYCLOAK_USER" \
             --from-literal=KEYCLOAK_PASSWORD="$KEYCLOAK_PASSWORD" \
             --from-literal=KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN" \
@@ -110,7 +114,9 @@ jobs:
             --from-literal=KC_DB_USERNAME="$KC_DB_USERNAME" \
             --from-literal=KC_DB_PASSWORD="$KC_DB_PASSWORD" \
 
+          kubectl delete secret mongo-secret --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret generic mongo-secret \
+            --namespace team-kruschefan-project \
             --from-literal=MONGO_INITDB_ROOT_USERNAME="$MONGO_INITDB_ROOT_USERNAME" \
             --from-literal=MONGO_INITDB_ROOT_PASSWORD="$MONGO_INITDB_ROOT_PASSWORD" \
             --from-literal=MONGO_INITDB_DATABASE="$MONGO_INITDB_DATABASE" \
@@ -119,14 +125,22 @@ jobs:
             --from-literal=MONGO_DATABASE="$MONGO_DATABASE" \
             --from-literal=MONGO_URI="$MONGO_URI"
 
+          kubectl delete secret ghcr-cred --namespace team-kruschefan-project --ignore-not-found
           kubectl create secret docker-registry ghcr-cred \
+            --namespace team-kruschefan-project \
             --docker-server=ghcr.io \
             --docker-username="$GHCR_USERNAME" \
             --docker-password="$GITHUB_TOKEN" \
             --docker-email="$GHCR_EMAIL" \
 
       - name: Deploy with Helmfile
-        run: helmfile apply --namespace team-kruschefan-project
+        uses: helmfile/helmfile-action@v2.0.4
+        with:
+          helmfile-version: 'v0.150.0'
+          helm-version: 'v3.11.0'
+          helmfile-args: apply --namespace team-kruschefan-project
+          helmfile-workdirectory: infra/helm
 
-      - name: Apply Ingress resource
-        run: kubectl apply -f infrastructure/helm/ingress.yaml --namespace team-kruschefan-project
+      # - name: Apply Ingress resource
+      #  run: kubectl apply -f infra/helm/ingress.yaml --namespace team-kruschefan-project
+
