@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class TemplateController implements TemplateApi {
+
     private final TemplateService templateService;
 
     @Override

@@ -112,9 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TemplateResponse'
+                $ref: '#/components/schemas/TemplateResponse'
     get:
       tags:
         - template
@@ -141,7 +139,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: The template data
@@ -159,7 +158,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -183,7 +183,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: No content
@@ -252,7 +253,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: The form response data
@@ -288,7 +290,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         keycloakId:
           type: string
         username:
@@ -317,9 +320,11 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         creatorId:
-          type: integer
+          type: string
+          format: uuid
         createdOn:
           type: string
           format: date-time
@@ -333,7 +338,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         question:
           type: string
         placeholder:
@@ -371,21 +377,24 @@ components:
       type: object
       properties:
         formId:
-          type: integer
+          type: string
+          format: uuid
         answers:
           type: array
           items:
             type: object
             properties:
               questionId:
-                type: integer
+                type: string
+                format: uuid
               answer:
                 type: string
     FormCreateResponse:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         formName:
           type: string
         questions:
@@ -398,16 +407,19 @@ components:
             type: object
             properties:
               questionId:
-                type: integer
+                type: string
+                format: uuid
               answer:
                 type: string
     FormSubmitResponse:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         formId:
-          type: integer
+          type: string
+          format: uuid
         submittedAt:
           type: string
           format: date-time
@@ -421,6 +433,7 @@ components:
             type: object
             properties:
               questionId:
-                type: integer
+                type: string
+                format: uuid
               answer:
                 type: string
