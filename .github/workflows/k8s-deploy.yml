@@ -64,10 +64,14 @@ jobs:
 
       - name: Build and push Docker images
         run: |
+          # Set up OpenAPI config files
+          echo "Setting up OpenAPI config files..."
+          sh api/scripts/setup.sh 
+
           # api-gateway
           echo "Building and pushing api-gateway image..."
           cd services/api-gateway-service
-          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f services/api-gateway-service/Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
+          docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/api-gateway:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/api-gateway:latest
           cd ../..
 
           # client
