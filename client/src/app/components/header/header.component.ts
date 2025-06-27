@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { KeycloakService } from '../../services/keycloak.service';
 
 @Component({
   selector: 'forms-ai-header',
@@ -17,7 +18,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  private authService = inject(KeycloakService);
+  isAuthenticated = signal(this.authService.IsLoggedIn);
+
+  login(): void {
+    this.authService.login();
+  }
   logout(): void {
-    console.log('User logged out!');
+    this.authService.logout();
   }
 }

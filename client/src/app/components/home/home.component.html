@@ -3,7 +3,13 @@
   <p class="tagline">
     Your one-stop solution for dynamic form generation and management.
   </p>
-  <button mat-flat-button color="primary" (click)="createNewTemplate()">
-    <mat-icon>add</mat-icon> Create New Template
-  </button>
+  @if (!isAuthenticated()) {
+    <button mat-flat-button color="primary" (click)="login()">
+      <mat-icon>login</mat-icon> Login
+    </button>
+  } @else {
+    <button mat-flat-button color="primary" (click)="createNewTemplate()">
+      <mat-icon>add</mat-icon> Create New Template
+    </button>
+  }
 </div>
