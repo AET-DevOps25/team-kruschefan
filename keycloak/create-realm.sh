@@ -73,5 +73,31 @@ else
   echo "Client $KEYCLOAK_FORMSAI_USER already exists"
 fi
 
+# Create mock user if it doesn't exist
+if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\"username\" : \"$KEYCLOAK_MOCK_USER\"" > /dev/null; then
+  echo "Creating mock user '$KEYCLOAK_MOCK_USER'..."
+
+  $KCADM_PATH create users -r forms-ai \
+    -s username=$KEYCLOAK_MOCK_USER \
+    -s email=$KEYCLOAK_MOCK_USER_EMAIL \
+    -s enabled=true \
+    -s emailVerified=true \
+    -s firstName="$KEYCLOAK_MOCK_USER_FIRST_NAME" \
+    -s lastName="$KEYCLOAK_MOCK_USER_LAST_NAME"
+
+  # Get the mock user's ID
+  MOCK_USER_ID=$($KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER --fields id --format csv | tail -n1 | tr -d '\r"')
+
+  # Set password for mock user
+  $KCADM_PATH set-password -r forms-ai --userid $MOCK_USER_ID --new-password $KEYCLOAK_MOCK_USER_PASSWORD
+
+  # Optionally assign realm role 'spring'
+  $KCADM_PATH add-roles -r forms-ai --uid $MOCK_USER_ID --rolename spring
+
+  echo "Mock user '$KEYCLOAK_MOCK_USER' created and role assigned"
+else
+  echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
+fi
+
 # Keep container running
 tail -f /dev/null
