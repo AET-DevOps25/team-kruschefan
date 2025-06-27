@@ -1,18 +1,17 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   # Angular for frontend
   angular-client:
     build:
-      context: ./client
+      context: ./web-client
     ports:
       - "4200:80"
 
   # Langchain GenAI service
   langchain-app:
     build:
-      context: ./GenAI
+      context: ./services/GenAI
     ports:
       - "8000:8000"
     environment:
@@ -49,7 +48,7 @@ services:
       - "9001:8080"
     depends_on:
       - postgres
-  
+
   # Prometheus for metrics collection
   prometheus:
     image: prom/prometheus:latest
@@ -80,8 +79,7 @@ services:
 
   user-service:
     build:
-      context: .
-      dockerfile: user-service/Dockerfile
+      context: ./services/user-service
     ports:
       - "8083:8083"
     environment:
@@ -94,8 +92,7 @@ services:
 
   form-service:
     build:
-      context: .
-      dockerfile: form-service/Dockerfile
+      context: ./services/form-service
     ports:
       - "8081:8081"
     environment:
@@ -103,8 +100,7 @@ services:
 
   template-service:
     build:
-      context: .
-      dockerfile: template-service/Dockerfile
+      context: ./services/template-service
     ports:
       - "8082:8082"
     environment:
@@ -114,8 +110,7 @@ services:
 
   api-gateway:
     build:
-      context: .
-      dockerfile: api-gateway-service/Dockerfile
+      context: ./services/api-gateway-service
     ports:
       - "8080:8080"
     environment:
@@ -126,7 +121,7 @@ services:
       - template-service
       - langchain-app
       - mongo
-  
+
   mongo:
     image: mongo:6.0
     container_name: mongo
@@ -135,6 +130,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongo-data:/data/db
 
@@ -142,7 +138,6 @@ volumes:
   postgres-data:
   grafana-data:
   mongo-data:
-
 
 networks:
   default:

@@ -395,3 +395,5 @@ infrastructure/helm/**/charts/
 publish.sh
 infrastructure/helm/cmds.txt
 infrastructure/helm/test-pod.yaml
+
+**/resources/openapi.yaml
