@@ -381,7 +381,7 @@ components:
         placeholder:
           type: string
         defaultValue:
-          type: string
+          type: object
         required:
           type: boolean
         type:
@@ -424,7 +424,7 @@ components:
                 type: string
                 format: uuid
               answer:
-                type: string
+                type: object
     FormCreateResponse:
       type: object
       properties:
@@ -475,4 +475,4 @@ components:
                 type: string
                 format: uuid
               answer:
-                type: string
+                type: object
