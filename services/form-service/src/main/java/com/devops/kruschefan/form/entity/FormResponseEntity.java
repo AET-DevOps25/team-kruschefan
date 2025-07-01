@@ -46,6 +46,6 @@ public class FormResponseEntity {
     @Builder
     public static class FormAnswer {
         private UUID questionId;
-        private String answer;
+        private Object answer;
     }
 }
