@@ -45,7 +45,8 @@ jobs:
         run: |
           echo "Setting up OpenAPI config files..."
           sh api/scripts/setup.sh 
-
+      
+      # Test Java services
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -58,6 +59,7 @@ jobs:
           mvn clean test
           cd ../..
 
+      # Test Python GenAI service
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -69,6 +71,19 @@ jobs:
       - name: Run tests
         run: pytest services/GenAI/test.py
 
+      # Test Angular web-client
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      # Set up Kubernetes
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
