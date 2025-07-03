@@ -3,3 +3,7 @@ uvicorn
 pydantic
 requests
 prometheus-fastapi-instrumentator
+pytest
+pytest-asyncio
+httpx
+trio

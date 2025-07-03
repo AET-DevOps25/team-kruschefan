@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-      - feat/k8s-cicd
-      - feat/add-openapi-docs
+      - feat/testing
     workflow_dispatch:
 
 jobs:
@@ -42,6 +41,55 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set up OpenAPI config files
+        run: |
+          echo "Setting up OpenAPI config files..."
+          sh api/scripts/setup.sh 
+      
+      # Test Java services
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run services tests
+        run: |
+          cd services/user-service
+          mvn clean test
+          cd ../..
+
+      # Test Python GenAI service
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install GenAI dependencies
+        run: pip install -r services/GenAI/requirements.txt
+
+      - name: Run GenAI tests
+        run: pytest services/GenAI/test.py
+
+      # Test Angular web-client
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install client ependencies
+        run: |
+          cd web-client
+          npm install
+          cd ..
+
+      - name: Run client tests
+        run: |
+          cd web-client
+          npm test
+          cd ..
+
+      # Set up Kubernetes
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
@@ -64,10 +112,6 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          # Set up OpenAPI config files
-          echo "Setting up OpenAPI config files..."
-          sh api/scripts/setup.sh 
-
           # api-gateway
           echo "Building and pushing api-gateway image..."
           cd services/api-gateway-service

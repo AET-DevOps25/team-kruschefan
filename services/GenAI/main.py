@@ -69,7 +69,7 @@ class GenAIResponse(BaseModel):
 def select_model(model_name):
     models = get_models()
     if model_name not in models:
-        model_name = models[0]
+        model_name = next(iter(models))
     return model_name
 
 

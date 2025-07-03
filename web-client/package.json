@@ -58,6 +58,7 @@
     "prettier": "^3.5.3",
     "schematics-scss-migrate": "^2.3.17",
     "typescript": "~5.7.2",
-    "typescript-eslint": "8.32.0"
+    "typescript-eslint": "8.32.0",
+    "puppeteer": "^22.0.1"
   }
 }
