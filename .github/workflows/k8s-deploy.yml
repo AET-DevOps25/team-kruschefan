@@ -65,7 +65,7 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: Install dependencies
+      - name: Install GenAI dependencies
         run: pip install -r services/GenAI/requirements.txt
 
       - name: Run GenAI tests
@@ -77,7 +77,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install client ependencies
         run: |
           cd web-client
           npm install
