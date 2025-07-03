@@ -1,7 +1,8 @@
 # FormsAI
 
-FormsAI is a tool de
-A form generating platform using AI
+FormsAI is an intelligent, modular tool designed to simplify the creation and customization of dynamic forms. Using modern web technologies, FormsAI enables users to generate structured form interfaces, using the provided web interface by the application, where users can create forms by using drag and drop. Users can also opt to use the GenAI function, where they submit a prompt, using which the GenAI will automatically create the forms for them. Upon publishing forms, user can gather responses from sending the survey link to other users. 
+
+This documentation records the system design of the application, how to use and deploy the application as well as the development team behind the application.
 
 ## Architecture Overview
 Below are the UML diagrams for the project for an overview of the project architecture.
@@ -20,7 +21,7 @@ Below are the UML diagrams for the project for an overview of the project archit
 
 > Other architecture details are documented in separate README files. Here is a list of them:
 > - [Microservices](./services)
-> - [GenAI Usage](./services/GenAI) **TODO: specify section**
+> - [GenAI Usage](./services/GenAI)
 > - [Web Client](./web-client)
 > - [Kubernetes Deployment Using Helm](./infra/helm)
 > - [Terraform Development](./infra/terraform)
