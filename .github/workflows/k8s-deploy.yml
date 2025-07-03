@@ -78,11 +78,17 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd web-client
+          npm ci
+          cd ..
 
       - name: Run tests
-        run: npm test
-
+        run: |
+          cd web-client
+          npm test
+          cd ..
+          
       # Set up Kubernetes
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
