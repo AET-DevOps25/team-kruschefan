@@ -184,3 +184,16 @@ Jay is the solution architect of the team, mainly contributing to the DevOps sid
 _Responsibilities: Solution architect, GenAI integration, Local/Kubernetes/Cloud deployment, Terraform deployment, User authentication suite, Testing, Monitoring, CI/CD, ..._
 
 
+**Julian Gassner**
+As a tutor, Julian is actively involved in project management and organizing meetings. He consulted the team with best practices and development plans and helped maintain the development repository.
+
+> For questions or feedback, feel free to open an issue or contact us via email.
+
+## License
+
+This project is licensed under the MIT License.  
+See the [LICENSE](./LICENSE) file for details.
+
+## Acknowledgements
+- This project is the assignment for the course DevOps in SS25 on TUM, Technical University of Munich.
+- Thanks to Prof. Dr. Stephan Krusche, Prof. Dr. Ingo Weber, Julian Gassner, the chair of Applied Education Technologies and TUM for the DevOps lecture and tutorials.
