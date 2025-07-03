@@ -18,16 +18,13 @@ Below are the UML diagrams for the project for an overview of the project archit
 **Sequence Diagram (for GenAI usage)**  
 <img src="/resources/UML/sequence_diagram.png" alt="Sequence Diagram" style="height: 18vw;"/>
 
-**Microservices**  
-The exact documentation of the microservices can be found in the [README](./services/README.md) file in the folder of services, where the microservice design, introduction and GenAI usage are discussed.
-
 > Other architecture details are documented in separate README files. Here is a list of them:
-> - [Microservices](./services/README.md)
+> - [Microservices](./services)
 > - [GenAI Usage](./services/GenAI) **TODO: specify section**
-> - [Web Client](./web-client/README.md)
-> - [Kubernetes Deployment Using Helm](./infra/helm/README.md)
-> - [Terraform Development](./infra/terraform/README.md)
-> - [Ansible Development](./infra/ansible/README.md)
+> - [Web Client](./web-client)
+> - [Kubernetes Deployment Using Helm](./infra/helm)
+> - [Terraform Development](./infra/terraform)
+> - [Ansible Development](./infra/ansible)
 
 ## Local Deployment
 The docker system is developed, so that the application can be started within a few commands. Here are the exact steps of how to start the application locally.
