@@ -70,7 +70,7 @@ def select_model(model_name):
     models = get_models()
     if model_name not in models:
         model_name = next(iter(models))
-    return models[model_name]
+    return model_name
 
 
 def get_models():
