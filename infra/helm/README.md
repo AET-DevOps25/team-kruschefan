@@ -1,4 +1,4 @@
-# 🧠 Full Stack Deployment: FormsAI Kubernetes Platform
+# Kubernetes via Helm
 
 Welcome! This guide will walk you through deploying the entire FormsAI stack on a Kubernetes cluster using Helm and Helmfile.
 
