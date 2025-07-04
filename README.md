@@ -178,7 +178,7 @@ The EC2 deploy pipeline is developed as file [k8s-deploy.yml](.github/workflows/
 **TODO**
 
 ## Team
-Our team consists of three members, each focus on and is responsible for different part of the development. The exact progress of the application development can be found under this Confluence page: https://confluence.aet.cit.tum.de/pages/viewpage.action?pageId=258581347&spaceKey=DO25WR&title=Team%2BKruschefan
+Our team consists of three members, each focus on and is responsible for different part of the development. A tutor is assigned to us to help manage the project. The exact progress of the application development can be found under this Confluence page: https://confluence.aet.cit.tum.de/pages/viewpage.action?pageId=258581347&spaceKey=DO25WR&title=Team%2BKruschefan
 
 **Stefan Dimitrov**  
 Stefan worked diligently on the microservices design and architecture, having implemented a large portion of microservices. He plays a crucial role in the integration of the front end and the back end of the application, while maintaining the configurations on the application side. On the other hand, he helped deploy the app as well, having mainly developed the Terraform-Ansible code to deploy the app on the cloud and also contributed to local and Kubernetes deployment, as well as the monitoring system.
