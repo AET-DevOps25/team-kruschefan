@@ -118,6 +118,7 @@ The docker system is developed, so that the application can be started within a 
    ```
 
 ## Cloud/Kubernetes Deployment
+**TODO**
 
 ## CI/CD Pipeline
 There are three CI/CD pipelines, all instantiated using GitHub actions. Two of them are used for deployments, one for cloud and one for Kubernetes. All of three pipelines are described below.
