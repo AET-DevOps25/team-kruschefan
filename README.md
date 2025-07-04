@@ -29,6 +29,8 @@ This diagram breaks down the architecture of FormsAI into key subsystems. The Cl
 <img src="/resources/UML/sequence_diagram.png" alt="Sequence Diagram" style="height: 25vw;"/>
 The diagram shows how a user prompt becomes a full form. The Form Service sends the prompt to the GenAI Service, which uses RAG and looks up similar examples from the Vector DB. It then uses an LLM API to generate a form based on the prompt and context. The generated form must be in JSON format is sent back through the services to be parsed and shown to the user.  
 
+---
+
 > Other architecture details are documented in separate README files. Here is a list of them:
 > - [Microservices](./services)
 > - [GenAI Usage](./services/GenAI)
