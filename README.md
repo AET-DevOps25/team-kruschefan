@@ -197,7 +197,7 @@ Jay is the solution architect of the team, mainly contributing to the DevOps sid
 _Responsibilities: Solution architect, GenAI integration, Local/Kubernetes/Cloud deployment, Terraform deployment, User authentication suite, Testing, Monitoring, CI/CD, ..._
 
 
-**Julian Gassner**
+**Julian Gassner**  
 As a tutor, Julian is actively involved in project management and organizing meetings. He consulted the team with best practices and development plans and helped maintain the development repository.
 
 > For questions or feedback, feel free to open an issue or contact us via email.
