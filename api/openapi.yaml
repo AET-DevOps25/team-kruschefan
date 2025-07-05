@@ -190,6 +190,21 @@ paths:
           description: No content
 
   /form:
+    get:
+      tags:
+        - form
+      operationId: getAllForms
+      summary: Retrieve all forms
+      responses:
+        "200":
+          description: List of all forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormCreateResponse'
+
     post:
       tags:
         - form
@@ -204,6 +219,27 @@ paths:
       responses:
         "201":
           description: No content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormCreateResponse'
+
+  /form/{formId}:
+    get:
+      tags:
+        - form
+      operationId: getFormById
+      summary: Retrieve a single form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: The form data
           content:
             application/json:
               schema:
@@ -345,7 +381,7 @@ components:
         placeholder:
           type: string
         defaultValue:
-          type: string
+          type: object
         required:
           type: boolean
         type:
@@ -388,7 +424,7 @@ components:
                 type: string
                 format: uuid
               answer:
-                type: string
+                type: object
     FormCreateResponse:
       type: object
       properties:
@@ -397,6 +433,9 @@ components:
           format: uuid
         formName:
           type: string
+        createdAt:
+          type: string
+          format: date-time
         questions:
           type: array
           items:
@@ -436,4 +475,4 @@ components:
                 type: string
                 format: uuid
               answer:
-                type: string
+                type: object
