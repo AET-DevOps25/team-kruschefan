@@ -2,16 +2,16 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-alert-rules
-  namespace: team-kruschefan-project
 data:
   alert.rules.yml: |
     groups:
-      - name: example
+      - name: test-rules
         rules:
           - alert: AlwaysFiring
-            expr: vector(1)
-            for: 10s
+            expr: up == 1
+            for: 5s
             labels:
               severity: test
             annotations:
               summary: "This alert always fires"
+              

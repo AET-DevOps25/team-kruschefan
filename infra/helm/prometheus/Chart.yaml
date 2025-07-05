@@ -1,6 +1,3 @@
 apiVersion: v2
-name: prometheus
-description: Prometheus monitoring system
-type: application
+name: prometheus-minimal
 version: 0.1.0
-appVersion: "2.46.0"

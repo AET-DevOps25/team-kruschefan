@@ -35,9 +35,7 @@ The diagram shows how a user prompt becomes a full form. The Form Service sends 
 > - [Microservices](./services)
 > - [GenAI Usage](./services/GenAI)
 > - [Web Client](./web-client)
-> - [Kubernetes Deployment Using Helm](./infra/helm)
-> - [Terraform Development](./infra/terraform)
-> - [Ansible Development](./infra/ansible)
+> - [Continuous Deployment](./infra)
 
 ## Local Deployment
 The docker system is developed, so that the application can be started within a few commands. Here are the exact steps of how to start the application locally.

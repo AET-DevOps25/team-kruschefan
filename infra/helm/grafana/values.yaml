@@ -40,3 +40,20 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+
+dashboards:
+  enabled: true
+  default:
+    basic-application-health:
+      file: dashboards/basic_application_health.json
+    http-requests-overview:
+      file: dashboards/http_requests_overview.json
+    garbage-collection:
+      file: dashboards/garbage_collection.json
+    jvm-threads:
+      file: dashboards/jvm_threads.json
+    http-response-time:
+      file: dashboards/http_response_time.json
+
+env:
+  GF_SECURITY_ADMIN_PASSWORD: admin
