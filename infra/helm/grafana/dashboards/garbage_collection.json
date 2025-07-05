@@ -1,0 +1,49 @@
+{
+  "id": null,
+  "uid": "demo-dashboard-4",
+  "title": "Garbage Collection",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "GC Pause Duration (avg over 5m)",
+      "targets": [
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum[5m]) / rate(jvm_gc_pause_seconds_count[5m])"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "GC Count",
+      "targets": [
+        {
+          "expr": "rate(jvm_gc_pause_seconds_count[5m])"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    }
+  ],
+  "schemaVersion": 37,
+  "version": 1,
+  "refresh": "5s"
+}

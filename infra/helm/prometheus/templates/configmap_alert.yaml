@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alert-rules
+data:
+  alert.rules.yml: |
+    groups:
+      - name: test-rules
+        rules:
+          - alert: AlwaysFiring
+            expr: up == 1
+            for: 5s
+            labels:
+              severity: test
+            annotations:
+              summary: "This alert always fires"
+              
