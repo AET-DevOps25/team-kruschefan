@@ -17,6 +17,20 @@ tags:
 
 paths:
   /user:
+    get:
+        tags:
+          - user
+        operationId: getAllUsers
+        summary: Retrieve all users
+        responses:
+          "200":
+            description: List of all users
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserResponse'
     post:
       tags:
         - user
@@ -315,6 +329,12 @@ components:
           type: string
         email:
           type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
     UserUpdateRequest:
       type: object
       properties:
@@ -322,17 +342,22 @@ components:
           type: string
         email:
           type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
     UserResponse:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-        keycloakId:
-          type: string
         username:
           type: string
         email:
+          type: string
+        firstName:
+          type: string
+        lastName:
           type: string
     TemplateCreateRequest:
       type: object
@@ -360,7 +385,6 @@ components:
           format: uuid
         creatorId:
           type: string
-          format: uuid
         createdOn:
           type: string
           format: date-time

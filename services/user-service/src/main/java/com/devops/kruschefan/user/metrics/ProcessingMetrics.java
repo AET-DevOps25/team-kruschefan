@@ -1,4 +1,4 @@
-package com.devops.kruschefan.metrics;
+package com.devops.kruschefan.user.metrics;
 
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.MeterRegistry;
