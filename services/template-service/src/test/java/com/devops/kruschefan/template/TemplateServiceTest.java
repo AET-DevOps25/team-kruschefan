@@ -73,7 +73,7 @@ class TemplateServiceTest {
                 .id(testTemplateId)
                 .templateName(request.getTemplateName())
                 .creatorId(testCreatorId)
-                .createdOn(OffsetDateTime.now())
+                .createdOn(Date.from(OffsetDateTime.now().toInstant()))
                 .questions(request.getQuestions())
                 .build();
 
@@ -266,6 +266,6 @@ class TemplateServiceTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         verify(templateRepository).save(argThat(template -> template.getQuestions() != null &&
                 template.getQuestions().size() == 1 &&
-                template.getQuestions().get(0).getId().equals(testQuestionId)));
+                template.getQuestions().getFirst().getId().equals(testQuestionId)));
     }
 }
