@@ -1,7 +1,8 @@
 package com.devops.kruschefan.user.service;
 
+import com.devops.kruschefan.openapi.model.UserResponse;
+import com.devops.kruschefan.user.config.ModelMapperConfig;
 import com.devops.kruschefan.user.dto.GroupDto;
-import com.devops.kruschefan.user.dto.UserDto;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Field;
@@ -32,6 +34,7 @@ public class GroupServiceTest {
     @Mock private RealmResource realmResource;
     @Mock private GroupsResource groupsResource;
     @Mock private GroupResource groupResource;
+    @Mock private ModelMapper modelMapper;
 
     @InjectMocks
     private GroupService groupService;
@@ -44,6 +47,11 @@ public class GroupServiceTest {
         Field realmField = GroupService.class.getDeclaredField("realm");
         realmField.setAccessible(true);
         realmField.set(groupService, "kruschefan");
+
+        modelMapper = new ModelMapperConfig().modelMapper();
+        Field modelMapperField = GroupService.class.getDeclaredField("modelMapper");
+        modelMapperField.setAccessible(true);
+        modelMapperField.set(groupService, modelMapper);
     }
 
     // Test for fetching all groups
@@ -58,7 +66,7 @@ public class GroupServiceTest {
         List<GroupDto> result = groupService.getAllGroups();
 
         assertEquals(1, result.size());
-        assertEquals("Admins", result.get(0).name());
+        assertEquals("Admins", result.getFirst().name());
     }
 
     // Test for fetching users in a specific group
@@ -77,10 +85,10 @@ public class GroupServiceTest {
         when(groupsResource.group("group1")).thenReturn(groupResource);
         when(groupResource.members()).thenReturn(List.of(user));
 
-        List<UserDto> result = groupService.getUsersInGroup("Admins");
+        List<UserResponse> result = groupService.getUsersInGroup("Admins").getBody();
 
         assertEquals(1, result.size());
-        assertEquals("fabio", result.get(0).username());
+        assertEquals("fabio", result.getFirst().getUsername());
     }
 
     // Test for group not found

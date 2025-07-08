@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @OpenAPIDefinition
 @SpringBootApplication
-@ComponentScan(basePackages = "com.devops.kruschefan")
 public class UserServiceApplication {
 
     public static void main(String[] args) {
