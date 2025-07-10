@@ -64,6 +64,9 @@ export class UserManagementComponent implements OnInit {
       )
       .subscribe(() => {
         this._removeTemplateFromList(id);
+        this.matSnackBar.open('Template deleted successfully.', 'Close', {
+          duration: 3000,
+        });
       });
   }
   private _removeTemplateFromList(id: string): void {
