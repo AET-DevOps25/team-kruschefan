@@ -1,10 +1,31 @@
 groups:
-  - name: test-rules
+  - name: service-availability
     rules:
-      - alert: AlwaysFiring
-        expr: vector(1)
-        for: 5s
+      - alert: FormServiceDown
+        expr: up{job="form-service"} == 0
+        for: 30s
         labels:
-          severity: test
+          severity: critical
         annotations:
-          summary: "This alert always fires"
+          summary: "Form Service is down"
+          description: "The form-service has been unreachable for more than 30 seconds."
+
+      - alert: TemplateServiceDown
+        expr: up{job="template-service"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Template Service is down"
+          description: "The template-service has been unreachable for more than 30 seconds."
+
+  - name: resource-usage
+    rules:
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes{job="user-service"} > 100000000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on user-service"
+          description: "user-service is using more than 100MB of memory for over 1 minute."
