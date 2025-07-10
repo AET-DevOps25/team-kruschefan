@@ -73,6 +73,26 @@ else
   echo "Client $KEYCLOAK_FORMSAI_USER already exists"
 fi
 
+# Create Angular frontend client if it doesn't exist
+if ! $KCADM_PATH get clients -r forms-ai | grep '"clientId" : "angular-frontend"' > /dev/null; then
+  echo "Creating client 'angular-frontend'..."
+
+  $KCADM_PATH create clients -r forms-ai \
+  -s clientId=angular-frontend \
+  -s name="Angular Frontend" \
+  -s enabled=true \
+  -s publicClient=true \
+  -s directAccessGrantsEnabled=true \
+  -s standardFlowEnabled=true \
+  -s protocol=openid-connect \
+  -s rootUrl="http://localhost:4200"
+
+  echo "Client 'angular-frontend' created"
+else
+  echo "Client 'angular-frontend' already exists"
+fi
+
+
 # Create mock user if it doesn't exist
 if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\"username\" : \"$KEYCLOAK_MOCK_USER\"" > /dev/null; then
   echo "Creating mock user '$KEYCLOAK_MOCK_USER'..."
