@@ -1,11 +1,11 @@
 import {
   Component,
+  DestroyRef,
   inject,
   OnInit,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { Template } from '../../interfaces/Template';
 import { QuestionType } from '../../interfaces/Question';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -26,6 +26,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormService } from '../../services/form.service';
+import { FormQuestionAnswer, FormResponse } from '../../interfaces/Form';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'forms-ai-form-fill',
@@ -45,102 +50,19 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FormFillComponent implements OnInit {
   protected readonly Types = QuestionType;
-  protected readonly template: Template = {
-    id: 'template1',
-    title: 'New candidate info form',
-    questions: [
-      {
-        id: 'question1',
-        type: QuestionType.TEXT,
-        label: 'What is your name?',
-        options: [],
-        required: false,
-      },
-      {
-        id: 'question2',
-        type: QuestionType.NUMBER,
-        label: 'How old are you?',
-        placeholder: 'Enter your age',
-        options: [],
-        required: true,
-      },
-      {
-        id: 'question3',
-        type: QuestionType.DATE,
-        label: 'What is your birth date?',
-        options: [],
-        required: false,
-      },
-      {
-        id: 'question4',
-        type: QuestionType.SINGLE_CHOICE,
-        label: 'What is your age',
-        options: [
-          'Under 18',
-          '18-24',
-          '25-34',
-          '35-44',
-          '45-54',
-          '55-64',
-          '65 or older',
-        ],
-        required: false,
-      },
-      {
-        id: 'question5',
-        type: QuestionType.MULTIPLE_CHOICE,
-        label: 'What are your hobbies?',
-        options: ['Reading', 'Traveling', 'Cooking', 'Sports'],
-        required: false,
-      },
-      {
-        id: 'question6',
-        type: QuestionType.DROPDOWN,
-        label: 'Select your country',
-        options: ['USA', 'Canada', 'UK', 'Australia'],
-        required: true,
-      },
-      {
-        id: 'question7',
-        type: QuestionType.COMMENT,
-        label:
-          'Note: Contact the support team if you have any issues while filling out the form.',
-        options: [],
-        required: false,
-      },
-      {
-        id: 'question8',
-        type: QuestionType.TEXT_BOX,
-        label: 'Describe your experience with our service',
-        options: [],
-        required: false,
-      },
-    ],
-  };
-  protected readonly response: Record<
-    string,
-    string | number | Date | string[]
-  > = {
-    question1: 'John Doe',
-    question2: 30,
-    question3: new Date('1993-01-01'),
-    question4: '25-34',
-    question5: ['Reading', 'Traveling'],
-    question6: 'USA',
-    question7: '',
-    question8:
-      'I had a wonderful experience using your service. The interface was user-friendly, and I found everything I needed easily.',
-  };
+
   protected form: FormGroup = new FormGroup({});
   protected isFormSubmitted: WritableSignal<boolean> = signal(false);
   protected isReadonly = false;
+  protected retrievedForm: FormResponse | null = null;
+  private formResponse: FormQuestionAnswer[] = [];
+  private formService = inject(FormService);
   private formBuilder = inject(FormBuilder);
   private activatedRoute = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
+  private matSnackbar = inject(MatSnackBar);
 
   ngOnInit(): void {
-    if (this.activatedRoute.snapshot.data['readonly']) {
-      this.isReadonly = true;
-    }
     this.initializeForm();
   }
 
@@ -153,8 +75,8 @@ export class FormFillComponent implements OnInit {
   }
 
   protected onSubmit(): void {
-    const processedData: Record<string, string | string[] | Date | number> = {};
-    for (const question of this.template.questions) {
+    const processedData: FormQuestionAnswer[] = [];
+    for (const question of this.retrievedForm!.questions) {
       if (
         question.type === QuestionType.MULTIPLE_CHOICE &&
         question.options &&
@@ -167,12 +89,42 @@ export class FormFillComponent implements OnInit {
             selectedOptions.push(question.options[Number(key)]);
           }
         }
-        processedData[question.id] = selectedOptions;
+        processedData.push({
+          questionId: question.id,
+          answer: selectedOptions,
+        });
       } else {
-        processedData[question.id] = this.getControl(question.id).value;
+        processedData.push({
+          questionId: question.id,
+          answer: this.getControl(question.id).value,
+        });
       }
     }
-    this.isFormSubmitted.set(true);
+    this.formService
+      .submitForm({
+        formId: this.retrievedForm!.id,
+        answers: processedData,
+      })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          console.error('Error submitting form:', error);
+          this.matSnackbar.open('Error submitting form', 'Close', {
+            duration: 3000,
+            panelClass: ['mat-snackbar-error'],
+          });
+          return of(null);
+        }),
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.matSnackbar.open('Form submitted successfully', 'Close', {
+            duration: 3000,
+            panelClass: ['mat-snackbar-success'],
+          });
+          this.isFormSubmitted.set(true);
+        }
+      });
   }
 
   protected onReset(): void {
@@ -192,8 +144,76 @@ export class FormFillComponent implements OnInit {
     return selectedOptions.length > 0 ? null : { required: true };
   };
 
+  private fetchForm(formId: string): void {
+    this.formService
+      .getFormById(formId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          console.error('Error fetching form:', error);
+          return of(null);
+        }),
+      )
+      .subscribe((form: FormResponse | null) => {
+        if (form) {
+          this.retrievedForm = form;
+          if (!this.isReadonly) {
+            this.initializeFormControls();
+          }
+        } else {
+          this.matSnackbar.open('Form not found', 'Close', {
+            duration: 3000,
+            panelClass: ['mat-snackbar-error'],
+          });
+        }
+      });
+  }
+
+  private fetchFormResponse(responseId: string): void {
+    this.formService
+      .getFormResponsesById(responseId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          console.error('Error fetching form response:', error);
+          return of(null);
+        }),
+      )
+      .subscribe((response: FormResponse | null) => {
+        if (response) {
+          this.retrievedForm = response;
+          this.formResponse = response.answers;
+          this.initializeFormControls();
+        } else {
+          this.matSnackbar.open('Form response not found', 'Close', {
+            duration: 3000,
+            panelClass: ['mat-snackbar-error'],
+          });
+        }
+      });
+  }
+
   private initializeForm(): void {
-    this.template.questions.forEach((question) => {
+    if (this.activatedRoute.snapshot.data['readonly']) {
+      this.isReadonly = true;
+    }
+    if (!this.isReadonly) {
+      const formId = this.activatedRoute.snapshot.params['formId'];
+      if (!formId) {
+        console.error('Form ID is not provided in the route parameters.');
+        return;
+      }
+      this.fetchForm(formId);
+    } else {
+      const responseId = this.activatedRoute.snapshot.params['responseId'];
+      if (this.isReadonly) {
+        this.fetchFormResponse(responseId);
+      }
+    }
+  }
+
+  private initializeFormControls(): void {
+    this.retrievedForm!.questions.forEach((question) => {
       if (
         question.type === QuestionType.MULTIPLE_CHOICE &&
         question.options &&
@@ -203,7 +223,7 @@ export class FormFillComponent implements OnInit {
           {},
           { validators: question.required ? this.checkboxValidation : null },
         );
-        const selectedOptions = this.response[question.id] || [];
+        const selectedOptions = this.getResponseByQuestionId(question.id) || [];
         question.options.forEach((_, index) => {
           checkboxGroup.addControl(
             `${index}`,
@@ -220,7 +240,7 @@ export class FormFillComponent implements OnInit {
           question.id,
           this.formBuilder.control(
             this.isReadonly
-              ? (this.response[question.id] ?? '')
+              ? (this.getResponseByQuestionId(question.id) ?? '')
               : (question.defaultValue ?? ''),
             {
               validators: question.required ? Validators.required : null,
@@ -232,5 +252,12 @@ export class FormFillComponent implements OnInit {
     if (this.isReadonly) {
       this.form.disable();
     }
+  }
+
+  private getResponseByQuestionId(
+    questionId: string,
+  ): string | string[] | Date | number | undefined {
+    return this.formResponse.find((answer) => answer.questionId === questionId)
+      ?.answer;
   }
 }

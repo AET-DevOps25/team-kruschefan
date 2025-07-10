@@ -18,19 +18,19 @@ tags:
 paths:
   /user:
     get:
-        tags:
-          - user
-        operationId: getAllUsers
-        summary: Retrieve all users
-        responses:
-          "200":
-            description: List of all users
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/UserResponse'
+      tags:
+        - user
+      operationId: getAllUsers
+      summary: Retrieve all users
+      responses:
+        "200":
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
     post:
       tags:
         - user
@@ -41,14 +41,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCreateRequest'
+              $ref: "#/components/schemas/UserCreateRequest"
       responses:
         "201":
           description: The created user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
 
   /user/{username}:
     get:
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
     put:
       tags:
         - user
@@ -85,14 +85,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserUpdateRequest'
+              $ref: "#/components/schemas/UserUpdateRequest"
       responses:
         "200":
           description: The updated user data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
     delete:
       tags:
         - user
@@ -119,14 +119,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TemplateCreateRequest'
+              $ref: "#/components/schemas/TemplateCreateRequest"
       responses:
         "201":
           description: The created template
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TemplateResponse'
+                $ref: "#/components/schemas/TemplateResponse"
     get:
       tags:
         - template
@@ -140,7 +140,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TemplateResponse'
+                  $ref: "#/components/schemas/TemplateResponse"
 
   /template/{templateId}:
     get:
@@ -161,7 +161,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TemplateResponse'
+                $ref: "#/components/schemas/TemplateResponse"
     put:
       tags:
         - template
@@ -179,14 +179,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TemplateUpdateRequest'
+              $ref: "#/components/schemas/TemplateUpdateRequest"
       responses:
         "200":
           description: The updated template data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TemplateResponse'
+                $ref: "#/components/schemas/TemplateResponse"
     delete:
       tags:
         - template
@@ -217,7 +217,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FormCreateResponse'
+                  $ref: "#/components/schemas/FormCreateResponse"
 
     post:
       tags:
@@ -229,14 +229,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FormCreateRequest'
+              $ref: "#/components/schemas/FormCreateRequest"
       responses:
         "201":
           description: No content
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormCreateResponse'
+                $ref: "#/components/schemas/FormCreateResponse"
 
   /form/{formId}:
     get:
@@ -257,7 +257,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormCreateResponse'
+                $ref: "#/components/schemas/FormCreateResponse"
 
   /form/responses:
     get:
@@ -273,7 +273,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FormSubmitResponse'
+                  $ref: "#/components/schemas/FormSubmitResponse"
     post:
       tags:
         - form
@@ -284,14 +284,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FormSubmitRequest'
+              $ref: "#/components/schemas/FormSubmitRequest"
       responses:
         "201":
           description: The submitted form response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormSubmitResponse'
+                $ref: "#/components/schemas/FormSubmitResponse"
   /form/responses/{responseId}:
     get:
       tags:
@@ -311,7 +311,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormSubmitResponse'
+                $ref: "#/components/schemas/FormSubmitResponse"
 
 components:
   securitySchemes:
@@ -367,7 +367,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
     TemplateUpdateRequest:
       type: object
       properties:
@@ -376,7 +376,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
     TemplateResponse:
       type: object
       properties:
@@ -393,14 +393,14 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
     QuestionResponse:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        question:
+        label:
           type: string
         placeholder:
           type: string
@@ -409,7 +409,7 @@ components:
         required:
           type: boolean
         type:
-          $ref: '#/components/schemas/QuestionType'
+          $ref: "#/components/schemas/QuestionType"
         options:
           type: array
           items:
@@ -417,13 +417,14 @@ components:
     QuestionType:
       type: string
       enum:
-        - TEXT
-        - DATE
-        - NUMBER
-        - SINGLE_CHOICE
-        - MULTIPLE_CHOICE
-        - TEXT_BOX
-        - DROPDOWN
+        - Text
+        - Date
+        - Number
+        - Single Choice
+        - Multiple Choice
+        - Text Box
+        - Dropdown
+        - Comment
     FormCreateRequest:
       type: object
       properties:
@@ -432,7 +433,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
     FormSubmitRequest:
       type: object
       properties:
@@ -463,7 +464,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
         answers:
           type: array
           items:
@@ -483,13 +484,15 @@ components:
         formId:
           type: string
           format: uuid
+        formName:
+          type: string
         submittedAt:
           type: string
           format: date-time
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionResponse'
+            $ref: "#/components/schemas/QuestionResponse"
         answers:
           type: array
           items:

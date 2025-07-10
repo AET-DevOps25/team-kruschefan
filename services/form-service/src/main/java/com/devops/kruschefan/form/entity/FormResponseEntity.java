@@ -36,6 +36,8 @@ public class FormResponseEntity {
     @CreatedDate
     private Date submittedAt;
 
+    private String formName;
+
     private List<QuestionResponse> questions;
 
     private List<FormAnswer> answers;

@@ -1,30 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Form } from '../interfaces/Form';
+import { Form, FormResponse, FormSubmission } from '../interfaces/Form';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
   private http = inject(HttpClient);
+  private baseUrl = environment.formApiUrl;
 
-  public createForm(form: Form): Observable<Form> {
-    return this.http.post<Form>('/form', form);
+  public createForm(form: Form): Observable<FormResponse> {
+    return this.http.post<FormResponse>(`${this.baseUrl}/form`, form);
   }
-  public getForms(): Observable<Form[]> {
-    return this.http.get<Form[]>('/form');
+  public getForms(): Observable<FormResponse[]> {
+    return this.http.get<FormResponse[]>(`${this.baseUrl}/form`);
   }
-  public getFormById(id: string): Observable<Form> {
-    return this.http.get<Form>(`/form/${id}`);
+  public getFormById(id: string): Observable<FormResponse> {
+    return this.http.get<FormResponse>(`${this.baseUrl}/form/${id}`);
   }
-  public getFormsResponses(): Observable<Form[]> {
-    return this.http.get<Form[]>('/form/responses');
+  public getFormsResponses(): Observable<FormResponse[]> {
+    return this.http.get<FormResponse[]>(`${this.baseUrl}/form/responses`);
   }
-  public submitForm(form: Form): Observable<Form> {
-    return this.http.post<Form>(`/form/responses`, form);
+  public submitForm(form: FormSubmission): Observable<Form> {
+    return this.http.post<Form>(`${this.baseUrl}/form/responses`, form);
   }
-  public getFormResponsesById(id: string): Observable<Form> {
-    return this.http.get<Form>(`/form/responses/${id}`);
+  public getFormResponsesById(id: string): Observable<FormResponse> {
+    return this.http.get<FormResponse>(`${this.baseUrl}/form/responses/${id}`);
   }
 }

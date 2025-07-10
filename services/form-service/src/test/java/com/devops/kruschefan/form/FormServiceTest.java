@@ -66,7 +66,7 @@ class FormServiceTest {
                                 .formName("Test Form")
                                 .questions(List.of(new QuestionResponse()
                                                 .id(testQuestionId)
-                                                .question("Test question")
+                                                .label("Test question")
                                                 .required(true)
                                                 .type(QuestionType.TEXT)));
 
@@ -169,7 +169,7 @@ class FormServiceTest {
                                 .id(testFormId)
                                 .questions(List.of(new QuestionResponse()
                                                 .id(testQuestionId)
-                                                .question("Test question")))
+                                                .label("Test question")))
                                 .build();
 
                 FormResponseEntity savedResponse = FormResponseEntity.builder()

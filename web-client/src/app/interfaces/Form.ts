@@ -1,7 +1,31 @@
-import { Template } from './Template';
+import { Question } from './Question';
 
 export interface Form {
+  formName: string;
+  questions: Question[];
+}
+
+export interface FormResponse {
   id: string;
-  template: Template;
-  responses: Record<string, string | number | Date | string[]>;
+  formName: string;
+  questions: Question[];
+  answers: FormQuestionAnswer[];
+  submittedOn: string;
+}
+
+export interface FormQuestionAnswer {
+  questionId: string;
+  answer: string | number | Date | string[];
+}
+
+export interface FormSubmission {
+  formId: string;
+  answers: FormQuestionAnswer[];
+}
+
+export interface FormResponseTableSummary {
+  position: number;
+  id: string;
+  formName: string;
+  submittedOn: string;
 }
