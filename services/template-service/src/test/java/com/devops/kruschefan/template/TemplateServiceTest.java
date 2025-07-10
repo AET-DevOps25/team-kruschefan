@@ -62,7 +62,7 @@ class TemplateServiceTest {
     void createTemplate_ShouldReturnCreatedResponse() {
         QuestionResponse question = new QuestionResponse()
                 .id(testQuestionId)
-                .question("Test question")
+                .label("Test question")
                 .type(QuestionType.TEXT);
 
         TemplateCreateRequest request = new TemplateCreateRequest()
@@ -162,14 +162,14 @@ class TemplateServiceTest {
                 .templateName("Updated Name")
                 .questions(List.of(new QuestionResponse()
                         .id(testQuestionId)
-                        .question("Updated question")));
+                        .label("Updated question")));
 
         TemplateEntity existingTemplate = TemplateEntity.builder()
                 .id(testTemplateId)
                 .templateName("Original Name")
                 .questions(List.of(new QuestionResponse()
                         .id(testQuestionId)
-                        .question("Original question")))
+                        .label("Original question")))
                 .build();
 
         TemplateEntity updatedTemplate = TemplateEntity.builder()
@@ -243,7 +243,7 @@ class TemplateServiceTest {
     void createTemplate_WithQuestions_ShouldSaveQuestions() {
         QuestionResponse question = new QuestionResponse()
                 .id(testQuestionId)
-                .question("Test question")
+                .label("Test question")
                 .type(QuestionType.TEXT);
 
         TemplateCreateRequest request = new TemplateCreateRequest()

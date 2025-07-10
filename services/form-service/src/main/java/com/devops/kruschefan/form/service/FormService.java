@@ -127,6 +127,7 @@ public class FormService implements FormApiDelegate {
         // Get questions from the form
         FormEntity form = formRepository.findById(formSubmitRequest.getFormId()).orElseThrow();
         responseEntity.setQuestions(form.getQuestions());
+        responseEntity.setFormName(form.getFormName());
 
         FormResponseEntity savedResponse = formResponseRepository.save(responseEntity);
         log.info("Form response submitted with ID: {}", savedResponse.getId());

@@ -1,9 +1,9 @@
 @if (!isFormSubmitted()) {
   <div class="form-container">
-    <h2>{{ template.title }}</h2>
+    <h2>{{ retrievedForm?.formName }}</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        @for (question of template.questions; track $index) {
+        @for (question of retrievedForm?.questions; track $index) {
           <div class="question-container">
             @if (question.type === Types.COMMENT) {
               <p>{{ question.label }}</p>
@@ -19,9 +19,9 @@
                     matInput
                     [id]="question.id"
                     [formControlName]="question.id"
-                    [placeholder]="question.placeholder ?? ''"
-                    [defaultValue]="question.defaultValue ?? ''"
-                    [required]="question.required ?? false"
+                    [placeholder]="question.placeholder"
+                    [defaultValue]="question.defaultValue"
+                    [required]="question.required"
                   />
                   @if (form.get(question.id)?.hasError('required')) {
                     <mat-error> Please enter a valid value. </mat-error>
@@ -35,9 +35,9 @@
                     type="number"
                     [id]="question.id"
                     [formControlName]="question.id"
-                    [placeholder]="question.placeholder ?? ''"
-                    [defaultValue]="question.defaultValue ?? ''"
-                    [required]="question.required ?? false"
+                    [placeholder]="question.placeholder"
+                    [defaultValue]="question.defaultValue"
+                    [required]="question.required"
                   />
                   @if (form.get(question.id)?.hasError('required')) {
                     <mat-error> Please enter a valid number. </mat-error>
@@ -52,9 +52,9 @@
                     [id]="question.id"
                     [formControlName]="question.id"
                     [matDatepicker]="picker"
-                    [required]="question.required ?? false"
-                    [placeholder]="question.placeholder ?? ''"
-                    [defaultValue]="question.defaultValue ?? ''"
+                    [required]="question.required"
+                    [placeholder]="question.placeholder"
+                    [defaultValue]="question.defaultValue"
                   />
                   <mat-datepicker-toggle
                     matSuffix
@@ -70,7 +70,7 @@
                   <mat-select
                     [id]="question.id"
                     [formControlName]="question.id"
-                    [required]="question.required ?? false"
+                    [required]="question.required"
                   >
                     @for (option of question.options; track $index) {
                       <mat-option [value]="option">{{ option }}</mat-option>
@@ -87,7 +87,7 @@
                   class="pb-15"
                   [id]="question.id"
                   [formControlName]="question.id"
-                  [required]="question.required ?? false"
+                  [required]="question.required"
                 >
                   @for (option of question.options; track $index) {
                     <mat-radio-button [value]="option">{{
@@ -130,9 +130,9 @@
                     matInput
                     [id]="question.id"
                     [formControlName]="question.id"
-                    [placeholder]="question.placeholder ?? ''"
-                    [defaultValue]="question.defaultValue ?? ''"
-                    [required]="question.required ?? false"
+                    [placeholder]="question.placeholder"
+                    [defaultValue]="question.defaultValue"
+                    [required]="question.required"
                   ></textarea>
                 </mat-form-field>
               }

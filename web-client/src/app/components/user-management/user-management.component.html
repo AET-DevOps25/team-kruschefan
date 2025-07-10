@@ -5,9 +5,9 @@
   [dataSource]="savedTemplates"
   class="mat-elevation-z8"
 >
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="templateName">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.templateName }}</td>
   </ng-container>
 
   <ng-container matColumnDef="position">
@@ -15,9 +15,9 @@
     <td mat-cell *matCellDef="let element">{{ element.position }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="createdOn">
+  <ng-container matColumnDef="createdAt">
     <th mat-header-cell *matHeaderCellDef>Created on</th>
-    <td mat-cell *matCellDef="let element">{{ element.createdOn }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.createdAt }}</td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
@@ -38,9 +38,9 @@
   [dataSource]="submittedForms"
   class="mat-elevation-z8"
 >
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="formName">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.formName }}</td>
   </ng-container>
 
   <ng-container matColumnDef="position">
