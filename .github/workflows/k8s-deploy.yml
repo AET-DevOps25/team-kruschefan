@@ -18,6 +18,11 @@ jobs:
       KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
       KEYCLOAK_FORMSAI_USER: ${{ secrets.KEYCLOAK_FORMSAI_USER }}
       KEYCLOAK_FORMSAI_PASSWORD: ${{ secrets.KEYCLOAK_FORMSAI_PASSWORD }}
+      KEYCLOAK_MOCK_USER: ${{ secrets.KEYCLOAK_MOCK_USER }}
+      KEYCLOAK_MOCK_USER_PASSWORD: ${{ secrets.KEYCLOAK_MOCK_USER_PASSWORD }}
+      KEYCLOAK_MOCK_USER_EMAIL: ${{ secrets.KEYCLOAK_MOCK_USER_EMAIL }}
+      KEYCLOAK_MOCK_USER_FIRST_NAME: ${{ secrets.KEYCLOAK_MOCK_USER_FIRST_NAME }}
+      KEYCLOAK_MOCK_USER_LAST_NAME: ${{ secrets.KEYCLOAK_MOCK_USER_LAST_NAME }}
       KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
       KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -44,14 +49,14 @@ jobs:
       - name: Set up OpenAPI config files
         run: |
           echo "Setting up OpenAPI config files..."
-          sh api/scripts/setup.sh 
-      
+          sh api/scripts/setup.sh
+
       # Test Java services
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: "temurin"
+          java-version: "21"
 
       - name: Run services tests
         run: |
