@@ -7,6 +7,8 @@ services:
       context: ./web-client
     ports:
       - "4200:80"
+    depends_on:
+      - keycloak
 
   # Langchain GenAI service
   langchain-app:

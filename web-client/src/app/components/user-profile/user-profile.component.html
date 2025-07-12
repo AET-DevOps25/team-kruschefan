@@ -1,0 +1,41 @@
+<div class="container">
+  @if (userProfile) {
+    <form>
+      <h1>User Profile</h1>
+      <div class="question-container">
+        <div class="form-field">
+          <label for="firstName">First Name</label>
+          <mat-form-field>
+            <input
+              matInput
+              name="firstName"
+              [(ngModel)]="userProfile.firstName"
+            />
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <label for="lastName">Last Name</label>
+          <mat-form-field>
+            <input
+              matInput
+              name="lastName"
+              [(ngModel)]="userProfile.lastName"
+            />
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <mat-form-field>
+            <input matInput name="email" [(ngModel)]="userProfile.email" />
+          </mat-form-field>
+        </div>
+      </div>
+      <button mat-flat-button color="primary" (click)="updateProfile()">
+        Update Profile
+      </button>
+    </form>
+  } @else {
+    <h1>Error Loading User Profile</h1>
+    <p>Unable to load user profile. Please try again later.</p>
+  }
+</div>

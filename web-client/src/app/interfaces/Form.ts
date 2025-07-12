@@ -7,6 +7,7 @@ export interface Form {
 
 export interface FormResponse {
   id: string;
+  formId: string;
   formName: string;
   questions: Question[];
   answers: FormQuestionAnswer[];
@@ -27,5 +28,6 @@ export interface FormResponseTableSummary {
   position: number;
   id: string;
   formName: string;
+  formId: string;
   submittedOn: string;
 }
