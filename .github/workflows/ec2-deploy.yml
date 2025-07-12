@@ -53,6 +53,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      
+      - name: Set up OpenAPI config files
+        run: |
+          echo "Setting up OpenAPI config files..."
+          sh api/scripts/setup.sh
 
       - name: Run services tests
         run: |
