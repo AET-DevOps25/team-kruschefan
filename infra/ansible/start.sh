@@ -3,12 +3,6 @@ set -e
 
 cd ~/app || exit 1
 
-echo "[+] Fetching secrets from AWS Secrets Manager..."
-SECRETS_JSON=$(aws secretsmanager get-secret-value \
-  --secret-id team/db_credentials \
-  --query 'SecretString' \
-  --output text)
-
 # Export secrets as environment variables
 export MONGO_URI=$(echo "$SECRETS_JSON" | jq -r '.mongo_uri')
 export HUGGINGFACEHUB_API_TOKEN=$(echo "$SECRETS_JSON" | jq -r '.huggingface_api_key')
@@ -25,5 +19,8 @@ export ME_CONFIG_MONGODB_ADMINPASSWORD=$MONGO_INITDB_ROOT_PASSWORD
 export ME_CONFIG_BASICAUTH_USERNAME=$(echo "$SECRETS_JSON" | jq -r '.mongo_express_user')
 export ME_CONFIG_BASICAUTH_PASSWORD=$(echo "$SECRETS_JSON" | jq -r '.mongo_express_password')
 
+echo "Setting up OpenAPI config files..."
+sh api/scripts/setup.sh
+
 echo "[+] Building and starting Docker containers..."
-docker compose up -d --build
+docker compose up --env-file .env -d --build
