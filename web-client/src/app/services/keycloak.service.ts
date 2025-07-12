@@ -38,8 +38,8 @@ export class KeycloakService {
     return !!this.keycloak?.authenticated;
   }
 
-  get UserProfile(): Keycloak.KeycloakProfile | undefined {
-    return this.keycloak?.profile;
+  get UserProfile(): Promise<Keycloak.KeycloakProfile> | undefined {
+    return this.keycloak?.loadUserProfile();
   }
 
   get KeycloakInstance(): Keycloak | undefined {
@@ -51,7 +51,9 @@ export class KeycloakService {
   }
 
   logout(): Promise<void> | undefined {
-    return this.keycloak?.logout({ redirectUri: 'http://localhost:4200/home' });
+    return this.keycloak?.logout({
+      redirectUri: `${window.location.origin}/home`,
+    });
   }
 
   getToken(): Promise<string | undefined> {

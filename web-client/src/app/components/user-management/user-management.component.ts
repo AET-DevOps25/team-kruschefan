@@ -8,6 +8,8 @@ import { FormResponseTableSummary } from '../../interfaces/Form';
 import { TemplateResponseTableSummary } from '../../interfaces/Template';
 import { FormService } from '../../services/form.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteConfirmationComponent } from '../dialogs/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'forms-ai-user-management',
@@ -36,6 +38,7 @@ export class UserManagementComponent implements OnInit {
   private templateService = inject(TemplateService);
   private formService = inject(FormService);
   private matSnackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this._getTemplates();
@@ -45,7 +48,22 @@ export class UserManagementComponent implements OnInit {
   protected editTemplate(id: string): void {
     this.router.navigate(['/editor', id]);
   }
-  protected deleteTemplate(id: string): void {
+  protected requestTemplateDelete(id: string): void {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.deleteTemplate(id);
+      }
+    });
+  }
+  protected viewForm(id: string): void {
+    this.router.navigate(['/form', id]);
+  }
+
+  private deleteTemplate(id: string): void {
     this.templateService
       .deleteTemplate(id)
       .pipe(
@@ -128,6 +146,7 @@ export class UserManagementComponent implements OnInit {
           return {
             position: index + 1,
             id: form.id,
+            formId: form.formId,
             formName: form.formName,
             submittedOn: new Date().toDateString(),
           };
