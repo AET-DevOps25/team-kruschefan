@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      #- feat/testing
+      - feat/cloud-deployment-fix
     workflow_dispatch:
 
 jobs:
@@ -114,10 +114,61 @@ jobs:
         working-directory: ./infra/terraform
         run: terraform apply -auto-approve
 
-      - name: Install SSH key
+      - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          cat > ~/.ssh/id_rsa << 'EOF'
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          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
+          UBAg==
+          -----END OPENSSH PRIVATE KEY-----
+          EOF
           chmod 600 ~/.ssh/id_rsa
 
       - name: Wait for EC2 to be reachable
