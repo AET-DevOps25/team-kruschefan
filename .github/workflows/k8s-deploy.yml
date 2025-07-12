@@ -64,6 +64,18 @@ jobs:
           mvn clean test
           cd ../..
 
+          cd services/template-service
+          mvn clean test
+          cd ../..
+
+          cd services/form-service
+          mvn clean test
+          cd ../..
+
+          cd services/api-gateway-service
+          mvn clean test
+          cd ../..
+
       # Test Python GenAI service
       - name: Set up Python
         uses: actions/setup-python@v4
