@@ -1,0 +1,199 @@
+# Docker-based routing
+spring:
+  application:
+    name: api-gateway-service
+
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/forms-ai
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-docker-get-user
+          #uri: http://user-service:8080
+          uri: http://localhost:8083
+          predicates:
+            - Path=/user
+            - Method=GET
+        - id: user-docker-post-user
+          #uri: http://user-service:8080
+          uri: http://localhost:8083
+          predicates:
+            - Path=/user
+            - Method=POST
+        - id: user-docker-get-user-{username}
+          uri: http://user-service:8080
+          predicates:
+            - Path=/user/{username}
+            - Method=GET
+        - id: user-docker-put-user-{username}
+          #uri: http://user-service:8080
+          uri: http://localhost:8083
+          predicates:
+            - Path=/user/{username}
+            - Method=PUT
+        - id: user-docker-delete-user-{username}
+          #uri: http://user-service:8080
+          uri: http://localhost:8083
+          predicates:
+            - Path=/user/{username}
+            - Method=DELETE
+
+        - id: form-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/form/**
+          filters:
+            - RewritePath=/form/(?<segment>.*), /form/${segment}
+
+        - id: template-docker-post-template
+          #uri: http://template-service:8080
+          uri: http://localhost:8082
+          predicates:
+            - Path=/template
+            - Method=POST
+        - id: template-docker-get-template
+          #uri: http://template-service:8080
+          uri: http://localhost:8082
+          predicates:
+            - Path=/template
+            - Method=GET
+        - id: template-docker-get-template-{templateId}
+          #uri: http://template-service:8080
+          uri: http://localhost:8082
+          predicates:
+            - Path=/template/{templateId}
+            - Method=GET
+        - id: template-docker-put-template-{templateId}
+          #uri: http://template-service:8080
+          uri: http://localhost:8082
+          predicates:
+            - Path=/template/{templateId}
+            - Method=PUT
+        - id: template-docker-delete-template-{templateId}
+          #uri: http://template-service:8080
+          uri: http://localhost:8082
+          predicates:
+            - Path=/template/{templateId}
+            - Method=DELETE
+
+        - id: genai-generate
+          #uri: http://langchain-app:8080
+          uri: http://localhost:8000
+          predicates:
+            - Path=/genai/generate_form
+            - Method=POST
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted
+  server:
+    port: 8080
+
+
+# Uncomment below for localhost testing:
+
+  # - id: user-local-get-user
+  #   uri: http://localhost:8083
+  #   predicates:
+  #     - Path=/user
+  #     - Method=GET
+
+  # - id: user-local-post-user
+  #   uri: http://localhost:8083
+  #   predicates:
+  #     - Path=/user
+  #     - Method=POST
+
+  # - id: user-local-get-user-{username}
+  #   uri: http://localhost:8083
+  #   predicates:
+  #     - Path=/user/{username}
+  #     - Method=GET
+
+  # - id: user-local-put-user-{username}
+  #   uri: http://localhost:8083
+  #   predicates:
+  #     - Path=/user/{username}
+  #     - Method=PUT
+
+  # - id: user-local-delete-user-{username}
+  #   uri: http://localhost:8083
+  #   predicates:
+  #     - Path=/user/{username}
+  #     - Method=DELETE
+
+  # - id: form-local-get-form
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form
+  #     - Method=GET
+
+  # - id: form-local-post-form
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form
+  #     - Method=POST
+
+  # - id: form-local-get-form-{formId}
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form/{formId}
+  #     - Method=GET
+
+  # - id: form-local-get-form-responses
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form/responses
+  #     - Method=GET
+
+  # - id: form-local-post-form-responses
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form/responses
+  #     - Method=POST
+
+  # - id: form-local-get-form-responses-{responseId}
+  #   uri: http://localhost:8081
+  #   predicates:
+  #     - Path=/form/responses/{responseId}
+  #     - Method=GET
+
+  # - id: template-local-post-template
+  #   uri: http://localhost:8082
+  #   predicates:
+  #     - Path=/template
+  #     - Method=POST
+
+  # - id: template-local-get-template
+  #   uri: http://localhost:8082
+  #   predicates:
+  #     - Path=/template
+  #     - Method=GET
+
+  # - id: template-local-get-template-{templateId}
+  #   uri: http://localhost:8082
+  #   predicates:
+  #     - Path=/template/{templateId}
+  #     - Method=GET
+
+  # - id: template-local-put-template-{templateId}
+  #   uri: http://localhost:8082
+  #   predicates:
+  #     - Path=/template/{templateId}
+  #     - Method=PUT
+
+  # - id: template-local-delete-template-{templateId}
+  #   uri: http://localhost:8082
+  #   predicates:
+  #     - Path=/template/{templateId}
+  #     - Method=DELETE
