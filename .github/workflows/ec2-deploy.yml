@@ -59,23 +59,23 @@ jobs:
           echo "Setting up OpenAPI config files..."
           sh api/scripts/setup.sh
 
-      ## - name: Run services tests
-      #   run: |
-      #     cd services/user-service
-      #     mvn clean test
-      #     cd ../..
+      - name: Run services tests
+        run: |
+           cd services/user-service
+           mvn clean test
+           cd ../..
 
-      #     cd services/template-service
-      #     mvn clean test
-      #     cd ../..
+           cd services/template-service
+           mvn clean test
+           cd ../..
 
-      #     cd services/form-service
-      #     mvn clean test
-      #     cd ../..
+           cd services/form-service
+           mvn clean test
+           cd ../..
 
-      #     cd services/api-gateway-service
-      #     mvn clean test
-      #     cd ../..
+           cd services/api-gateway-service
+           mvn clean test
+           cd ../..
 
       # Test Python GenAI service
       - name: Set up Python
@@ -177,7 +177,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Wait for EC2 to be reachable
-        run: sleep 60 
+        run: sleep 120
 
       # Ansible deployment
       - name: Set up Python for Ansible
@@ -193,5 +193,34 @@ jobs:
       - name: Run Ansible Playbook
         working-directory: ./ansible/ansible
         run: |
-          ansible-playbook -i "ec2-user@$(terraform output -raw public_ip)" playbook.yml --private-key ~/.ssh/id_rsa
-      
+          ansible-playbook -i "ec2-user@$(terraform output -raw public_ip)" \
+            playbook.yml \
+            --private-key ~/.ssh/id_rsa \
+            --extra-vars '
+            KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
+            KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
+            KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+            KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+            KEYCLOAK_FORMSAI_USER: ${{ secrets.KEYCLOAK_FORMSAI_USER }}
+            KEYCLOAK_FORMSAI_PASSWORD: ${{ secrets.KEYCLOAK_FORMSAI_PASSWORD }}
+            KEYCLOAK_MOCK_USER: ${{ secrets.KEYCLOAK_MOCK_USER }}
+            KEYCLOAK_MOCK_USER_PASSWORD: ${{ secrets.KEYCLOAK_MOCK_USER_PASSWORD }}
+            KEYCLOAK_MOCK_USER_EMAIL: ${{ secrets.KEYCLOAK_MOCK_USER_EMAIL }}
+            KEYCLOAK_MOCK_USER_FIRST_NAME: ${{ secrets.KEYCLOAK_MOCK_USER_FIRST_NAME }}
+            KEYCLOAK_MOCK_USER_LAST_NAME: ${{ secrets.KEYCLOAK_MOCK_USER_LAST_NAME }}
+            KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
+            KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
+            POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
+            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+            MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+            MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+            MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
+            MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+            MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+            MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+            MONGO_URI: ${{ secrets.MONGO_URI }}
+            OPENUI_API_KEY: ${{ secrets.OPENUI_API_KEY }}
+            '
+                

@@ -15,6 +15,12 @@
           - git
         state: present
 
+    - name: Generate .env file for Docker Compose
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: "/home/{{ ansible_user }}/app/.env"
+        mode: "0600"
+
     - import_tasks: tasks/install_docker.yml
     - import_tasks: tasks/install_kubectl.yml
     - import_tasks: tasks/install_helm.yml
