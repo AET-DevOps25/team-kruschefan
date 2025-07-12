@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 from enum import Enum
@@ -13,13 +12,7 @@ import time
 
 
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # or ["*"] for development
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 OPENUI_API_KEY = os.getenv("OPENUI_API_KEY")
 OPENUI_HOSTNAME = "https://gpu.aet.cit.tum.de"
 DEFAULT_MODEL = "deepseek-r1:70b"

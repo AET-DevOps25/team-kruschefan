@@ -37,9 +37,22 @@ spring:
         - id: genai-generate
           uri: http://langchain-app:8000
           predicates:
-            - Path=/generate_form
-            - Method=POST
+          - Path=/genai/**
+          filters:
+          - StripPrefix=1
 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
 # server:
 #   port: 8080
 
