@@ -14,30 +14,30 @@ spring:
     gateway:
       routes:
         - id: form-service
-          uri: http://form-service:8081
+          uri: http://localhost:8081
           predicates:
-          - Path=/form/**
+          - Path=/**
           filters:
           - StripPrefix=1
 
         - id: user-service
-          uri: http://user-service:8083
+          uri: http://localhost:8083
           predicates:
-          - Path=/user/**
+          - Path=/**
           filters:
           - StripPrefix=1
 
         - id: template-service
-          uri: http://template-service:8082
+          uri: http://localhost:8082
           predicates:
-          - Path=/template/**
+          - Path=/**
           filters:
           - StripPrefix=1
 
         - id: genai-generate
-          uri: http://langchain-app:8000
+          uri: http://localhost:8000
           predicates:
-          - Path=/genai/**
+          - Path=/**
           filters:
           - StripPrefix=1
 
