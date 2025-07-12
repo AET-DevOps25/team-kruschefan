@@ -16,43 +16,26 @@ spring:
         - id: form-service
           uri: http://form-service:8081
           predicates:
+          - Path=/**
           - Path=/form/**
-          filters:
-          - StripPrefix=1
 
         - id: user-service
           uri: http://user-service:8083
           predicates:
+          - Path=/**
           - Path=/user/**
-          filters:
-          - StripPrefix=1
 
         - id: template-service
           uri: http://template-service:8082
           predicates:
+          - Path=/**
           - Path=/template/**
-          filters:
-          - StripPrefix=1
 
         - id: genai-generate
           uri: http://langchain-app:8000
           predicates:
-          - Path=/genai/**
-          filters:
-          - StripPrefix=1
+          - Path=/**
 
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "http://localhost:4200"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
-            allowCredentials: true
 # server:
 #   port: 8080
 
