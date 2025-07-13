@@ -16,4 +16,8 @@ RUN mvn -B clean package -DskipTests
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY --from=build /app/api-gateway-service/target/*.jar app.jar
+
+ARG DEPLOYMENT=k8s
+ENV DEPLOYMENT=${DEPLOYMENT}
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
