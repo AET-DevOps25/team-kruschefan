@@ -399,4 +399,8 @@ infrastructure/helm/test-pod.yaml
 
 # Extra Repo for Terraform
 infra/terraform-eks/terraform-aws-eks
-infra/terraform-eks/instruction.txt
+infra/terraform-eks/instruction.txt 
+infra/terraform/instruction.txt 
+infra/terraform/tfplan
+infra/terraform/terraform*
+infra/terraform/.terraform*

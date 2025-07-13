@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feat/testing
+      - feat/kubernetes-fix
     workflow_dispatch:
 
 jobs:

@@ -24,7 +24,6 @@ export class KeycloakService {
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
           window.location.origin + '/assets/silent-check-sso.html',
-        pkceMethod: 'S256',
         checkLoginIframe: false,
       });
       return authenticated;
