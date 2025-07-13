@@ -26,13 +26,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     if (this.keyCloakService.IsLoggedIn) {
-      //this.loadUserName();
-      this.userProfile = {
-        email: 'random@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-      };
-      this.userName = 'john.doe';
+      this.loadUserName();
     } else {
       console.warn('User is not logged in, cannot load profile.');
     }
