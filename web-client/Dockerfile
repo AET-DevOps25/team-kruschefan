@@ -4,7 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build --prod
+ARG BUILD_ENV=k8s
+RUN npm run build -- --configuration=$BUILD_ENV
 
 # Stage 2: Serve with NGINX
 FROM nginx:alpine

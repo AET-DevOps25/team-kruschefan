@@ -3,6 +3,9 @@ set -e
 
 KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
 KC_PATH="/opt/keycloak/bin/kc.sh"
+# TODO: Delete
+KEYCLOAK_FORMSAI_USER="user-service"
+KEYCLOAK_FORMSAI_PASSWORD="user-service-secret"
 
 # Start Keycloak in background
 $KC_PATH start-dev &
@@ -40,6 +43,7 @@ if ! $KCADM_PATH get clients -r forms-ai | grep "\"clientId\" : \"$KEYCLOAK_FORM
     -s publicClient=false \
     -s protocol=openid-connect \
     -s secret=$KEYCLOAK_FORMSAI_PASSWORD
+    #-s clientId=$KEYCLOAK_FORMSAI_USER \
 
   # Create realm role 'spring' if it doesn't exist
   if ! $KCADM_PATH get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
