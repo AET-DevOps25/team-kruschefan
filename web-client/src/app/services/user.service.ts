@@ -23,6 +23,9 @@ export class UserService {
     username: string,
     profile: UserProfile,
   ): Observable<UserProfile> {
-    return this.http.put<UserProfile>(`${this.baseUrl}/${username}`, profile);
+    return this.http.put<UserProfile>(
+      `${this.baseUrl}/user/${username}`,
+      profile,
+    );
   }
 }
