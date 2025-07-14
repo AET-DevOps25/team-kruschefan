@@ -3,17 +3,15 @@ set -e
 
 KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
 KC_PATH="/opt/keycloak/bin/kc.sh"
-# TODO: Delete
-KEYCLOAK_FORMSAI_USER="user-service"
-KEYCLOAK_FORMSAI_PASSWORD="user-service-secret"
+CLIENT_ROLES=("client_user" "client_admin")
 
 # Start Keycloak in background
-$KC_PATH start-dev &
+$KC_PATH start-dev --http-port=9001 &
 
 # Wait for Keycloak to become responsive to kcadm
 echo "Waiting for Keycloak to become ready..."
 until $KCADM_PATH config credentials \
-  --server http://localhost:8080 \
+  --server http://localhost:9001 \
   --realm master \
   --user "$KEYCLOAK_ADMIN" \
   --password "$KEYCLOAK_ADMIN_PASSWORD"; do
@@ -43,7 +41,6 @@ if ! $KCADM_PATH get clients -r forms-ai | grep "\"clientId\" : \"$KEYCLOAK_FORM
     -s publicClient=false \
     -s protocol=openid-connect \
     -s secret=$KEYCLOAK_FORMSAI_PASSWORD
-    #-s clientId=$KEYCLOAK_FORMSAI_USER \
 
   # Create realm role 'spring' if it doesn't exist
   if ! $KCADM_PATH get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
@@ -51,14 +48,8 @@ if ! $KCADM_PATH get clients -r forms-ai | grep "\"clientId\" : \"$KEYCLOAK_FORM
     $KCADM_PATH create roles -r forms-ai -s name=spring
   fi
 
-  # Assign roles to service account of user-service
-  SERVICE_ACCOUNT_ID=$( $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_FORMSAI_USER --fields id --format csv | tail -n1 | tr -d '\r"' )
-
   # Assign realm role 'spring'
   $KCADM_PATH add-roles -r forms-ai --uusername service-account-$KEYCLOAK_FORMSAI_USER --rolename spring
-
-  # Get the ID of the realm-management client
-  REALM_MGMT_ID=$($KCADM_PATH get clients -r forms-ai -q clientId=realm-management --fields id --format csv | tail -n1 | tr -d '\r"')
 
   # Assign view-users and manage-users to service account
   $KCADM_PATH add-roles -r forms-ai \
@@ -91,11 +82,22 @@ if ! $KCADM_PATH get clients -r forms-ai | grep '"clientId" : "angular-frontend"
   -s protocol=openid-connect \
   -s rootUrl="http://localhost:4200"
 
-  echo "Client 'angular-frontend' created"
+  CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+    grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+    grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
+
+  for ROLE in "${CLIENT_ROLES[@]}"; do
+    $KCADM_PATH create clients/$CLIENT_UUID/roles -r forms-ai -s name=$ROLE
+  done
+
+  $KCADM_PATH add-roles \
+    -r forms-ai \
+    --rname default-roles-forms-ai \
+    --cclientid angular-frontend \
+    --rolename client_user
 else
   echo "Client 'angular-frontend' already exists"
 fi
-
 
 # Create mock user if it doesn't exist
 if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\"username\" : \"$KEYCLOAK_MOCK_USER\"" > /dev/null; then
@@ -121,6 +123,42 @@ if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\
   echo "Mock user '$KEYCLOAK_MOCK_USER' created and role assigned"
 else
   echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
+fi
+
+# Create mock admin if it doesn't exist
+if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN | grep "\"username\" : \"$KEYCLOAK_MOCK_ADMIN\"" > /dev/null; then
+  echo "Creating admin user '$KEYCLOAK_MOCK_ADMIN'..."
+
+  $KCADM_PATH create users -r forms-ai \
+    -s username=$KEYCLOAK_MOCK_ADMIN \
+    -s email=$KEYCLOAK_MOCK_ADMIN_EMAIL \
+    -s enabled=true \
+    -s emailVerified=true \
+    -s firstName="$KEYCLOAK_MOCK_ADMIN_FIRST_NAME" \
+    -s lastName="$KEYCLOAK_MOCK_ADMIN_LAST_NAME"
+
+  # Get the mock admin's ID
+  MOCK_ADMIN_ID=$($KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN --fields id --format csv | tail -n1 | tr -d '\r"')
+
+  # Set password for mock admin
+  $KCADM_PATH set-password -r forms-ai --userid $MOCK_ADMIN_ID --new-password $KEYCLOAK_MOCK_ADMIN_PASSWORD
+
+  # Assign admin role
+  CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+    grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+    grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
+  $KCADM_PATH add-roles \
+    -r forms-ai \
+    --uid $MOCK_ADMIN_ID \
+    --cclientid angular-frontend \
+    --rolename client_admin
+
+  # Optionally assign realm role 'spring'
+  $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename spring
+
+  echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' created and role assigned"
+else
+  echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' already exists"
 fi
 
 # Keep container running
