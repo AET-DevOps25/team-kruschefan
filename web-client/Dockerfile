@@ -4,7 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+
 ARG BUILD_ENV=k8s
+ENV BUILD_ENV=${BUILD_ENV}
+RUN echo "Building client with profile: $BUILD_ENV"
 RUN npm run build -- --configuration=$BUILD_ENV
 
 # Stage 2: Serve with NGINX
