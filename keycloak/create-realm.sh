@@ -6,12 +6,12 @@ KC_PATH="/opt/keycloak/bin/kc.sh"
 CLIENT_ROLES=("client_user" "client_admin")
 
 # Start Keycloak in background
-$KC_PATH start-dev &
+$KC_PATH start-dev --http-port=9001 &
 
 # Wait for Keycloak to become responsive to kcadm
 echo "Waiting for Keycloak to become ready..."
 until $KCADM_PATH config credentials \
-  --server http://localhost:8080 \
+  --server http://localhost:9001 \
   --realm master \
   --user "$KEYCLOAK_ADMIN" \
   --password "$KEYCLOAK_ADMIN_PASSWORD"; do
@@ -82,18 +82,22 @@ if ! $KCADM_PATH get clients -r forms-ai | grep '"clientId" : "angular-frontend"
   -s protocol=openid-connect \
   -s rootUrl="http://localhost:4200"
 
-  echo "Client 'angular-frontend' created"
+  CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+    grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+    grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
+
+  for ROLE in "${CLIENT_ROLES[@]}"; do
+    $KCADM_PATH create clients/$CLIENT_UUID/roles -r forms-ai -s name=$ROLE
+  done
+
+  $KCADM_PATH add-roles \
+    -r forms-ai \
+    --rname default-roles-forms-ai \
+    --cclientid angular-frontend \
+    --rolename client_user
 else
   echo "Client 'angular-frontend' already exists"
 fi
-
-for ROLE in "${CLIENT_ROLES[@]}"; do
-  if ! $KCADM_PATH get roles -r forms-ai | grep "\"name\" : \"$ROLE\"" > /dev/null; then
-    $KCADM_PATH create roles -r forms-ai -s name=$ROLE
-  fi
-done
-
-$KCADM_PATH add-roles --rname default-roles-forms-ai --rolename client_user -r forms-ai
 
 # Create mock user if it doesn't exist
 if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\"username\" : \"$KEYCLOAK_MOCK_USER\"" > /dev/null; then
@@ -140,7 +144,14 @@ if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN | grep "
   $KCADM_PATH set-password -r forms-ai --userid $MOCK_ADMIN_ID --new-password $KEYCLOAK_MOCK_ADMIN_PASSWORD
 
   # Assign admin role
-  $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename client_admin
+  CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+    grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+    grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
+  $KCADM_PATH add-roles \
+    -r forms-ai \
+    --uid $MOCK_ADMIN_ID \
+    --cclientid angular-frontend \
+    --rolename client_admin
 
   # Optionally assign realm role 'spring'
   $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename spring

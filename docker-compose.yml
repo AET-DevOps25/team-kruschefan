@@ -58,9 +58,8 @@ services:
       KEYCLOAK_MOCK_ADMIN_EMAIL: ${KEYCLOAK_MOCK_ADMIN_EMAIL}
       KEYCLOAK_MOCK_ADMIN_FIRST_NAME: ${KEYCLOAK_MOCK_ADMIN_FIRST_NAME}
       KEYCLOAK_MOCK_ADMIN_LAST_NAME: ${KEYCLOAK_MOCK_ADMIN_LAST_NAME}
-      KC_HOSTNAME: localhost
     ports:
-      - "9001:8080"
+      - "9001:9001"
     depends_on:
       - postgres
 
