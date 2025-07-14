@@ -17,7 +17,8 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY --from=build /app/user-service/target/*.jar app.jar
 
-ARG DEPLOYMENT=k8s
-ENV DEPLOYMENT=${DEPLOYMENT}
+ARG SPRING_PROFILES_ACTIVE=k8s
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+RUN echo "Building user service with profile: $SPRING_PROFILES_ACTIVE"
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: formsai-ingress
   namespace: team-kruschefan-project
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -14,7 +14,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: angular-client
+              name: client
               port:
                 number: 80
         - path: /api
@@ -24,7 +24,11 @@ spec:
               name: api-gateway
               port:
                 number: 8080
-        - path: /keycloak
+
+  - host: keycloak.team-kruschefan.local
+    http:
+      paths:
+        - path: /
           pathType: Prefix
           backend:
             service:

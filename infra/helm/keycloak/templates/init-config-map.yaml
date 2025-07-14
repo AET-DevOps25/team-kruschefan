@@ -12,7 +12,7 @@ data:
     KC_PATH="/opt/keycloak/bin/kc.sh"
 
     # Start Keycloak in background
-    $KC_PATH start-dev &
+    $KC_PATH start-dev $KC_ARGS &
 
     # Wait for Keycloak to become responsive to kcadm
     echo "Waiting for Keycloak to become ready..."
