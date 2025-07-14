@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feat/testing
+      - feat/multi-env-deployment
     workflow_dispatch:
 
 jobs:
@@ -155,7 +155,7 @@ jobs:
 
           # template-service
           echo "Building and pushing template-service image..."
-          cd services/GenAI
+          cd services/template-service
           docker buildx build --platform linux/amd64 -t ghcr.io/cjzbeastmode/template-service:latest -f Dockerfile . && docker push ghcr.io/cjzbeastmode/template-service:latest
           cd ../..
 
