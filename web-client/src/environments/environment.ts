@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080',
-  templateApiUrl: 'http://localhost:8080',
-  formApiUrl: 'http://localhost:8080',
-  userApiUrl: 'http://localhost:8080',
+  apiUrl: 'http://localhost:8080/api',
+  templateApiUrl: 'http://localhost:8080/api',
+  formApiUrl: 'http://localhost:8080/api',
+  userApiUrl: 'http://localhost:8080/api',
   keycloak: {
     issuer: 'http://localhost:9001',
     realm: 'forms-ai',
