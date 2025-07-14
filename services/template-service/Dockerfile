@@ -19,5 +19,6 @@ COPY --from=build /app/template-service/target/*.jar app.jar
 
 ARG SPRING_PROFILES_ACTIVE=k8s
 ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+RUN echo "Building template service with profile: $SPRING_PROFILES_ACTIVE"
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
