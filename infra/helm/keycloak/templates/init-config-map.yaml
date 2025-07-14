@@ -9,13 +9,7 @@ data:
     set -e
 
     KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
-    KC_PATH="/opt/keycloak/bin/kc.sh"
 
-    # Start Keycloak in background
-    $KC_PATH start-dev $KC_ARGS &
-
-    # Wait for Keycloak to become responsive to kcadm
-    echo "Waiting for Keycloak to become ready..."
     until $KCADM_PATH config credentials \
       --server http://localhost:8080 \
       --realm master \
@@ -30,8 +24,10 @@ data:
     # Create realm if it doesn't exist
     if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
       $KCADM_PATH create realms -s realm=forms-ai -s enabled=true
+      $KCADM_PATH update realms/forms-ai -s sslRequired=NONE
       echo "Realm 'forms-ai' created"
     else
+      $KCADM_PATH update realms/forms-ai -s sslRequired=NONE
       echo "Realm 'forms-ai' already exists"
     fi
 
@@ -92,7 +88,7 @@ data:
       -s directAccessGrantsEnabled=true \
       -s standardFlowEnabled=true \
       -s protocol=openid-connect \
-      -s rootUrl="http://localhost:4200"
+      -s rootUrl="http://team-kruschefan.local"
 
       echo "Client 'angular-frontend' created"
     else
@@ -125,3 +121,6 @@ data:
     else
       echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
     fi
+
+    echo "Init complete. Exiting."
+    exit 0

@@ -13,60 +13,26 @@ spec:
       labels:
         app: keycloak
     spec:
-      initContainers:
-        - name: keycloak-init
-          image: quay.io/keycloak/keycloak:24.0.1
-          command:
-            - sh
-            - -c
-            - |
-              cp /opt/keycloak/init/init-keycloak.sh /tmp/init.sh && \
-              chmod +x /tmp/init.sh && \
-              KC_ARGS="--hostname-strict=false --hostname-strict-https=false" sh /tmp/init.sh
-          env:
-            - name: KEYCLOAK_ADMIN
-              value: keycloak
-            # TODO: secret, KEYCLOAK_ADMIN_PASSWORD
-            - name: KEYCLOAK_ADMIN_PASSWORD
-              value: keycloak-secret
-            # !!!TODO: secret
-            - name: KEYCLOAK_SERVICE_HOST
-              value: localhost
-            - name: KEYCLOAK_SERVICE_PORT
-              value: "8080"
-            - name: KC_HOSTNAME
-              value: "localhost"
-            - name: KEYCLOAK_FORMSAI_USER
-              value: "user-service"
-            - name: KEYCLOAK_FORMSAI_PASSWORD
-              value: "user-service-secret"
-            - name: KEYCLOAK_MOCK_USER
-              value: "mock-user"
-            - name: KEYCLOAK_MOCK_USER_PASSWORD
-              value: "mock-user-secret"
-            - name: KEYCLOAK_MOCK_USER_EMAIL
-              value: "mock@mock.com"
-            - name: KEYCLOAK_MOCK_USER_FIRST_NAME
-              value: Mock
-            - name: KEYCLOAK_MOCK_USER_LAST_NAME
-              value: User
-            
+      containers:
+        - name: keycloak
+          image: "quay.io/keycloak/keycloak:24.0.1"
           volumeMounts:
             - name: keycloak-init-script
               mountPath: /opt/keycloak/init/init-keycloak.sh
               subPath: init-keycloak.sh
               readOnly: true
 
-
-      containers:
-        - name: keycloak
-          image: "quay.io/keycloak/keycloak:24.0.1"
           command:
-            - "/opt/keycloak/bin/kc.sh"
-          args:
-            - "start-dev"
-            - "--hostname-strict=false"
-            - "--hostname-strict-https=false"
+            - sh
+            - -c
+            - |
+              /opt/keycloak/bin/kc.sh start-dev --http-enabled=true --hostname-strict=false --hostname-strict-https=false &
+
+              echo "Running init script..."
+              sh /opt/keycloak/init/init-keycloak.sh
+
+              wait
+
           ports:
             - containerPort: 8080
           env:
@@ -110,7 +76,7 @@ spec:
               value: Mock
             - name: KEYCLOAK_MOCK_USER_LAST_NAME
               value: User
-
+      
       volumes:
         - name: keycloak-init-script
           configMap:
