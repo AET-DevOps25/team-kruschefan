@@ -8,7 +8,7 @@ export const environment = {
   userApiUrl:
     'http://api-gateway.team-kruschefan-project.svc.cluster.local:8080',
   keycloak: {
-    issuer: 'http://keycloak.team-kruschefan-project.svc.cluster.local:9001',
+    issuer: 'https://team-kruschefan.local/keycloak',
     realm: 'forms-ai',
     clientId: 'angular-frontend',
   },
