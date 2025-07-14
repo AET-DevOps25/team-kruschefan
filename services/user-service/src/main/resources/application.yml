@@ -25,12 +25,12 @@ server:
   port: 8083
 
 keycloak:
-    realm: forms-ai
-    auth-server-url: ${KEYCLOAK_URL:http://localhost:9001}
-    resource: user-service
-    credentials:
-      secret: user-service-secret
-    bearer-only: true
+  realm: forms-ai
+  auth-server-url: ${KEYCLOAK_URL:http://localhost:9001}
+  resource: user-service
+  credentials:
+    secret: user-service-secret
+  bearer-only: true
 
 management:
   endpoints:
