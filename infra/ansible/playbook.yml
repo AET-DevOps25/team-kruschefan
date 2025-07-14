@@ -2,40 +2,52 @@
 - name: Provision EC2 instance
   hosts: all
   become: yes
+  vars:
+        ansible_user: ec2-user
 
   tasks:
-    - name: Ensure apt cache is updated
-      ansible.builtin.apt:
+    - name: Ensure dnf cache is updated
+      ansible.builtin.dnf:
         update_cache: yes
 
     - name: Install base packages
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name:
           - jq
           - git
         state: present
 
-    - name: Generate .env file for Docker Compose
-      ansible.builtin.template:
-        src: templates/env.j2
-        dest: "/home/{{ ansible_user }}/app/.env"
-        mode: "0600"
-
     - import_tasks: tasks/install_docker.yml
-    - import_tasks: tasks/install_kubectl.yml
-    - import_tasks: tasks/install_helm.yml
+
+    - name: Remove existing app directory if it exists
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/app"
+        state: absent
 
     - name: Clone repo
       ansible.builtin.git:
         repo: "https://github.com/AET-DevOps25/team-kruschefan.git"
         dest: "/home/{{ ansible_user }}/app"
         version: main
+        force: yes
+
+    - name: Generate .env file for Docker Compose
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: "/home/{{ ansible_user }}/app/.env.secret"
+        mode: "0600"
 
     - name: Copy start.sh to remote host
       ansible.builtin.copy:
         src: ./start.sh
-        dest: "/home/{{ ansible_user }}"
+        dest: "/home/{{ ansible_user }}/app"
         mode: '0755'
 
     - name: Run start.sh
-      ansible.builtin.command: "/home/{{ ansible_user }}/start.sh"
+      ansible.builtin.command: "/home/{{ ansible_user }}/app/start.sh"
+
+    - name: Docker Compose Up
+      ansible.builtin.shell: |
+        docker compose up -d
+      args:
+        chdir: "/home/{{ ansible_user }}/app"

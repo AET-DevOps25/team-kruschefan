@@ -1,8 +1,7 @@
-- name: Install Docker
-  ansible.builtin.apt:
-    name: docker.io
+- name: Install Docker (Amazon Linux 2023)
+  ansible.builtin.dnf:
+    name: docker
     state: present
-    update_cache: yes
 
 - name: Start Docker service
   ansible.builtin.service:
@@ -15,3 +14,11 @@
     name: "{{ ansible_user }}"
     groups: docker
     append: yes
+
+- name: Install Docker Compose v2 plugin
+  ansible.builtin.shell: |
+    mkdir -p /usr/libexec/docker/cli-plugins
+    curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/libexec/docker/cli-plugins/docker-compose
+    chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+  args:
+    creates: /usr/libexec/docker/cli-plugins/docker-compose
