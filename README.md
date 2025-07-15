@@ -40,6 +40,23 @@ The diagram shows how a user prompt becomes a full form. The Form Service sends 
 ## App Usage
 After deploying the app, the app can be used on the web interface using a browser. The deployment methods are well documented below. In this section, 
 
+1. **Log in**
+   Log in the app using a mock user
+   ```bash
+   username: mock-user
+   password: mock-user-secret
+   ```
+
+2. **Form Editor**
+   In the Form Editor section, users can create a form using GenAI or drag and drop functionality. After creating the form, users can either save the form as template, or immediately export the form.
+
+3. **User Management**
+   In the User Management section, users can view all the forms that are created by the user. Users have the option to edit the form or export it. Underneath there is the submitted forms section, where users can view all the submitted surveys filled by other users.
+
+4. **Profile**
+   In the Profile section, users can view their profile, edit them and update them.
+
+
 ## Local Deployment
 The docker system is developed, so that the application can be started within a few commands. Here are the exact steps of how to start the application locally.
 
@@ -130,9 +147,7 @@ The docker system is developed, so that the application can be started within a 
    ```
 
 ## Kubernetes Deployment
-**TODO**
-Apart from the local deployment, two cloud deployment variants are provided using CI/CD pipelines implemented in GitHub actions. The Kubernetes is deployed through helm (.infra/helm) onto the rancher Kubernetes cluster provided by TUM (https://rancher.ase.cit.tum.de) under the namespace "team-kruschefan-project". 
-
+Apart from the local deployment, two cloud deployment variants are provided using CI/CD pipelines implemented in GitHub actions. The Kubernetes is deployed through helm (.infra/helm) onto the rancher Kubernetes cluster provided by TUM (https://rancher.ase.cit.tum.de) under the namespace "team-kruschefan-project". Ingress is applied, so that users can access the running instance by configuring local DNS resolution via the /etc/hosts file as described below.
 
 1. **Set the local network hostnames**
    Open the following file locally:
