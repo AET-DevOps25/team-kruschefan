@@ -76,6 +76,16 @@ spec:
               value: Mock
             - name: KEYCLOAK_MOCK_USER_LAST_NAME
               value: User
+            - name: KEYCLOAK_MOCK_ADMIN
+              value: "mock-admin"
+            - name: KEYCLOAK_MOCK_ADMIN_PASSWORD
+              value: "mock-admin-secret"
+            - name: KEYCLOAK_MOCK_ADMIN_EMAIL
+              value: "mock-admin@example.com"
+            - name: KEYCLOAK_MOCK_ADMIN_FIRST_NAME
+              value: Mock
+            - name: KEYCLOAK_MOCK_ADMIN_LAST_NAME
+              value: Admin
       
       volumes:
         - name: keycloak-init-script
