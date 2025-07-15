@@ -3,8 +3,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${KEYCLOAK_URL:keycloak.team-kruschefan.local}/realms/forms-ai
+          issuer-uri: http://keycloak.team-kruschefan-project.svc.cluster.local/realms/forms-ai
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 keycloak:
-  auth-server-url: http://${KEYCLOAK_URL:keycloak.team-kruschefan.local}
+  auth-server-url: http://keycloak.team-kruschefan-project.svc.cluster.local

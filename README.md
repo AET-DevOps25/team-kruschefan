@@ -37,6 +37,9 @@ The diagram shows how a user prompt becomes a full form. The Form Service sends 
 > - [Web Client](./web-client)
 > - [Continuous Deployment](./infra)
 
+## App Usage
+After deploying the app, the app can be used on the web interface using a browser. The deployment methods are well documented below. In this section, 
+
 ## Local Deployment
 The docker system is developed, so that the application can be started within a few commands. Here are the exact steps of how to start the application locally.
 
@@ -68,6 +71,11 @@ The docker system is developed, so that the application can be started within a 
    KEYCLOAK_MOCK_USER_EMAIL=
    KEYCLOAK_MOCK_USER_FIRST_NAME=
    KEYCLOAK_MOCK_USER_LAST_NAME=
+   KEYCLOAK_MOCK_ADMIN=mock-admin
+   KEYCLOAK_MOCK_ADMIN_PASSWORD=
+   KEYCLOAK_MOCK_ADMIN_EMAIL=
+   KEYCLOAK_MOCK_ADMIN_FIRST_NAME=
+   KEYCLOAK_MOCK_ADMIN_LAST_NAME=
 
    #  Postgresql config
    KC_DB_USERNAME= # Keycloak username for connection to Postgres 
@@ -107,16 +115,42 @@ The docker system is developed, so that the application can be started within a 
    ```bash
    docker-compose up --build
    ```
-   The application will be started in a short while.  
+   The application will be started in a short while. 
+
+5. **Visit the website**
+   The app can be found under the following endpoint:
+   ```
+   http://localhost:4200
+   ``` 
   
-5. **Shut the application down**
+6. **Shut the application down**
    For shutting down the application, use the docker-compose down command in the project root.
    ```bash
    docker-compose down
    ```
 
-## Cloud/Kubernetes Deployment
+## Kubernetes Deployment
 **TODO**
+Apart from the local deployment, two cloud deployment variants are provided using CI/CD pipelines implemented in GitHub actions. The Kubernetes is deployed through helm (.infra/helm) onto the rancher Kubernetes cluster provided by TUM (https://rancher.ase.cit.tum.de) under the namespace "team-kruschefan-project". 
+
+
+1. **Set the local network hostnames**
+   Open the following file locally:
+   ```
+   /etc/hosts
+   ```
+   and add the lines at the botton of the file
+   ```
+   # Kubernetes network set up for team-kruschefan-project
+   131.159.88.14 team-kruschefan.local keycloak.team-kruschefan.local
+   ```
+
+2. **Visit the website**
+   The app can be found under the following endpoint:
+   ```
+   http://team-kruschefan.local
+   ```
+
 
 ## CI/CD Pipeline
 There are two CI/CD pipelines, all instantiated using GitHub actions. Both of them are used for deployments, one for cloud and one for Kubernetes.
@@ -170,7 +204,8 @@ The EC2 deploy pipeline is developed as file [k8s-deploy.yml](.github/workflows/
 
 
 ## Monitoring
-**TODO**
+**TODO Vishav: explain rules**
+**TODO Jay: explain dashboards**
 
 ## Team
 Our team consists of three members, each focus on and is responsible for different part of the development. A tutor is assigned to the team to help manage the project. The exact progress of the application development can be found under this Confluence page: https://confluence.aet.cit.tum.de/pages/viewpage.action?pageId=258581347&spaceKey=DO25WR&title=Team%2BKruschefan
