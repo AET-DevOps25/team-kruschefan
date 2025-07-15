@@ -180,7 +180,9 @@ The EC2 deploy pipeline is developed as file [ec2-deploy.yml](.github/workflows/
    - Perform tests to make sure the integrity of the development
    - Tests of microservices, GenAI services and client will be executed
 
-3. **TODO**
+3. **Terraform Deploy**
+   - Deploy Terraform to the AWS instance
+   - Terraform init, Terraform plan and apply
 
  
 **K8s Deploy**
