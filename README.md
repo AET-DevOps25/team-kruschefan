@@ -182,7 +182,16 @@ The EC2 deploy pipeline is developed as file [ec2-deploy.yml](.github/workflows/
 
 3. **Terraform Deploy**
    - Deploy Terraform to the AWS instance
+   - Terraform brings up the EC2 instance where the app will be running
    - Terraform init, Terraform plan and apply
+
+4. **Ansible Deploy**
+   - Deploy Ansible playbook
+   - Ansible configures the EC2 instance and brings the app to life
+
+5. **Post-Deployment Validation**  
+   - Verifies successful deployment
+   - Optionally runs smoke tests or health checks
 
  
 **K8s Deploy**
