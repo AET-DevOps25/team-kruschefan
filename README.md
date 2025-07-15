@@ -119,10 +119,7 @@ The docker system is developed, so that the application can be started within a 
 **TODO**
 
 ## CI/CD Pipeline
-There are three CI/CD pipelines, all instantiated using GitHub actions. Two of them are used for deployments, one for cloud and one for Kubernetes. All of three pipelines are described below.
-
-**Frontend Lint**
-The frontend lint pipeline is developed as file [frontend-lint-format.yml](.github/workflows/frontend-lint-format.yml). **TODO**
+There are two CI/CD pipelines, all instantiated using GitHub actions. Both of them are used for deployments, one for cloud and one for Kubernetes.
 
 **EC2 Deploy**
 The EC2 deploy pipeline is developed as file [ec2-deploy.yml](.github/workflows/ec2-deploy.yml). The objective of the pipeline is to develop the local application to an AWS EC2 instance, so that the application can be hosted on the cloud. The pipeline contains the following stages:  

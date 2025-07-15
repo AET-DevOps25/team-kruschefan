@@ -20,6 +20,7 @@ data:
     done
 
     echo "Logged into Keycloak CLI"
+    $KCADM_PATH update realms/master -s sslRequired=NONE
 
     # Create realm if it doesn't exist
     if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
