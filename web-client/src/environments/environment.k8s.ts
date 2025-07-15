@@ -1,13 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl:
-    'http://api-gateway.team-kruschefan-project.svc.cluster.local:8080/api',
-  templateApiUrl:
-    'http://api-gateway.team-kruschefan-project.svc.cluster.local:8080/api',
-  formApiUrl:
-    'http://api-gateway.team-kruschefan-project.svc.cluster.local:8080/api',
-  userApiUrl:
-    'http://api-gateway.team-kruschefan-project.svc.cluster.local:8080/api',
+  apiUrl: 'http://team-kruschefan.local/api',
+  templateApiUrl: 'http://team-kruschefan.local/api',
+  formApiUrl: 'http://team-kruschefan.local/api',
+  userApiUrl: 'http://team-kruschefan.local/api',
   keycloak: {
     issuer: 'http://keycloak.team-kruschefan.local',
     realm: 'forms-ai',
