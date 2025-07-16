@@ -21,7 +21,7 @@ This diagram gives a overview of the entire FormsAI platform. At the core, the A
 
 3. **Subsystem Decomposition**  
 <img src="/resources/UML/subsystem_decomposition.png" alt="Subsystem Decomposition" style="height: 30vw;"/>
-This diagram breaks down the architecture of FormsAI into key subsystems. The Client interacts with the backend via an API Gateway, which handles routing, authentication, and token checks. The backend is divided into multiple microservices, including User, Form, Template, and GenAI (Langchain). Keycloak handles authentication and user management, while Monitoring (via Prometheus & Grafana) and CI/CD pipelines (via GitHub Actions) ensure integrity and automation of the system. Note: **TODO: Replace placeholders**  
+This diagram breaks down the architecture of FormsAI into key subsystems. The Client interacts with the backend via an API Gateway, which handles routing, authentication, and token checks. The backend is divided into multiple microservices, including User, Form, Template, and GenAI (Langchain). Keycloak handles authentication and user management, while Monitoring (via Prometheus & Grafana) and CI/CD pipelines (via GitHub Actions) ensure integrity and automation of the system.
 
 ---
 
@@ -35,7 +35,7 @@ The diagram shows how a user prompt becomes a full form. The Form Service sends 
 > - [Microservices](./services)
 > - [GenAI Usage](./services/GenAI)
 > - [Web Client](./web-client)
-> - [Continuous Deployment](./infra)
+> - [Infrastructure](./infra)
 
 ## App Usage
 After deploying the app, the app can be used on the web interface using a browser. The deployment methods are well documented below. In this section, 
@@ -230,8 +230,8 @@ The EC2 deploy pipeline is developed as file [k8s-deploy.yml](.github/workflows/
 
 
 ## Monitoring
-**TODO Vishav: explain rules**
-**TODO Jay: explain dashboards**
+**TODO: explain rules**
+**TODO: explain dashboards**
 
 ## Team
 Our team consists of three members, each focus on and is responsible for different part of the development. A tutor is assigned to the team to help manage the project. The exact progress of the application development can be found under this Confluence page: https://confluence.aet.cit.tum.de/pages/viewpage.action?pageId=258581347&spaceKey=DO25WR&title=Team%2BKruschefan
