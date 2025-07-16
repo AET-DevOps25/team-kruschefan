@@ -26,11 +26,9 @@ server:
 
 keycloak:
   realm: forms-ai
-  auth-server-url: ${KEYCLOAK_URL:http://localhost:9001}
-  resource: user-service
-  credentials:
-    secret: user-service-secret
-  bearer-only: true
+  server-url: ${KEYCLOAK_URL:http://localhost:9001}
+  clientId: user-service
+  client-secret: user-service-secret
 
 management:
   endpoints:

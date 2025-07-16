@@ -5,7 +5,7 @@ export const environment = {
   formApiUrl: 'http://localhost:8080/api',
   userApiUrl: 'http://localhost:8080/api',
   keycloak: {
-    issuer: 'http://keycloak:9001',
+    issuer: 'http://localhost:9001',
     realm: 'forms-ai',
     clientId: 'angular-frontend',
   },
