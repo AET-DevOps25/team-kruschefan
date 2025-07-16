@@ -59,54 +59,54 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         return jwt.getClaim(claimName);
     }
 
-    // private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-    //     Map<String, Object> resourceAccess;
-    //     Map<String, Object> resource;
-    //     Collection<String> resourceRoles;
-    //     if (jwt.getClaim("resource_access") == null) {
-    //         return Set.of();
-    //     }
-    //     resourceAccess = jwt.getClaim("resource_access");
-    //     if (resourceAccess.get(resourceId) == null) {
-    //         return Set.of();
-    //     }
-    //     resource = (Map<String, Object>) resourceAccess.get(resourceId);
-    //     resourceRoles = (Collection<String>) resource.get("roles");
-    //     return resourceRoles
-    //             .stream()
-    //             .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-    //             .collect(Collectors.toSet());
-    // }
-
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-
-        // 1. Extract roles from the realm_access claim
-        Map<String, Object> realmAccess = jwt.getClaim("realm_access");
-        if (realmAccess != null && realmAccess.containsKey("roles")) {
-            Collection<String> realmRoles = (Collection<String>) realmAccess.get("roles");
-            authorities.addAll(realmRoles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                    .collect(Collectors.toSet()));
-        }
-
-        // 2. Extract roles from the resource_access claim
         Map<String, Object> resourceAccess;
         Map<String, Object> resource;
         Collection<String> resourceRoles;
-        if (jwt.getClaim("resource_access") != null) {
-            resourceAccess = jwt.getClaim("resource_access");
-            if (resourceAccess.containsKey(resourceId)) {
-                resource = (Map<String, Object>) resourceAccess.get(resourceId);
-                if (resource.containsKey("roles")) {
-                    resourceRoles = (Collection<String>) resource.get("roles");
-                    authorities.addAll(resourceRoles.stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                            .collect(Collectors.toSet()));
-                }
-            }
+        if (jwt.getClaim("resource_access") == null) {
+            return Set.of();
         }
-        
-        return authorities;
+        resourceAccess = jwt.getClaim("resource_access");
+        if (resourceAccess.get(resourceId) == null) {
+            return Set.of();
+        }
+        resource = (Map<String, Object>) resourceAccess.get(resourceId);
+        resourceRoles = (Collection<String>) resource.get("roles");
+        return resourceRoles
+                .stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toSet());
     }
+
+    // private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
+    //     Set<GrantedAuthority> authorities = new HashSet<>();
+
+    //     // 1. Extract roles from the realm_access claim
+    //     Map<String, Object> realmAccess = jwt.getClaim("realm_access");
+    //     if (realmAccess != null && realmAccess.containsKey("roles")) {
+    //         Collection<String> realmRoles = (Collection<String>) realmAccess.get("roles");
+    //         authorities.addAll(realmRoles.stream()
+    //                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    //                 .collect(Collectors.toSet()));
+    //     }
+
+    //     // 2. Extract roles from the resource_access claim
+    //     Map<String, Object> resourceAccess;
+    //     Map<String, Object> resource;
+    //     Collection<String> resourceRoles;
+    //     if (jwt.getClaim("resource_access") != null) {
+    //         resourceAccess = jwt.getClaim("resource_access");
+    //         if (resourceAccess.containsKey(resourceId)) {
+    //             resource = (Map<String, Object>) resourceAccess.get(resourceId);
+    //             if (resource.containsKey("roles")) {
+    //                 resourceRoles = (Collection<String>) resource.get("roles");
+    //                 authorities.addAll(resourceRoles.stream()
+    //                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    //                         .collect(Collectors.toSet()));
+    //             }
+    //         }
+    //     }
+        
+    //     return authorities;
+    // }
 }
