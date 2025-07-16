@@ -1,49 +1,111 @@
 {
-  "id": null,
-  "uid": "demo-dashboard-4",
-  "title": "Garbage Collection",
+  "title": "Garbage Collection Dashboard",
   "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "30s",
   "panels": [
     {
       "type": "timeseries",
-      "title": "GC Pause Duration (avg over 5m)",
-      "targets": [
-        {
-          "expr": "rate(jvm_gc_pause_seconds_sum[5m]) / rate(jvm_gc_pause_seconds_count[5m])"
-        }
-      ],
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
+      "title": "GC Pause Duration (Sum)",
       "gridPos": {
-        "h": 8,
+        "h": 12,
         "w": 12,
         "x": 0,
         "y": 0
-      }
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_pause_seconds_sum",
+          "refId": "A"
+        }
+      ],
+      "datasource": "Prometheus"
     },
     {
       "type": "timeseries",
-      "title": "GC Count",
-      "targets": [
-        {
-          "expr": "rate(jvm_gc_pause_seconds_count[5m])"
-        }
-      ],
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
+      "title": "GC Pause Count",
       "gridPos": {
-        "h": 8,
+        "h": 12,
         "w": 12,
         "x": 12,
         "y": 0
-      }
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_pause_seconds_count",
+          "refId": "B"
+        }
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "type": "timeseries",
+      "title": "Live Data Size After GC",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_live_data_size_bytes",
+          "refId": "C"
+        }
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "type": "timeseries",
+      "title": "Max Data Size After GC",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_max_data_size_bytes",
+          "refId": "D"
+        }
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "type": "timeseries",
+      "title": "Allocated Memory (Total)",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_memory_allocated_bytes_total",
+          "refId": "E"
+        }
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "type": "timeseries",
+      "title": "Promoted Memory (Total)",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_memory_promoted_bytes_total",
+          "refId": "F"
+        }
+      ],
+      "datasource": "Prometheus"
     }
-  ],
-  "schemaVersion": 37,
-  "version": 1,
-  "refresh": "5s"
+  ]
 }

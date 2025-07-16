@@ -1,7 +1,7 @@
 {
   "id": null,
   "uid": "demo-dashboard-6",
-  "title": "HTTP Response Times by URI",
+  "title": "OLD-HTTP Response Times by URI",
   "timezone": "browser",
   "panels": [
     {

@@ -1,15 +1,15 @@
 {
   "id": null,
-  "uid": "demo-dashboard-2",
-  "title": "HTTP Requests Overview",
+  "uid": "demo-dashboard-5",
+  "title": "OLD-JVM Threads",
   "timezone": "browser",
   "panels": [
     {
       "type": "timeseries",
-      "title": "Request Count",
+      "title": "Live Threads",
       "targets": [
         {
-          "expr": "rate(http_server_requests_seconds_count[1m])"
+          "expr": "jvm_threads_live_threads"
         }
       ],
       "datasource": {
@@ -25,10 +25,10 @@
     },
     {
       "type": "timeseries",
-      "title": "Request Latency (95th percentile)",
+      "title": "Daemon Threads",
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, uri))"
+          "expr": "jvm_threads_daemon_threads"
         }
       ],
       "datasource": {
@@ -43,11 +43,11 @@
       }
     },
     {
-      "type": "barchart",
-      "title": "Status Codes",
+      "type": "timeseries",
+      "title": "Peak Threads",
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count[5m])) by (status)"
+          "expr": "jvm_threads_peak_threads"
         }
       ],
       "datasource": {

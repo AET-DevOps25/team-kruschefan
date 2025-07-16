@@ -1,15 +1,15 @@
 {
   "id": null,
-  "uid": "demo-dashboard-6",
-  "title": "HTTP Response Times by URI",
+  "uid": "demo-dashboard-4",
+  "title": "OLD-Garbage Collection",
   "timezone": "browser",
   "panels": [
     {
       "type": "timeseries",
-      "title": "95th Percentile by URI",
+      "title": "GC Pause Duration (avg over 5m)",
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, uri))"
+          "expr": "rate(jvm_gc_pause_seconds_sum[5m]) / rate(jvm_gc_pause_seconds_count[5m])"
         }
       ],
       "datasource": {
@@ -25,10 +25,10 @@
     },
     {
       "type": "timeseries",
-      "title": "Average Response Time by URI",
+      "title": "GC Count",
       "targets": [
         {
-          "expr": "rate(http_server_requests_seconds_sum[5m]) / rate(http_server_requests_seconds_count[5m])"
+          "expr": "rate(jvm_gc_pause_seconds_count[5m])"
         }
       ],
       "datasource": {
