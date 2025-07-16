@@ -12,11 +12,11 @@ export class UserService {
   private baseUrl = environment.userApiUrl;
 
   public getUserProfile(username: string): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.baseUrl}/${username}`);
+    return this.http.get<UserProfile>(`${this.baseUrl}/user/${username}`);
   }
 
   public createUserProfile(profile: UserProfile): Observable<UserProfile> {
-    return this.http.post<UserProfile>(`${this.baseUrl}`, profile);
+    return this.http.post<UserProfile>(`${this.baseUrl}/user`, profile);
   }
 
   public updateUserProfile(

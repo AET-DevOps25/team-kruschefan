@@ -17,20 +17,22 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('client_user')")
 public class FormController implements FormApi {
     private final FormService formService;
 
+    @PreAuthorize("hasRole('client_user')")
     @Override
     public ResponseEntity<FormCreateResponse> createForm(FormCreateRequest formCreateRequest) {
         return formService.createForm(formCreateRequest);
     }
 
+    @PreAuthorize("hasRole('client_user')")
     @Override
     public ResponseEntity<List<FormCreateResponse>> getAllForms() {
         return formService.getAllForms();
     }
 
+    @PreAuthorize("hasRole('client_user')")
     @Override
     public ResponseEntity<List<FormSubmitResponse>> getAllFormsResponses() {
         return formService.getAllFormsResponses();
@@ -41,6 +43,7 @@ public class FormController implements FormApi {
         return formService.getFormById(formId);
     }
 
+    @PreAuthorize("hasRole('client_user')")
     @Override
     public ResponseEntity<FormSubmitResponse> getFormResponseById(UUID responseId) {
         return formService.getFormResponseById(responseId);
