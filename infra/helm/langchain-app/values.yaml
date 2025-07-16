@@ -13,9 +13,10 @@ env:
   - name: PYTHONUNBUFFERED
     value: "1"
   - name: OPENUI_API_KEY
-    valueFromSecret:
-      name: project-secrets
-      key: OPENUI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: project-secrets
+        key: OPENUI_API_KEY
 
 serviceAccount:
   create: true

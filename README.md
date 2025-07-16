@@ -21,7 +21,7 @@ This diagram gives a overview of the entire FormsAI platform. At the core, the A
 
 3. **Subsystem Decomposition**  
 <img src="/resources/UML/subsystem_decomposition.png" alt="Subsystem Decomposition" style="height: 30vw;"/>
-This diagram breaks down the architecture of FormsAI into key subsystems. The Client interacts with the backend via an API Gateway, which handles routing, authentication, and token checks. The backend is divided into multiple microservices, including User, Form, Template, and GenAI (Langchain). Keycloak handles authentication and user management, while Monitoring (via Prometheus & Grafana) and CI/CD pipelines (via GitHub Actions) ensure integrity and automation of the system. Note: **TODO: Replace placeholders**  
+This diagram breaks down the architecture of FormsAI into key subsystems. The Client interacts with the backend via an API Gateway, which handles routing, authentication, and token checks. The backend is divided into multiple microservices, including User, Form, Template, and GenAI (Langchain). Keycloak handles authentication and user management, while Monitoring (via Prometheus & Grafana) and CI/CD pipelines (via GitHub Actions) ensure integrity and automation of the system.
 
 ---
 
@@ -35,7 +35,27 @@ The diagram shows how a user prompt becomes a full form. The Form Service sends 
 > - [Microservices](./services)
 > - [GenAI Usage](./services/GenAI)
 > - [Web Client](./web-client)
-> - [Continuous Deployment](./infra)
+> - [Infrastructure](./infra)
+
+## App Usage
+After deploying the app, the app can be used on the web interface using a browser. The deployment methods are well documented below. In this section, 
+
+1. **Log in**
+   Log in the app using a mock user
+   ```bash
+   username: mock-user
+   password: mock-user-secret
+   ```
+
+2. **Form Editor**
+   In the Form Editor section, users can create a form using GenAI or drag and drop functionality. After creating the form, users can either save the form as template, or immediately export the form.
+
+3. **User Management**
+   In the User Management section, users can view all the forms that are created by the user. Users have the option to edit the form or export it. Underneath there is the submitted forms section, where users can view all the submitted surveys filled by other users.
+
+4. **Profile**
+   In the Profile section, users can view their profile, edit them and update them.
+
 
 ## Local Deployment
 The docker system is developed, so that the application can be started within a few commands. Here are the exact steps of how to start the application locally.
@@ -68,6 +88,11 @@ The docker system is developed, so that the application can be started within a 
    KEYCLOAK_MOCK_USER_EMAIL=
    KEYCLOAK_MOCK_USER_FIRST_NAME=
    KEYCLOAK_MOCK_USER_LAST_NAME=
+   KEYCLOAK_MOCK_ADMIN=mock-admin
+   KEYCLOAK_MOCK_ADMIN_PASSWORD=
+   KEYCLOAK_MOCK_ADMIN_EMAIL=
+   KEYCLOAK_MOCK_ADMIN_FIRST_NAME=
+   KEYCLOAK_MOCK_ADMIN_LAST_NAME=
 
    #  Postgresql config
    KC_DB_USERNAME= # Keycloak username for connection to Postgres 
@@ -107,16 +132,40 @@ The docker system is developed, so that the application can be started within a 
    ```bash
    docker-compose up --build
    ```
-   The application will be started in a short while.  
+   The application will be started in a short while. 
+
+5. **Visit the website**
+   The app can be found under the following endpoint:
+   ```
+   http://localhost:4200
+   ``` 
   
-5. **Shut the application down**
+6. **Shut the application down**
    For shutting down the application, use the docker-compose down command in the project root.
    ```bash
    docker-compose down
    ```
 
-## Cloud/Kubernetes Deployment
-**TODO**
+## Kubernetes Deployment
+Apart from the local deployment, two cloud deployment variants are provided using CI/CD pipelines implemented in GitHub actions. The Kubernetes is deployed through helm (.infra/helm) onto the rancher Kubernetes cluster provided by TUM (https://rancher.ase.cit.tum.de) under the namespace "team-kruschefan-project". Ingress is applied, so that users can access the running instance by configuring local DNS resolution via the /etc/hosts file as described below.
+
+1. **Set the local network hostnames**
+   Open the following file locally:
+   ```
+   /etc/hosts
+   ```
+   and add the lines at the botton of the file
+   ```
+   # Kubernetes network set up for team-kruschefan-project
+   131.159.88.14 team-kruschefan.local keycloak.team-kruschefan.local
+   ```
+
+2. **Visit the website**
+   The app can be found under the following endpoint:
+   ```
+   http://team-kruschefan.local
+   ```
+
 
 ## CI/CD Pipeline
 There are two CI/CD pipelines, all instantiated using GitHub actions. Both of them are used for deployments, one for cloud and one for Kubernetes.
@@ -131,7 +180,18 @@ The EC2 deploy pipeline is developed as file [ec2-deploy.yml](.github/workflows/
    - Perform tests to make sure the integrity of the development
    - Tests of microservices, GenAI services and client will be executed
 
-3. **TODO**
+3. **Terraform Deploy**
+   - Deploy Terraform to the AWS instance
+   - Terraform brings up the EC2 instance where the app will be running
+   - Terraform init, Terraform plan and apply
+
+4. **Ansible Deploy**
+   - Deploy Ansible playbook
+   - Ansible configures the EC2 instance and brings the app to life
+
+5. **Post-Deployment Validation**  
+   - Verifies successful deployment
+   - Optionally runs smoke tests or health checks
 
  
 **K8s Deploy**
@@ -170,7 +230,8 @@ The EC2 deploy pipeline is developed as file [k8s-deploy.yml](.github/workflows/
 
 
 ## Monitoring
-**TODO**
+**TODO: explain rules**
+**TODO: explain dashboards**
 
 ## Team
 Our team consists of three members, each focus on and is responsible for different part of the development. A tutor is assigned to the team to help manage the project. The exact progress of the application development can be found under this Confluence page: https://confluence.aet.cit.tum.de/pages/viewpage.action?pageId=258581347&spaceKey=DO25WR&title=Team%2BKruschefan

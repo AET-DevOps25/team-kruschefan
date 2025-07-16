@@ -1,3 +1,0 @@
-params:
--- model_source: remote or localhost (optional)
--- llm_name: name of the llm (optional)

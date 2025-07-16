@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feat/multi-env-deployment
+      - feat/local-kube-check
     workflow_dispatch:
 
 jobs:

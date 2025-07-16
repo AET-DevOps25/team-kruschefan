@@ -9,6 +9,7 @@ data:
     set -e
 
     KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
+    CLIENT_ROLES=("client_user" "client_admin")
 
     until $KCADM_PATH config credentials \
       --server http://localhost:8080 \
@@ -91,11 +92,24 @@ data:
       -s protocol=openid-connect \
       -s rootUrl="http://team-kruschefan.local"
 
-      echo "Client 'angular-frontend' created"
-    else
-      echo "Client 'angular-frontend' already exists"
-    fi
+      CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+        grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+        grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
 
+      for ROLE in "${CLIENT_ROLES[@]}"; do
+        $KCADM_PATH create clients/$CLIENT_UUID/roles -r forms-ai -s name=$ROLE
+      done
+
+      $KCADM_PATH add-roles \
+        -r forms-ai \
+        --rname default-roles-forms-ai \
+        --cclientid angular-frontend \
+        --rolename client_user
+
+        echo "Client 'angular-frontend' created"
+      else
+        echo "Client 'angular-frontend' already exists"
+      fi
 
     # Create mock user if it doesn't exist
     if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\"username\" : \"$KEYCLOAK_MOCK_USER\"" > /dev/null; then
@@ -122,6 +136,42 @@ data:
     else
       echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
     fi
+
+    # Create mock admin if it doesn't exist
+    if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN | grep "\"username\" : \"$KEYCLOAK_MOCK_ADMIN\"" > /dev/null; then
+      echo "Creating admin user '$KEYCLOAK_MOCK_ADMIN'..."
+
+      $KCADM_PATH create users -r forms-ai \
+      -s username=$KEYCLOAK_MOCK_ADMIN \
+      -s email=$KEYCLOAK_MOCK_ADMIN_EMAIL \
+      -s enabled=true \
+      -s emailVerified=true \
+      -s firstName="$KEYCLOAK_MOCK_ADMIN_FIRST_NAME" \
+      -s lastName="$KEYCLOAK_MOCK_ADMIN_LAST_NAME"
+
+      # Get the mock admin's ID
+      MOCK_ADMIN_ID=$($KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN --fields id --format csv | tail -n1 | tr -d '\r"')
+
+      # Set password for mock admin
+      $KCADM_PATH set-password -r forms-ai --userid $MOCK_ADMIN_ID --new-password $KEYCLOAK_MOCK_ADMIN_PASSWORD
+
+      # Assign admin role
+      CLIENT_UUID=$($KCADM_PATH get clients -r forms-ai --fields id,clientId | \
+      grep -B1 "\"clientId\" : \"angular-frontend\"" | \
+      grep '"id"' | sed 's/.*"id" : "\(.*\)".*/\1/')
+      $KCADM_PATH add-roles \
+      -r forms-ai \
+      --uid $MOCK_ADMIN_ID \
+      --cclientid angular-frontend \
+      --rolename client_admin
+
+      # Optionally assign realm role 'spring'
+      $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename spring
+
+      echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' created and role assigned"
+      else
+      echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' already exists"
+      fi
 
     echo "Init complete. Exiting."
     exit 0

@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,4 +77,36 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toSet());
     }
+
+    // private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
+    //     Set<GrantedAuthority> authorities = new HashSet<>();
+
+    //     // 1. Extract roles from the realm_access claim
+    //     Map<String, Object> realmAccess = jwt.getClaim("realm_access");
+    //     if (realmAccess != null && realmAccess.containsKey("roles")) {
+    //         Collection<String> realmRoles = (Collection<String>) realmAccess.get("roles");
+    //         authorities.addAll(realmRoles.stream()
+    //                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    //                 .collect(Collectors.toSet()));
+    //     }
+
+    //     // 2. Extract roles from the resource_access claim
+    //     Map<String, Object> resourceAccess;
+    //     Map<String, Object> resource;
+    //     Collection<String> resourceRoles;
+    //     if (jwt.getClaim("resource_access") != null) {
+    //         resourceAccess = jwt.getClaim("resource_access");
+    //         if (resourceAccess.containsKey(resourceId)) {
+    //             resource = (Map<String, Object>) resourceAccess.get(resourceId);
+    //             if (resource.containsKey("roles")) {
+    //                 resourceRoles = (Collection<String>) resource.get("roles");
+    //                 authorities.addAll(resourceRoles.stream()
+    //                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    //                         .collect(Collectors.toSet()));
+    //             }
+    //         }
+    //     }
+        
+    //     return authorities;
+    // }
 }
