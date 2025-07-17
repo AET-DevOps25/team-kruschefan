@@ -23,8 +23,9 @@ In web-client, do these steps to get started:
    ```bash
    ng serve
    ```
-3. Open your browser and navigate to `http://localhost:4200`.
-4. You can log in with the following credentials:
+3. Run `docker compose up keycloak api-gateway` to start the Keycloak server and other services like GenAI and form service.
+4. Open your browser and navigate to `http://localhost:4200`.
+5. You can log in with the following credentials:
    - Username: `mock-user`
    - Password: `mock-user-secret`
 
@@ -55,3 +56,4 @@ The AI capabilities are integrated through the `gen-ai.service.ts` service, whic
 - The AI service may not always generate the expected form structure, especially for complex prompts.
 - Some UI components may not be fully responsive on smaller screens.
 - The user management component currently does not support pagination for large datasets.
+- Submission and creation dates are currently hardcoded to the current date in the user management component. This will be updated to reflect actual submission dates in future releases.
