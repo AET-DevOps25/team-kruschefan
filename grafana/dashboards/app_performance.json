@@ -202,10 +202,7 @@
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              { "color": "green" },
-              { "color": "red", "value": 80 }
-            ]
+            "steps": [{ "color": "green" }, { "color": "red", "value": 80 }]
           },
           "custom": {
             "displayMode": "auto",
@@ -245,7 +242,10 @@
         },
         "showPercentChange": false,
         "textMode": "value_and_name",
-        "wideLayout": true
+        "wideLayout": true,
+        "text": {
+          "titleSize": 10
+        }
       },
       "pluginVersion": "12.0.2",
       "targets": [
