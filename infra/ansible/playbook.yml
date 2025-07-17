@@ -48,6 +48,6 @@
 
     - name: Docker Compose Up
       ansible.builtin.shell: |
-        docker compose up -d
+        docker compose up --build
       args:
         chdir: "/home/{{ ansible_user }}/app"

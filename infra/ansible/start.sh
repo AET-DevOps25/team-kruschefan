@@ -8,6 +8,3 @@ sh api/scripts/setup.sh
 
 echo "Sourcing env vars..."
 source sourcelocal.sh
-
-echo "[+] Building Docker containers..."
-docker compose build
