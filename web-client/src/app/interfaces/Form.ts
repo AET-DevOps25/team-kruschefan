@@ -24,6 +24,14 @@ export interface FormSubmission {
   answers: FormQuestionAnswer[];
 }
 
+export interface FormCreatedTableSummary {
+  position: number;
+  id: string;
+  formId: string;
+  formName: string;
+  createdAt: string;
+}
+
 export interface FormResponseTableSummary {
   position: number;
   id: string;

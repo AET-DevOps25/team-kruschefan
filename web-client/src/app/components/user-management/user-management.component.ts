@@ -4,7 +4,10 @@ import { MatTable, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TemplateService } from '../../services/template.service';
 import { catchError, EMPTY, take } from 'rxjs';
-import { FormResponseTableSummary } from '../../interfaces/Form';
+import {
+  FormCreatedTableSummary,
+  FormResponseTableSummary,
+} from '../../interfaces/Form';
 import { TemplateResponseTableSummary } from '../../interfaces/Template';
 import { FormService } from '../../services/form.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -34,6 +37,7 @@ export class UserManagementComponent implements OnInit {
   ];
   protected savedTemplates: TemplateResponseTableSummary[] = [];
   protected submittedForms: FormResponseTableSummary[] = [];
+  protected createdForms: FormCreatedTableSummary[] = [];
   private router = inject(Router);
   private templateService = inject(TemplateService);
   private formService = inject(FormService);
@@ -42,6 +46,7 @@ export class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this._getTemplates();
+    this._getCreatedForms();
     this._getForms();
   }
 
@@ -125,6 +130,29 @@ export class UserManagementComponent implements OnInit {
             position: index + 1,
             id: template.id,
             templateName: template.templateName,
+            createdAt: new Date().toDateString(),
+          };
+        });
+      });
+  }
+
+  private _getCreatedForms(): void {
+    this.formService
+      .getForms()
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching created forms:', error);
+          return [];
+        }),
+        take(1),
+      )
+      .subscribe((forms) => {
+        this.createdForms = forms.map((form, index) => {
+          return {
+            position: index + 1,
+            id: form.id,
+            formId: form.formId,
+            formName: form.formName,
             createdAt: new Date().toDateString(),
           };
         });
