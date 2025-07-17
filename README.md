@@ -8,19 +8,19 @@ This documentation records the system design of the application, how to use and 
 
 Below are the UML diagrams for the project for an overview of the project architecture.
 
-1. **Use Case Diagram**  
+1. **Use Case Diagram**     
    <img src="/resources/UML/use_case_diagram.png" alt="Use Case Diagram" style="height: 25vw;"/>
    This use case diagram shows the main interactions users have with FormsAI. Form Creators can create, view, delete, and share forms. They can also use the AI-powered form generation feature to generate forms. Form Accessers can view and fill out forms that have been shared with them.
 
 ---
 
-2. **Top Level Architecture**  
+2. **Top Level Architecture**     
    <img src="/resources/UML/top_level_architecture.png" alt="Top Level Architecture" style="height: 40vw;"/>
    This diagram gives a overview of the entire FormsAI platform. At the core, the Application is made up of a Server that routes requests through an API Gateway to several microservices. Among them, GenAI relies on the OpenUI API for text generation, which is then forwarded to form service. Each of these components interacts with databases and handles distinct aspects of the application's logic. The client then interacts with the back end and displays the UI. Authentication is managed through Keycloak, while CI/CD ensures seamless deployment. Monitoring tools like Prometheus, AlertManager, and Grafana keep everything observable and reliable.
 
 ---
 
-3. **Subsystem Decomposition**  
+3. **Subsystem Decomposition**   
    <img src="/resources/UML/subsystem_decomposition.png" alt="Subsystem Decomposition" style="height: 30vw;"/>
    This diagram breaks down the architecture of FormsAI into key subsystems. The Client interacts with the backend via an API Gateway, which handles routing, authentication, and token checks. The backend is divided into multiple microservices, including User, Form, Template, and GenAI (Langchain). Keycloak handles authentication and user management, while Monitoring (via Prometheus & Grafana) and CI/CD pipelines (via GitHub Actions) ensure integrity and automation of the system.
 
