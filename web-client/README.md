@@ -1,65 +1,57 @@
-# FormsAI
+# FormsAI Web Client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.8.
+This is the web client for FormsAI, a platform for creating and managing forms with AI capabilities.
+It provides a user-friendly interface for managing templates, forms, and responses.
 
-## Development server
+## Features
 
-To install the necessary dependencies, run:
+- Create, edit, and delete templates and forms using drag and drop
+- AI-assisted form generation based on user prompts
+- Manage forms and their responses
+- User authentication and authorization
+- Integration with Angular Material for UI components
 
-```bash
-npm install
-```
+## Getting Started
 
-To start a local development server, run:
+In web-client, do these steps to get started:
 
-```bash
-ng serve
-```
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   ng serve
+   ```
+3. Open your browser and navigate to `http://localhost:4200`.
+4. You can log in with the following credentials:
+   - Username: `mock-user`
+   - Password: `mock-user-secret`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Workflow
 
-## Code scaffolding
+After logging in, you can navigate through the application using the menu bar. The main features include:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Editor**: Create and editing templates and forms with/without AI assistance.
+- **User Management**: View and manage created templates and forms and view form responses.
+- **Profile**: View and edit your profile information.
 
-```bash
-ng generate component component-name
-```
+To get started with creating a form, you can use the AI feature by providing a prompt in the editor. The AI will generate a form based on your input, which you can then customize further. Users can also create forms manually by adding questions by dragging them from the sidebar. Every question has a settings button that allows you to configure the default value, placeholder, options and other properties.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+After creating a form, you can save it as a template for future use or export it directly. The submitted forms can be viewed in the User Management section, where you can also see the responses to each form.
 
-```bash
-ng generate --help
-```
+## Development
 
-## Building
+This project is built using [Angular](https://angular.dev/), [RxJS](https://rxjs.dev/guide/overview), and [Angular Material](https://material.angular.dev/). The code is organized into components, services, and interfaces. Each component is built standalone conforming to Angular's best practices. Rxjs is used for handling asynchronous operations such as API calls and event handling. Angular Material is used for all UI components to ensure a consistent and responsive design and handles accessibility by default.
 
-To build the project run:
+This project uses keycloak for authentication and authorization. Keycloak is configured using the Keycloak-angular and Keycloak-js libraries. The Keycloak service is injected in app.config.ts and any unauthorized access is handled by `guard/auth.guard.ts`.
 
-```bash
-ng build
-```
+## AI Integration
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The AI capabilities are integrated through the `gen-ai.service.ts` service, which interacts with the backend AI service to generate forms based on the given prompt. The AI service not only generates questions but also provides the appropriate types for each question and options if any. The AI-generated forms can be saved as templates or exported directly as a form for future use.
 
-## Running unit tests
+## Known Issues
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- The AI service may not always generate the expected form structure, especially for complex prompts.
+- Some UI components may not be fully responsive on smaller screens.
+- The user management component currently does not support pagination for large datasets.
