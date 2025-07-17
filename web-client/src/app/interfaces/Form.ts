@@ -26,7 +26,6 @@ export interface FormSubmission {
 
 export interface FormCreatedTableSummary {
   position: number;
-  id: string;
   formId: string;
   formName: string;
   createdAt: string;

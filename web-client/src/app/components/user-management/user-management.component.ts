@@ -29,7 +29,13 @@ export class UserManagementComponent implements OnInit {
     'createdAt',
     'actions',
   ];
-  protected readonly formTableColumns: string[] = [
+  protected readonly formCreatedTableColumns: string[] = [
+    'position',
+    'formName',
+    'createdAt',
+    'actions',
+  ];
+  protected readonly formResponseTableColumns: string[] = [
     'position',
     'formName',
     'submittedOn',
@@ -47,7 +53,7 @@ export class UserManagementComponent implements OnInit {
   ngOnInit(): void {
     this._getTemplates();
     this._getCreatedForms();
-    this._getForms();
+    this._getFormResponses();
   }
 
   protected editTemplate(id: string): void {
@@ -150,8 +156,7 @@ export class UserManagementComponent implements OnInit {
         this.createdForms = forms.map((form, index) => {
           return {
             position: index + 1,
-            id: form.id,
-            formId: form.formId,
+            formId: form.id,
             formName: form.formName,
             createdAt: new Date().toDateString(),
           };
@@ -159,7 +164,7 @@ export class UserManagementComponent implements OnInit {
       });
   }
 
-  private _getForms(): void {
+  private _getFormResponses(): void {
     this.formService
       .getFormsResponses()
       .pipe(

@@ -43,7 +43,7 @@
   <p>No created forms found.</p>
 } @else {
   <table
-    #formTable
+    #formCreatedTable
     mat-table
     [dataSource]="createdForms"
     class="mat-elevation-z8"
@@ -70,8 +70,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="formTableColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: formTableColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="formCreatedTableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: formCreatedTableColumns"></tr>
   </table>
 }
 
@@ -110,7 +110,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="formTableColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: formTableColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="formResponseTableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: formResponseTableColumns"></tr>
   </table>
 }
