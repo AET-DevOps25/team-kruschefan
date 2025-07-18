@@ -79,12 +79,12 @@ Due to AWS resource cost and privacy of the propriertary AWS account, a deployme
 
 After executing Terraform (the logs can be found [here](./logs/terraform_log.txt)), the ec2 instance will be up and can be found in the AWS Console UI.
 
-<img src="logs/ec2_instance.png" alt="ec2_instance" style="height: 45vw;"/>    
+<img src="logs/ec2_instance.png" alt="ec2_instance" style="height: 35vw;"/>    
 
 
 Afterwards, Ansible playbook is executed. (The logs can be found [here](./logs/ansible_log.txt)). As we can see in the screenshot down below, all files are copied into the virtual machine, and is in the state that is ready to be deployed.
 
-<img src="logs/ec2_console.png" alt="ec2_console" style="height: 45vw;"/>    
+<img src="logs/ec2_console.png" alt="ec2_console" style="height: 35vw;"/>    
 
 > IP addresses of the instances in the log in different stages are different, because the pipeline has been logged at different times.
 ---
