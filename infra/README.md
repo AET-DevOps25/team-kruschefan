@@ -27,15 +27,19 @@ Terraform is used to provision both EC2-based infrastructure, so that the applic
    export AWS_SECRET_ACCESS_KEY=...
    export AWS_SESSION_TOKEN=... # Only when required
    ```
-3. Initialize Terraform:
+3. Source environment variables for SSM storage
+   ```bash
+   source sourcelocal.sh
+   ```
+4. Initialize Terraform:
    ```bash
    terraform init
    ```
-4. Preview the changes:
+5. Preview the changes:
    ```bash
    terraform plan 
    ```
-5. Apply the configuration:
+6. Apply the configuration:
    ```bash
    terraform apply
    ```
@@ -68,6 +72,21 @@ Ansible automates the provisioning and configuration of the EC2 server. The play
 
 This installs all necessary tools and prepares the instance for deploying Kubernetes resources using Helm.
 
+---
+
+## Cloud Deployment Proof
+Due to AWS resource cost and privacy of the propriertary AWS account, a deployment of the infrastructure on the AWS platform cannot be performed. However, a thorough run of the deployment process has been recorded. Screenshots and logs are provided inside the [logs](./logs). 
+
+After executing Terraform (the logs can be found [here](./logs/terraform_log.txt)), the ec2 instance will be up and can be found in the AWS Console UI.
+
+<img src="logs/ec2_instance.png" alt="ec2_instance" style="height: 45vw;"/>    
+
+
+Afterwards, Ansible playbook is executed. (The logs can be found [here](./logs/ansible_log.txt)). As we can see in the screenshot down below, all files are copied into the virtual machine, and is in the state that is ready to be deployed.
+
+<img src="logs/ec2_console.png" alt="ec2_console" style="height: 45vw;"/>    
+
+> IP addresses of the instances in the log in different stages are different, because the pipeline has been logged at different times.
 ---
 
 ## Kubernetes: Microservices Deployment via Helm

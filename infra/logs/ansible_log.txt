@@ -1,0 +1,45 @@
+jay@MacBookPro ~/D/t/i/ansible (main)> ansible-playbook -i "ec2-user@3.121.206.53," \     (base) 
+                                                       playbook.yml \
+                                                       --private-key ~/.ssh/devops
+
+PLAY [Provision EC2 instance] *******************************************************************
+
+TASK [Gathering Facts] **************************************************************************
+[WARNING]: Platform linux on host ec2-user@3.121.206.53 is using the discovered Python
+interpreter at /usr/bin/python3.9, but future installation of another Python interpreter could
+change the meaning of that path. See https://docs.ansible.com/ansible-
+core/2.18/reference_appendices/interpreter_discovery.html for more information.
+ok: [ec2-user@3.121.206.53]
+
+TASK [Ensure dnf cache is updated] **************************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Install base packages] ********************************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Install Docker (Amazon Linux 2023)] *******************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Start Docker service] *********************************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Add user to docker group] *****************************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Install Docker Compose v2 plugin] *********************************************************
+ok: [ec2-user@3.121.206.53]
+
+TASK [Remove existing app directory if it exists] ***********************************************
+changed: [ec2-user@3.121.206.53]
+
+TASK [Clone repo] *******************************************************************************
+changed: [ec2-user@3.121.206.53]
+
+TASK [Generate .env file for Docker Compose] ****************************************************
+changed: [ec2-user@3.121.206.53]
+
+TASK [Run API setup script] *********************************************************************
+changed: [ec2-user@3.121.206.53]
+
+PLAY RECAP **************************************************************************************
+ec2-user@3.121.206.53      : ok=11   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

@@ -37,17 +37,12 @@
         dest: "/home/{{ ansible_user }}/app/.env.secret"
         mode: "0600"
 
-    - name: Copy start.sh to remote host
-      ansible.builtin.copy:
-        src: ./start.sh
-        dest: "/home/{{ ansible_user }}/app"
-        mode: '0755'
-
-    - name: Run start.sh
-      ansible.builtin.command: "/home/{{ ansible_user }}/app/start.sh"
-
-    - name: Docker Compose Up
-      ansible.builtin.shell: |
-        docker compose up --build
+    - name: Run API setup script
+      ansible.builtin.shell: sh api/scripts/setup.sh
       args:
-        chdir: "/home/{{ ansible_user }}/app"
+        chdir: /home/ec2-user/app
+
+    # - name: Run Docker Compose
+    #   community.docker.docker_compose_v2:
+    #     project_src: /home/ec2-user/app
+    #     state: present

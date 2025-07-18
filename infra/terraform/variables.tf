@@ -30,3 +30,7 @@ variable "public_key_path" {
   type        = string
   default     = "~/.ssh/devops.pub"
 }
+
+variable "env_vars" {
+  type = map(string)
+}

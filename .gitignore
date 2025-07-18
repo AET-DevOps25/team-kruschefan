@@ -150,6 +150,7 @@ fabric.properties
 # Log file
 *.log
 
+
 # BlueJ files
 *.ctxt
 
@@ -292,6 +293,7 @@ celerybeat.pid
 # Environments
 .env
 .env.secret
+.terraform.env.secret
 .venv
 env/
 venv/
@@ -343,6 +345,7 @@ pyrightconfig.json
 ### react ###
 .DS_*
 logs
+!infra/logs
 **/*.backup.*
 **/*.back.*
 
@@ -404,3 +407,4 @@ infra/terraform/instruction.txt
 infra/terraform/tfplan
 infra/terraform/terraform*
 infra/terraform/.terraform*
+!infra/logs/terraform.txt
