@@ -11,7 +11,7 @@ service:
 
 env:
   - name: SPRING_PROFILES_ACTIVE
-    value: docker
+    value: k8s
   - name: KEYCLOAK_REALM
     value: master
   - name: KEYCLOAK_CLIENT_ID
@@ -22,8 +22,6 @@ env:
   - name: KEYCLOAK_PASSWORD
     value: admin
   #!!!TODO: secret
-  - name: KEYCLOAK_URL
-    value: http://keycloak:9001
 
 
 serviceAccount:
