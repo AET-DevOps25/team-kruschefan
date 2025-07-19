@@ -103,7 +103,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install client ependencies
+      - name: Install client dependencies
         run: |
           cd web-client
           npm install
@@ -122,6 +122,14 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./infra/terraform
         run: terraform init
+
+      - name: Add SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY_ANSIBLE }}" > ~/.ssh/devops
+          echo "${{ secrets.SSH_PUB_KEY_ANSIBLE }}" > ~/.ssh/devops.pub
+          chmod 600 ~/.ssh/devops
+          chmod 644 ~/.ssh/devops.pub
 
       - name: Plan Terraform
         working-directory: ./infra/terraform
@@ -165,12 +173,6 @@ jobs:
       - name: Apply Terraform
         working-directory: ./infra/terraform
         run: terraform apply tfplan
-
-      - name: Add SSH key
-        run: |
-          kdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY_ANSIBLE }}" > ~/.ssh/devops
-          chmod 600 ~/.ssh/devops
 
       - name: Wait for EC2 to be reachable
         run: sleep 120
