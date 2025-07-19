@@ -4,7 +4,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak.team-kruschefan.local/realms/forms-ai
-          jwk-set-uri: http://keycloak.team-kruschefan-project.svc.cluster.local:8080/realms/forms-ai/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak:9001/realms/forms-ai/protocol/openid-connect/certs
 
 keycloak:
-  server-url: http://keycloak.team-kruschefan-project.svc.cluster.local:8080
+  server-url: http://keycloak:9001
