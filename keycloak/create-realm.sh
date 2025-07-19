@@ -23,7 +23,12 @@ echo "Logged into Keycloak CLI"
 
 # Create realm if it doesn't exist
 if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
-  $KCADM_PATH create realms -s realm=forms-ai -s enabled=true
+  $KCADM_PATH create realms \
+    -s realm=forms-ai \
+    -s enabled=true \
+    -s registrationAllowed=true \
+    -s resetPasswordAllowed=true \
+    -s rememberMe=true
   echo "Realm 'forms-ai' created"
 else
   echo "Realm 'forms-ai' already exists"

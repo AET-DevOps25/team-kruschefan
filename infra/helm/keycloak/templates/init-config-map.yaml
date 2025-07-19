@@ -25,8 +25,13 @@ data:
 
     # Create realm if it doesn't exist
     if ! $KCADM_PATH get realms | grep '"realm" : "forms-ai"' > /dev/null; then
-      $KCADM_PATH create realms -s realm=forms-ai -s enabled=true
-      $KCADM_PATH update realms/forms-ai -s sslRequired=NONE
+        $KCADM_PATH create realms \
+          -s realm=forms-ai \
+          -s enabled=true \
+          -s registrationAllowed=true \
+          -s resetPasswordAllowed=true \
+          -s rememberMe=true \
+          -s sslRequired=NONE
       echo "Realm 'forms-ai' created"
     else
       $KCADM_PATH update realms/forms-ai -s sslRequired=NONE

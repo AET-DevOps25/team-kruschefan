@@ -3,31 +3,30 @@
   @if (isAuthenticated()) {
     <nav class="main-nav">
       <a mat-button routerLink="/home" routerLinkActive="active-link">
-        <mat-icon>home</mat-icon> Home
+        <mat-icon>home</mat-icon>
+        Home
       </a>
       <a mat-button routerLink="/editor" routerLinkActive="active-link">
-        <mat-icon>edit_note</mat-icon> Form Editor
+        <mat-icon>edit_note</mat-icon>
+        Form Editor
       </a>
       <a
         mat-button
         routerLink="/user-management"
         routerLinkActive="active-link"
       >
-        <mat-icon>group</mat-icon> User Management
+        <mat-icon>group</mat-icon>
+        User Management
       </a>
       <a mat-button routerLink="/profile" routerLinkActive="active-link">
-        <mat-icon>person</mat-icon> Profile
+        <mat-icon>person</mat-icon>
+        Profile
       </a>
     </nav>
-  }
 
-  @if (isAuthenticated()) {
     <button mat-button color="accent" (click)="logout()">
-      <mat-icon>logout</mat-icon> Logout
-    </button>
-  } @else {
-    <button mat-button color="accent" (click)="login()">
-      <mat-icon>login</mat-icon> Login
+      <mat-icon>logout</mat-icon>
+      Logout
     </button>
   }
 </mat-toolbar>

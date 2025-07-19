@@ -20,6 +20,12 @@ export class HomeComponent {
     this.keyCloakService.login();
   }
 
+  protected register(): void {
+    this.keyCloakService.register({
+      redirectUri: `${window.location.origin}/home`,
+    });
+  }
+
   protected createNewTemplate(): void {
     this.router.navigate(['/editor']);
   }

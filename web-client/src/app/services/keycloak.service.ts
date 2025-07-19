@@ -42,15 +42,20 @@ export class KeycloakService {
     return this.keycloak?.loadUserProfile();
   }
 
-  get KeycloakInstance(): Keycloak | undefined {
-    return this.keycloak;
-  }
-
-  login(): Promise<void> | undefined {
+  public login(): Promise<void> | undefined {
     return this.keycloak?.login();
   }
 
-  logout(): Promise<void> | undefined {
+  public register(
+    options?: Keycloak.KeycloakRegisterOptions,
+  ): Promise<void> | undefined {
+    return this.keycloak?.register({
+      ...options,
+      redirectUri: `${window.location.origin}/home`,
+    });
+  }
+
+  public logout(): Promise<void> | undefined {
     return this.keycloak?.logout({
       redirectUri: `${window.location.origin}/home`,
     });

@@ -4,12 +4,20 @@
     Your one-stop solution for dynamic form generation and management.
   </p>
   @if (!isAuthenticated()) {
-    <button mat-flat-button color="primary" (click)="login()">
-      <mat-icon>login</mat-icon> Login
-    </button>
+    <section class="login-section">
+      <button mat-flat-button color="primary" (click)="login()">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+      <button mat-flat-button color="primary" (click)="register()">
+        <mat-icon>app_registration</mat-icon>
+        Register
+      </button>
+    </section>
   } @else {
     <button mat-flat-button color="primary" (click)="createNewTemplate()">
-      <mat-icon>add</mat-icon> Create New Template
+      <mat-icon>add</mat-icon>
+      Create New Template
     </button>
   }
 </div>
