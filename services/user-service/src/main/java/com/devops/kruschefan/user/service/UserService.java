@@ -44,7 +44,7 @@ public class UserService implements UserApiDelegate {
     private final PayloadMetrics payloadMetrics;
     private final ModelMapper modelMapper;
 
-    @Value("${keycloak.realm:${KEYCLOAK_REALM}}")
+    @Value("${keycloak.realm}")
     private String realm;
 
     @Override
