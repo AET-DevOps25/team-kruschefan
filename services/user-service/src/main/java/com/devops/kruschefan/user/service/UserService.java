@@ -75,6 +75,8 @@ public class UserService implements UserApiDelegate {
 
     @Override
     public ResponseEntity<Void> deleteUser(String username) {
+        log.info("Deleting user from Keycloak: {}", username);
+
         UserRepresentation user = getKcUserByUsername(username);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -89,6 +91,8 @@ public class UserService implements UserApiDelegate {
 
     @Override
     public ResponseEntity<UserResponse> getUser(String username) {
+        log.info("Retrieving user from Keycloak: {}", username);
+
         UserRepresentation user = getKcUserByUsername(username);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -106,6 +110,8 @@ public class UserService implements UserApiDelegate {
 
     @Override
     public ResponseEntity<UserResponse> updateUser(String username, UserUpdateRequest userUpdateRequest) {
+        log.info("Updating user in Keycloak: {}", username);
+
         UserRepresentation user = getKcUserByUsername(username);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
