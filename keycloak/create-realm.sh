@@ -31,39 +31,29 @@ fi
 
 # Create 'user-service' confidential client if it doesn't exist
 if ! $KCADM_PATH get clients -r forms-ai | grep "\"clientId\" : \"$KEYCLOAK_FORMSAI_USER\"" > /dev/null; then
-  echo "Creating client 'user-service'..."
+  echo "Creating client '$KEYCLOAK_FORMSAI_USER'..."
+
   $KCADM_PATH create clients -r forms-ai \
     -s clientId=$KEYCLOAK_FORMSAI_USER \
     -s name="User Service" \
     -s enabled=true \
-    -s serviceAccountsEnabled=true \
-    -s directAccessGrantsEnabled=true \
     -s publicClient=false \
-    -s protocol=openid-connect \
+    -s serviceAccountsEnabled=true \
+    -s standardFlowEnabled=false \
+    -s directAccessGrantsEnabled=false \
+    -s clientAuthenticatorType=client-secret \
     -s secret=$KEYCLOAK_FORMSAI_PASSWORD
 
-  # Create realm role 'spring' if it doesn't exist
-  if ! $KCADM_PATH get roles -r forms-ai | grep '"name" : "spring"' > /dev/null; then
-    echo "Creating realm role 'spring'..."
-    $KCADM_PATH create roles -r forms-ai -s name=spring
-  fi
-
-  # Assign realm role 'spring'
-  $KCADM_PATH add-roles -r forms-ai --uusername service-account-$KEYCLOAK_FORMSAI_USER --rolename spring
-
-  # Assign view-users and manage-users to service account
+  # Assign roles to the service account
   $KCADM_PATH add-roles -r forms-ai \
     --uusername service-account-$KEYCLOAK_FORMSAI_USER \
-    --cclientid realm-management \
-    --rolename view-users
-
-  $KCADM_PATH add-roles -r forms-ai \
-    --uusername service-account-$KEYCLOAK_FORMSAI_USER \
-    --cclientid realm-management \
-    --rolename manage-users
+    --rolename manage-users \
+    --rolename view-users \
+    --rolename manage-realm \
+    --rolename view-realm \
+    --cclientid realm-management
 
   echo "Role assignment to service account succeeded!"
-
 else
   echo "Client $KEYCLOAK_FORMSAI_USER already exists"
 fi
@@ -117,9 +107,6 @@ if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_USER | grep "\
   # Set password for mock user
   $KCADM_PATH set-password -r forms-ai --userid $MOCK_USER_ID --new-password $KEYCLOAK_MOCK_USER_PASSWORD
 
-  # Optionally assign realm role 'spring'
-  $KCADM_PATH add-roles -r forms-ai --uid $MOCK_USER_ID --rolename spring
-
   echo "Mock user '$KEYCLOAK_MOCK_USER' created and role assigned"
 else
   echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
@@ -152,9 +139,6 @@ if ! $KCADM_PATH get users -r forms-ai -q username=$KEYCLOAK_MOCK_ADMIN | grep "
     --uid $MOCK_ADMIN_ID \
     --cclientid angular-frontend \
     --rolename client_admin
-
-  # Optionally assign realm role 'spring'
-  $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename spring
 
   echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' created and role assigned"
 else
