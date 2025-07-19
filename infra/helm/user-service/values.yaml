@@ -12,17 +12,6 @@ service:
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: k8s
-  - name: KEYCLOAK_REALM
-    value: master
-  - name: KEYCLOAK_CLIENT_ID
-    value: admin-cli
-  - name: KEYCLOAK_USERNAME
-    value: admin
-  # TODO: secret
-  - name: KEYCLOAK_PASSWORD
-    value: admin
-  #!!!TODO: secret
-
 
 serviceAccount:
   create: true
