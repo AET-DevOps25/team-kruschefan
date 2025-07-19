@@ -113,9 +113,6 @@ data:
       # Set password for mock user
       $KCADM_PATH set-password -r forms-ai --userid $MOCK_USER_ID --new-password $KEYCLOAK_MOCK_USER_PASSWORD
 
-      # Optionally assign realm role 'spring'
-      $KCADM_PATH add-roles -r forms-ai --uid $MOCK_USER_ID --rolename spring
-
       echo "Mock user '$KEYCLOAK_MOCK_USER' created and role assigned"
     else
       echo "Mock user '$KEYCLOAK_MOCK_USER' already exists"
@@ -148,9 +145,6 @@ data:
       --uid $MOCK_ADMIN_ID \
       --cclientid angular-frontend \
       --rolename client_admin
-
-      # Optionally assign realm role 'spring'
-      $KCADM_PATH add-roles -r forms-ai --uid $MOCK_ADMIN_ID --rolename spring
 
       echo "Mock admin '$KEYCLOAK_MOCK_ADMIN' created and role assigned"
       else

@@ -1,10 +1,10 @@
 spring:
-   security:
-     oauth2:
-       resourceserver:
-         jwt:
-            issuer-uri: http://localhost:9001/realms/forms-ai
-            jwk-set-uri: http://keycloak:9001/realms/forms-ai/protocol/openid-connect/certs
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9001/realms/forms-ai
+          jwk-set-uri: http://keycloak:9001/realms/forms-ai/protocol/openid-connect/certs
 
 keycloak:
   server-url: http://${KEYCLOAK_URL:keycloak:9001}
