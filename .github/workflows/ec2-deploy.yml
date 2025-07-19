@@ -121,7 +121,7 @@ jobs:
 
       - name: Export Terraform Environment Variables
         run: | 
-          export TF_VAR_env_vars='{
+          echo "TF_VAR_env_vars='{
             KEYCLOAK_USER: ${{ env.KEYCLOAK_USER }},    
             KEYCLOAK_PASSWORD: ${{ env.KEYCLOAK_PASSWORD }},    
             KEYCLOAK_ADMIN: ${{ env.KEYCLOAK_ADMIN }},                      
@@ -153,7 +153,7 @@ jobs:
             KEYCLOAK_MOCK_ADMIN_EMAIL: ${{ env.KEYCLOAK_MOCK_ADMIN_EMAIL }},       
             KEYCLOAK_MOCK_ADMIN_FIRST_NAME: ${{ env.KEYCLOAK_MOCK_ADMIN_FIRST_NAME }},
             KEYCLOAK_MOCK_ADMIN_LAST_NAME: ${{ env.KEYCLOAK_MOCK_ADMIN_LAST_NAME }}   
-          }'
+          }'" >> $GITHUB_ENV
 
       - name: Initialize Terraform
         working-directory: ./infra/terraform
