@@ -10,8 +10,8 @@ fi
 
 echo "[+] Loading secrets from .env.secret..."
 while IFS= read -r line || [[ -n "$line" ]]; do
-  # Skip comments
-  if [[ "$line" =~ ^# ]]; then
+  # Skip comments and empty lines
+  if [[ "$line" =~ ^# ]] || [[ -z "$line" ]]; then
     continue
   fi
 
