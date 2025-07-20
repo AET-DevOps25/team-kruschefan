@@ -122,6 +122,14 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./infra/terraform
         run: terraform init
+        
+      - name: Import Instances into Terraform
+        working-directory: ./infra/terraform
+        run: |
+          terraform import aws_security_group.team_kruschefan_sg sg-0690cb2fc84155187
+          terraform import aws_iam_role.ec2_ssm_role ec2-ssm-access
+          terraform import aws_key_pair.team_kruschefan_key devops
+          terraform import aws_instance.team_kruschefan_project i-0db9f4ac101c6010c
 
       - name: Add SSH keys
         run: |
