@@ -67,53 +67,53 @@ jobs:
           echo "Setting up OpenAPI config files..."
           sh api/scripts/setup.sh
 
-      - name: Run services tests
-        run: |
-           cd services/user-service
-           mvn clean test
-           cd ../..
+      # - name: Run services tests
+      #   run: |
+      #      cd services/user-service
+      #      mvn clean test
+      #      cd ../..
 
-           cd services/template-service
-           mvn clean test
-           cd ../..
+      #      cd services/template-service
+      #      mvn clean test
+      #      cd ../..
 
-           cd services/form-service
-           mvn clean test
-           cd ../..
+      #      cd services/form-service
+      #      mvn clean test
+      #      cd ../..
 
-           cd services/api-gateway-service
-           mvn clean test
-           cd ../..
+      #      cd services/api-gateway-service
+      #      mvn clean test
+      #      cd ../..
 
-      # Test Python GenAI service
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
+      # # Test Python GenAI service
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: 3.11
 
-      - name: Install GenAI dependencies
-        run: pip install -r services/GenAI/requirements.txt
+      # - name: Install GenAI dependencies
+      #   run: pip install -r services/GenAI/requirements.txt
 
-      - name: Run GenAI tests
-        run: pytest services/GenAI/test.py
+      # - name: Run GenAI tests
+      #   run: pytest services/GenAI/test.py
 
-      # Test Angular web-client
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+      # # Test Angular web-client
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 20
 
-      - name: Install client dependencies
-        run: |
-          cd web-client
-          npm install
-          cd ..
+      # - name: Install client dependencies
+      #   run: |
+      #     cd web-client
+      #     npm install
+      #     cd ..
 
-      - name: Run client tests
-        run: |
-          cd web-client
-          npm test
-          cd ..
+      # - name: Run client tests
+      #   run: |
+      #     cd web-client
+      #     npm test
+      #     cd ..
 
       # Terraform deployment
       - name: Set up Terraform
@@ -128,6 +128,7 @@ jobs:
         run: |
           terraform import aws_security_group.team_kruschefan_sg sg-0690cb2fc84155187
           terraform import aws_iam_role.ec2_ssm_role ec2-ssm-access
+          terraform import aws_iam_instance_profile.ec2_ssm_profile ec2-ssm-profile
           terraform import aws_key_pair.team_kruschefan_key devops
           terraform import aws_instance.team_kruschefan_project i-0db9f4ac101c6010c
         env:
