@@ -221,9 +221,6 @@ jobs:
       - name: Wait for EC2 to be reachable
         run: sleep 120
 
-      - name: Set output as env var
-        run: echo "PUBLIC_IP=$(terraform output -raw public_ip)" >> $GITHUB_ENV
-
       # Ansible deployment
       - name: Set up Python for Ansible
         uses: actions/setup-python@v4
@@ -239,9 +236,8 @@ jobs:
         timeout-minutes: 10
         working-directory: ./infra/ansible
         run: |
-          ansible-playbook -i "ec2-user@${{ env.PUBLIC_IP }}," \
+          ansible-playbook -i "ec2-user@$(terraform output -raw public_ip)," \
             playbook.yml \
             --private-key ~/.ssh/devops
-            '
           
                 
