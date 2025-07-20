@@ -83,6 +83,32 @@ The docker system is developed, so that the application can be started within a 
    Environment variables need to be set for the application to behave normally, since the docker-compose file require these environment variables for the services. First, set all the environment variables in a file called _.env.secret_ in the project root. The following environment variables are required:
 
    ```env
+   #  Postgresql config
+   KC_DB_USERNAME= # Keycloak username for connection to Postgres
+   KC_DB_PASSWORD= # Keycloak password for connection to Postgres
+   POSTGRES_USER=
+   POSTGRES_PASSWORD=
+   POSTGRES_URI= # default: jdbc:postgresql://postgres:5432/forms-ai
+   POSTGRES_DB= # default: forms-ai
+
+   # MongoDB config
+   MONGO_USERNAME=
+   MONGO_PASSWORD=
+   MONGO_DATABASE= # default: forms-ai
+   MONGO_URI= # default: mongodb://mongo:mongo-secret@localhost:27017
+
+   # GitHub credentials
+   GHCR_USERNAME=
+   GHCR_EMAIL=
+   GITHUB_TOKEN=
+
+   # OpenWebUI credential
+   OPENUI_API_KEY=
+   ```
+   
+   The following environment variables are optional (have default values provided), but recommended to be set:
+
+   ```env
    # Keycloak Config
    KEYCLOAK_USER=
    KEYCLOAK_PASSWORD=
@@ -100,32 +126,14 @@ The docker system is developed, so that the application can be started within a 
    KEYCLOAK_MOCK_ADMIN_EMAIL=
    KEYCLOAK_MOCK_ADMIN_FIRST_NAME=
    KEYCLOAK_MOCK_ADMIN_LAST_NAME=
-
-   #  Postgresql config
-   KC_DB_USERNAME= # Keycloak username for connection to Postgres
-   KC_DB_PASSWORD= # Keycloak password for connection to Postgres
-   POSTGRES_USER=
-   POSTGRES_PASSWORD=
-   POSTGRES_URI= # default: jdbc:postgresql://postgres:5432/forms-ai
-   POSTGRES_DB= # default: forms-ai
-
-   # MongoDB config
+   
+   # MongoDB Config
    MONGO_INITDB_ROOT_USERNAME=
    MONGO_INITDB_ROOT_PASSWORD=
    MONGO_INITDB_DATABASE= # default: forms-ai
-   MONGO_USERNAME=
-   MONGO_PASSWORD=
-   MONGO_DATABASE= # default: forms-ai
-   MONGO_URI= # default: mongodb://mongo:mongo-secret@localhost:27017
-
-   # GitHub credentials
-   GHCR_USERNAME=
-   GHCR_EMAIL=
-   GITHUB_TOKEN=
-
-   # OpenWebUI credential
-   OPENUI_API_KEY=
    ```
+   
+   In production it is important to set the mock user data to a secure value, so that the mock user cannot be used to access the application. The mock user is only used for local development and testing purposes.
 
    **Remember to delete all comments and blank rows in the template.**
 
