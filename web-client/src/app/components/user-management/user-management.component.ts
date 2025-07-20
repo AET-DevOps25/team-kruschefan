@@ -1,9 +1,9 @@
-import { Component, inject, ViewChild, OnInit } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TemplateService } from '../../services/template.service';
-import { catchError, EMPTY, take } from 'rxjs';
+import { catchError, combineLatest, EMPTY, finalize, take } from 'rxjs';
 import {
   FormCreatedTableSummary,
   FormResponseTableSummary,
@@ -13,10 +13,11 @@ import { FormService } from '../../services/form.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteConfirmationComponent } from '../dialogs/delete-confirmation/delete-confirmation.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'forms-ai-user-management',
-  imports: [MatTableModule, MatButtonModule],
+  imports: [MatTableModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
@@ -44,6 +45,7 @@ export class UserManagementComponent implements OnInit {
   protected savedTemplates: TemplateResponseTableSummary[] = [];
   protected submittedForms: FormResponseTableSummary[] = [];
   protected createdForms: FormCreatedTableSummary[] = [];
+  protected isLoading = signal(false);
   private router = inject(Router);
   private templateService = inject(TemplateService);
   private formService = inject(FormService);
@@ -51,9 +53,8 @@ export class UserManagementComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this._getTemplates();
-    this._getCreatedForms();
-    this._getFormResponses();
+    this.isLoading.set(true);
+    this._initializeData();
   }
 
   protected editTemplate(id: string): void {
@@ -119,18 +120,22 @@ export class UserManagementComponent implements OnInit {
   protected viewFormResponse(id: string): void {
     this.router.navigate(['/response', id]);
   }
-
-  private _getTemplates(): void {
-    this.templateService
-      .getTemplates()
+  private _initializeData(): void {
+    combineLatest([
+      this.templateService.getTemplates(),
+      this.formService.getForms(),
+      this.formService.getFormsResponses(),
+    ])
       .pipe(
         catchError((error) => {
-          console.error('Error fetching templates:', error);
-          return [];
+          console.error('Error initializing data:', error);
+          return EMPTY;
         }),
-        take(1),
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
       )
-      .subscribe((templates) => {
+      .subscribe(([templates, forms, responses]) => {
         this.savedTemplates = templates.map((template, index) => {
           return {
             position: index + 1,
@@ -139,20 +144,6 @@ export class UserManagementComponent implements OnInit {
             createdAt: new Date().toDateString(),
           };
         });
-      });
-  }
-
-  private _getCreatedForms(): void {
-    this.formService
-      .getForms()
-      .pipe(
-        catchError((error) => {
-          console.error('Error fetching created forms:', error);
-          return [];
-        }),
-        take(1),
-      )
-      .subscribe((forms) => {
         this.createdForms = forms.map((form, index) => {
           return {
             position: index + 1,
@@ -161,21 +152,7 @@ export class UserManagementComponent implements OnInit {
             createdAt: new Date().toDateString(),
           };
         });
-      });
-  }
-
-  private _getFormResponses(): void {
-    this.formService
-      .getFormsResponses()
-      .pipe(
-        catchError((error) => {
-          console.error('Error fetching forms:', error);
-          return [];
-        }),
-        take(1),
-      )
-      .subscribe((forms) => {
-        this.submittedForms = forms.map((form, index) => {
+        this.submittedForms = responses.map((form, index) => {
           return {
             position: index + 1,
             id: form.id,
