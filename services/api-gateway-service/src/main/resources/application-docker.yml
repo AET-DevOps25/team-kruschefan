@@ -6,10 +6,6 @@ spring:
   main:
     web-application-type: reactive
 
-  data:
-    mongodb:
-      uri: mongodb://mongo:mongo-secret@mongo:27017/forms-ai
-
   cloud:
     gateway:
       routes:

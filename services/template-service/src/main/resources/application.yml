@@ -7,9 +7,9 @@ spring:
       authentication-database: admin
       host: localhost
       port: 27017
-      database: forms-ai
-      username: mongo
-      password: mongo-secret
+      database: ${MONGO_INIT_DB_DATABASE:forms-ai}
+      username: ${MONGO_INITDB_ROOT_USERNAME:mongo}
+      password: ${MONGO_INITDB_ROOT_PASSWORD:mongo-secret}
 
   security:
     oauth2:
