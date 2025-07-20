@@ -1,23 +1,31 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserProfile } from '../../interfaces/UserProfile';
 import { UserService } from '../../services/user.service';
 import { KeycloakService } from '../../services/keycloak.service';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'forms-ai-user-profile',
-  imports: [MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule],
+  imports: [
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
 export class UserProfileComponent implements OnInit {
   protected userProfile: UserProfile | null = null;
+  protected isUserServiceLoading = signal(false);
   private userName: string | null = null;
   private userService = inject(UserService);
   private keyCloakService = inject(KeycloakService);
@@ -26,6 +34,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     if (this.keyCloakService.IsLoggedIn) {
+      this.isUserServiceLoading.set(true);
       this.loadUserName();
     } else {
       console.warn('User is not logged in, cannot load profile.');
@@ -71,17 +80,20 @@ export class UserProfileComponent implements OnInit {
       this.loadUserProfile();
     }).catch((error) => {
       console.error('Failed to load user profile:', error);
+      this.isUserServiceLoading.set(false);
     });
   }
 
   private loadUserProfile(): void {
-    console.log('Loading user profile for:', this.userName);
     this.userService
       .getUserProfile(this.userName ?? '')
       .pipe(
         catchError((error) => {
           console.error('Failed to load user profile:', error);
           return of(null);
+        }),
+        finalize(() => {
+          this.isUserServiceLoading.set(false);
         }),
         tap((profile) => {
           this.userProfile = profile;

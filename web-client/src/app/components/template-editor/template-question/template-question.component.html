@@ -7,11 +7,14 @@
       <mat-label>{{
         question().type === Types.COMMENT ? 'Comment' : 'Question'
       }}</mat-label>
-      <input
+      <textarea
         matInput
         [(ngModel)]="question().label"
         [required]="question().required"
-      />
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
     </mat-form-field>
     @switch (question().type) {
       @case (Types.TEXT) {
